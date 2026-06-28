@@ -48,8 +48,12 @@ export const sources: Source[] = [
     description: 'Large-scale, repeated survey of human values across Europe; integrated dataset available via GESIS.' },
   { name: 'Wellcome Global Monitor', url: 'https://wellcome.org/reports/wellcome-global-monitor', status: 'catalog', category: 'Wellbeing & values',
     description: 'Gallup study of how people worldwide think and feel about science and health; full crosstabs collected.' },
-  { name: 'World Risk Poll', url: 'https://wrp.lrfoundation.org.uk/', status: 'catalog', category: 'Wellbeing & values',
-    description: 'Lloyd’s Register Foundation / Gallup global study of perceived risk and safety; data dictionary on hand.' },
+  { name: 'World Risk Poll', url: 'https://wrp.lrfoundation.org.uk/', status: 'live', category: 'Risk & resilience', match: 'World Risk Poll',
+    description: 'Lloyd’s Register Foundation / Gallup global study of how people experience and cope with risk — the Resilience Index.' },
+  { name: 'WorldRiskIndex', url: 'https://weltrisikobericht.de/en/', status: 'live', category: 'Risk & resilience', match: 'WorldRiskIndex',
+    description: 'IFHV / Bündnis Entwicklung Hilft model of disaster risk from extreme natural events and climate change — exposure × vulnerability.' },
+  { name: 'INFORM Risk Index', url: 'https://drmkc.jrc.ec.europa.eu/inform-index', status: 'live', category: 'Risk & resilience', match: 'INFORM',
+    description: 'EC Joint Research Centre / IASC index of humanitarian crisis and disaster risk, including hazard, vulnerability and coping capacity.' },
 
   // ── Public opinion (regional barometers) ───────────────────────────
   { name: 'Eurobarometer', url: 'https://europa.eu/eurobarometer/', status: 'catalog', category: 'Public opinion barometers',
@@ -90,6 +94,7 @@ export const sourceCategories = [
   'Macro & economics',
   'Governance & democracy',
   'Wellbeing & values',
+  'Risk & resilience',
   'Public opinion barometers',
   'Health & demography',
 ];
