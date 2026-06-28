@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Scatter from '@components/Scatter.astro';
+import { getDataset } from '@data/datasets';
+import { colorFor, regionList } from '@lib/palette';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pdi = getDataset('hofstede-power-distance')!;
+const idv = getDataset('hofstede-individualism')!;
+const idvByIso = new Map(idv.data.map((o) => [o.iso, o]));
+
+const HIGHLIGHT = new Set(['United States', 'Germany', 'Japan', 'China', 'Russia', 'Sweden', 'Brazil', 'India', 'France', 'Malaysia', 'Guatemala', 'Great Britain']);
+const points = pdi.data
+  .filter((o) => o.iso && idvByIso.has(o.iso))
+  .map((o) => ({ x: o.value, y: idvByIso.get(o.iso)!.value, label: o.entity, group: o.group, highlight: HIGHLIGHT.has(o.entity) }));
+
+const top = (key: (p: any) => number) => [...points].sort((a, b) => key(b) - key(a))[0];
+const mostHierarchical = top((p) => p.x);
+const flattest = top((p) => -p.x);
+const mostIndividualist = top((p) => p.y);
+const mostCollectivist = top((p) => -p.y);
+---
+<BaseLayout title="The Shape of National Culture" active="news"
+  description="Hofstede's cultural dimensions: how countries differ on power distance and individualism.">
+  <section class="story-hero">
+    <div class="container">
+      <a class="meta" href={`${base}/`}>← News</a>
+      <span class="kicker">Data story · Hofstede cultural dimensions</span>
+      <h1>The shape of<br/>national <span class="hl">culture</span>.</h1>
+      <p class="sub" style="max-width:660px">
+        Geert Hofstede mapped how societies differ along a handful of dimensions. Two of the most telling:
+        <b>power distance</b> — how readily people accept hierarchy — and <b>individualism</b> — “I” versus “we”.
+        They tend to move together: flat, individualist societies on one side; hierarchical, collectivist ones on the other.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Power distance vs individualism</h2>
+      <p class="sub">{points.length} countries · right = more hierarchical, up = more individualist.</p>
+      <Scatter points={points} xLabel="Power distance →" yLabel="Individualism →" labelTop={0} />
+      <div class="legend-regions">
+        {regionList.map((r) => (<span class="lr"><span class="lr-dot" style={`background:${colorFor(r)}`}></span>{r}</span>))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>The extremes</h2>
+      <div class="grid cols-2">
+        <div class="card"><h3>Most individualist</h3><p class="meta">{mostIndividualist.label} — personal goals and autonomy come first.</p></div>
+        <div class="card"><h3>Most collectivist</h3><p class="meta">{mostCollectivist.label} — the group and loyalty come first.</p></div>
+        <div class="card"><h3>Most hierarchical</h3><p class="meta">{mostHierarchical.label} — large power gaps are accepted as normal.</p></div>
+        <div class="card"><h3>Flattest</h3><p class="meta">{flattest.label} — power is expected to be shared and questioned.</p></div>
+      </div>
+      <p class="sub" style="margin-top:24px">
+        Source: <a href="https://geerthofstede.com/" target="_blank" rel="noopener">Hofstede cultural dimensions</a>.
+        Compare with the <a href={`${base}/stories/cultural-map`}>Inglehart-Welzel map →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
