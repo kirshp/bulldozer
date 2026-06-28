@@ -16,6 +16,8 @@ export function methodologyFor(slug: string): Methodology {
     return { vintage: 'LiTS IV (~2022–2023)', method: 'Country mean of the item; transition region only, single wave.' };
   if (slug.startsWith('hofstede-'))
     return { vintage: 'Dimension matrix (2010)', method: 'Published national scores (0–100); a fixed model, not a time series.' };
+  if (slug.startsWith('who-'))
+    return { method: 'WHO Global Health Observatory; latest available year per country (varies); both sexes, modelled estimates.' };
   if (slug.startsWith('wgm-'))
     return { vintage: 'Wellcome Global Monitor 2018 (Gallup)', method: 'Gallup World Poll; weighted shares (Column N %); share giving the stated response.' };
   if (slug.startsWith('cb-'))
