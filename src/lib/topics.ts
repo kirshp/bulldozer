@@ -17,10 +17,10 @@ export const TOPICS: Record<string, Topic> = {
   attitudes: { id: 'attitudes', label: 'Attitudes & values', icon: '🧭' },
 };
 
-/** Display order of topics. */
+/** Display order of topics — alphabetical by label (Attitudes first). */
 export const TOPIC_ORDER = [
-  'economy', 'demographics', 'health', 'education', 'environment', 'connectivity',
-  'governance', 'safety', 'risk', 'wellbeing', 'attitudes',
+  'attitudes', 'connectivity', 'demographics', 'economy', 'education',
+  'environment', 'governance', 'health', 'risk', 'safety', 'wellbeing',
 ];
 
 /** True opinion/perception surveys (everything else is objective statistics). */
