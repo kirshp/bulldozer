@@ -148,6 +148,10 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Indicator pictogram */
 .ind-ic { display: inline-block; margin-right: 7px; font-size: 0.95em; opacity: 0.9; }
 
+/* Bivariate map preset quick-picks */
+.biv-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.biv-preset { margin: 0; font-size: 13px; cursor: pointer; }
+
 /* Methodology note */
 .method-note { font-size: 13px; color: var(--text-dim); background: var(--bg-elev); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 14px 0 0; line-height: 1.55; }
 .method-note b { color: var(--text); font-weight: 600; }

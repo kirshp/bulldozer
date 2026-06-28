@@ -16,6 +16,8 @@ export function methodologyFor(slug: string): Methodology {
     return { vintage: 'LiTS IV (~2022–2023)', method: 'Country mean of the item; transition region only, single wave.' };
   if (slug.startsWith('hofstede-'))
     return { vintage: 'Dimension matrix (2010)', method: 'Published national scores (0–100); a fixed model, not a time series.' };
+  if (slug.startsWith('wgm-'))
+    return { vintage: 'Wellcome Global Monitor 2018 (Gallup)', method: 'Gallup World Poll; weighted shares (Column N %); share giving the stated response.' };
   if (slug.startsWith('cb-'))
     return { vintage: 'Caucasus Barometer 2013 (last wave incl. Azerbaijan)', method: 'CRRC; weighted by indwt; South Caucasus only (Armenia, Azerbaijan, Georgia).' };
   if (slug.startsWith('sdr2-'))

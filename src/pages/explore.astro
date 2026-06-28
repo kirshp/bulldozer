@@ -7,7 +7,7 @@ import BivariateExplore from '@components/BivariateExplore.astro';
 import { datasets } from '@data/datasets';
 
 const indicators = datasets.map((d) => ({
-  slug: d.slug, title: d.title, kind: d.kind, unit: d.unit, valueLabel: d.valueLabel,
+  slug: d.slug, title: d.title, kind: d.kind, unit: d.unit, valueLabel: d.valueLabel, topic: d.topic,
   changeMode: d.changeMode, periods: [...new Set(d.data.map((o) => o.period))].sort(),
 }));
 ---

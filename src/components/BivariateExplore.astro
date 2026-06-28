@@ -1,13 +1,26 @@
 ---
 import WorldMap from '@components/WorldMap.astro';
 import isoNumeric from '@data/iso-numeric.json';
-export interface IndexItem { slug: string; title: string; kind: string }
+import { TOPICS, TOPIC_ORDER } from '@lib/topics';
+export interface IndexItem { slug: string; title: string; kind: string; topic?: string }
 interface Props { indicators: IndexItem[] }
 const { indicators } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const config = { base, indicators };
+const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: TOPICS[id].icon }));
+// Quick-pick cultural maps the user asked for (Inglehart-Welzel, Hofstede) plus a classic.
+const presets = [
+  { label: '🧭 Inglehart cultural map', x: 'wvs-secular', y: 'wvs-emancipative' },
+  { label: '🌍 Hofstede: individualism × power distance', x: 'hofstede-individualism', y: 'hofstede-power-distance' },
+  { label: '😊 Happiness × wealth', x: 'whr-happiness', y: 'imf-gdp-per-capita-ppp' },
+].filter((p) => indicators.some((d) => d.slug === p.x) && indicators.some((d) => d.slug === p.y));
+const config = { base, indicators, topicMeta };
 ---
 <div class="bivexplore">
+  <div class="biv-presets" id="biv-presets">
+    {presets.map((p) => (
+      <button type="button" class="ghost-btn biv-preset" data-x={p.x} data-y={p.y}>{p.label}</button>
+    ))}
+  </div>
   <div class="controls">
     <label>X (amber →)<select id="biv-x"></select></label>
     <label>Y (blue ↑)<select id="biv-y"></select></label>
@@ -39,10 +52,15 @@ const config = { base, indicators };
   const cls = (v, t) => v <= t[0] ? 0 : v <= t[1] ? 1 : 2;
 
   function fillSelect(sel, def) {
-    for (const kind of ['macro', 'survey']) {
-      const items = cfg.indicators.filter((x) => x.kind === kind);
-      const g = document.createElement('optgroup'); g.label = kind === 'macro' ? 'Macro' : 'Study';
-      for (const d of items) { const o = document.createElement('option'); o.value = d.slug; o.textContent = d.title; g.appendChild(o); }
+    // Group by topic (with icon) so clusters like "Attitudes & values"
+    // — where Hofstede and the Inglehart-Welzel WVS dimensions live — are easy to find.
+    for (const t of cfg.topicMeta) {
+      const items = cfg.indicators.filter((x) => x.topic === t.id);
+      if (!items.length) continue;
+      const g = document.createElement('optgroup'); g.label = `${t.icon} ${t.label}`;
+      for (const d of items.sort((a, b) => a.title.localeCompare(b.title))) {
+        const o = document.createElement('option'); o.value = d.slug; o.textContent = d.title; g.appendChild(o);
+      }
       sel.appendChild(g);
     }
     sel.value = def;
@@ -78,6 +96,10 @@ const config = { base, indicators };
   }
   elx.addEventListener('change', () => { render(); syncUrl(); });
   ely.addEventListener('change', () => { render(); syncUrl(); });
+  document.getElementById('biv-presets')?.addEventListener('click', (e) => {
+    const b = e.target.closest('.biv-preset'); if (!b) return;
+    elx.value = b.dataset.x; ely.value = b.dataset.y; render(); syncUrl();
+  });
   const bp = new URLSearchParams(location.search);
   const valid = (s) => cfg.indicators.some((d) => d.slug === s);
   fillSelect(elx, valid(bp.get('bx')) ? bp.get('bx') : 'whr-happiness');
