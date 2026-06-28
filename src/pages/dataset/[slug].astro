@@ -48,6 +48,7 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
       <h2>{ds.title}</h2>
       <p class="sub">{ds.summary}</p>
       <Provenance meta={ds} />
+      <p style="margin-top:12px"><a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/data/${ds.slug}.csv`} download>↓ Download CSV</a></p>
     </div>
   </section>
 
