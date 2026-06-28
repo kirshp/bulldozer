@@ -1,0 +1,472 @@
+{
+  "meta": {
+    "title": "Individualism",
+    "valueLabel": "Individualism",
+    "unit": "index 0–100",
+    "changeMode": "pp",
+    "topic": "attitudes",
+    "summary": "Preference for a loosely-knit social framework (individualism) over a tight one (collectivism). Hofstede’s cultural dimensions.",
+    "source": "Hofstede cultural dimensions (G. Hofstede)",
+    "license": "Public — Hofstede model",
+    "url": "https://geerthofstede.com/research-and-vsm/dimension-data-matrix/",
+    "parsedAt": "2026-06-28",
+    "kind": "survey"
+  },
+  "data": [
+    {
+      "entity": "Argentina",
+      "group": "Other",
+      "period": "2010",
+      "value": 46,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2010",
+      "value": 90,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2010",
+      "value": 55,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Bangladesh",
+      "group": "Asia",
+      "period": "2010",
+      "value": 20,
+      "iso": "BGD"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2010",
+      "value": 75,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Other",
+      "period": "2010",
+      "value": 38,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2010",
+      "value": 30,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Canada",
+      "group": "Other",
+      "period": "2010",
+      "value": 80,
+      "iso": "CAN"
+    },
+    {
+      "entity": "Chile",
+      "group": "Other",
+      "period": "2010",
+      "value": 23,
+      "iso": "CHL"
+    },
+    {
+      "entity": "China",
+      "group": "Asia",
+      "period": "2010",
+      "value": 20,
+      "iso": "CHN"
+    },
+    {
+      "entity": "Colombia",
+      "group": "Other",
+      "period": "2010",
+      "value": 13,
+      "iso": "COL"
+    },
+    {
+      "entity": "Costa Rica",
+      "group": "Other",
+      "period": "2010",
+      "value": 15,
+      "iso": "CRI"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2010",
+      "value": 58,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2010",
+      "value": 74,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Ecuador",
+      "group": "Other",
+      "period": "2010",
+      "value": 8,
+      "iso": "ECU"
+    },
+    {
+      "entity": "El Salvador",
+      "group": "Other",
+      "period": "2010",
+      "value": 19,
+      "iso": "SLV"
+    },
+    {
+      "entity": "Estonia",
+      "group": "Europe",
+      "period": "2010",
+      "value": 60,
+      "iso": "EST"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2010",
+      "value": 63,
+      "iso": "FIN"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2010",
+      "value": 71,
+      "iso": "FRA"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2010",
+      "value": 67,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2010",
+      "value": 35,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Guatemala",
+      "group": "Other",
+      "period": "2010",
+      "value": 6,
+      "iso": "GTM"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2010",
+      "value": 25,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2010",
+      "value": 80,
+      "iso": "HUN"
+    },
+    {
+      "entity": "India",
+      "group": "Asia",
+      "period": "2010",
+      "value": 48,
+      "iso": "IND"
+    },
+    {
+      "entity": "Indonesia",
+      "group": "Asia",
+      "period": "2010",
+      "value": 14,
+      "iso": "IDN"
+    },
+    {
+      "entity": "Iran",
+      "group": "Asia",
+      "period": "2010",
+      "value": 41,
+      "iso": "IRN"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2010",
+      "value": 70,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Israel",
+      "group": "Asia",
+      "period": "2010",
+      "value": 54,
+      "iso": "ISR"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2010",
+      "value": 76,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Jamaica",
+      "group": "Other",
+      "period": "2010",
+      "value": 39,
+      "iso": "JAM"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2010",
+      "value": 46,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Luxembourg",
+      "group": "Europe",
+      "period": "2010",
+      "value": 60,
+      "iso": "LUX"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2010",
+      "value": 26,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Malta",
+      "group": "Europe",
+      "period": "2010",
+      "value": 59,
+      "iso": "MLT"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Other",
+      "period": "2010",
+      "value": 30,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Morocco",
+      "group": "Africa",
+      "period": "2010",
+      "value": 46,
+      "iso": "MAR"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2010",
+      "value": 80,
+      "iso": "NLD"
+    },
+    {
+      "entity": "New Zealand",
+      "group": "Asia",
+      "period": "2010",
+      "value": 79,
+      "iso": "NZL"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2010",
+      "value": 69,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Pakistan",
+      "group": "Asia",
+      "period": "2010",
+      "value": 14,
+      "iso": "PAK"
+    },
+    {
+      "entity": "Panama",
+      "group": "Other",
+      "period": "2010",
+      "value": 11,
+      "iso": "PAN"
+    },
+    {
+      "entity": "Peru",
+      "group": "Other",
+      "period": "2010",
+      "value": 16,
+      "iso": "PER"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2010",
+      "value": 32,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2010",
+      "value": 60,
+      "iso": "POL"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2010",
+      "value": 27,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2010",
+      "value": 30,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2010",
+      "value": 39,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2010",
+      "value": 20,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Slovakia",
+      "group": "Europe",
+      "period": "2010",
+      "value": 52,
+      "iso": "SVK"
+    },
+    {
+      "entity": "South Africa",
+      "group": "Africa",
+      "period": "2010",
+      "value": 65,
+      "iso": "ZAF"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2010",
+      "value": 18,
+      "iso": "KOR"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2010",
+      "value": 51,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Surinam",
+      "group": "Other",
+      "period": "2010",
+      "value": 47,
+      "iso": "SUR"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2010",
+      "value": 71,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2010",
+      "value": 68,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2010",
+      "value": 17,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Thailand",
+      "group": "Asia",
+      "period": "2010",
+      "value": 20,
+      "iso": "THA"
+    },
+    {
+      "entity": "Trinidad",
+      "group": "Other",
+      "period": "2010",
+      "value": 16,
+      "iso": "TTO"
+    },
+    {
+      "entity": "Turkey",
+      "group": "Europe",
+      "period": "2010",
+      "value": 37,
+      "iso": "TUR"
+    },
+    {
+      "entity": "United Kingdom",
+      "group": "Europe",
+      "period": "2010",
+      "value": 89,
+      "iso": "GBR"
+    },
+    {
+      "entity": "United States",
+      "group": "Other",
+      "period": "2010",
+      "value": 91,
+      "iso": "USA"
+    },
+    {
+      "entity": "Uruguay",
+      "group": "Other",
+      "period": "2010",
+      "value": 36,
+      "iso": "URY"
+    },
+    {
+      "entity": "Venezuela",
+      "group": "Other",
+      "period": "2010",
+      "value": 12,
+      "iso": "VEN"
+    },
+    {
+      "entity": "Vietnam",
+      "group": "Asia",
+      "period": "2010",
+      "value": 20,
+      "iso": "VNM"
+    }
+  ]
+}

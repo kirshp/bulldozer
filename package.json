@@ -16,6 +16,7 @@
     "parse:risk": "node scripts/parse_risk.mjs",
     "parse:owid": "node scripts/parse_owid.mjs",
     "parse:wvs": "node scripts/parse_wvs.mjs",
+    "parse:hofstede": "node scripts/parse_hofstede.mjs",
     "data:build": "node scripts/parse_macro.mjs && node scripts/parse_surveys.mjs && node scripts/parse_tidy.mjs && node scripts/parse_lits.mjs && node scripts/parse_risk.mjs && node scripts/parse_owid.mjs",
     "digest": "node scripts/telegram_digest.mjs"
   },

@@ -46,6 +46,8 @@ export const sources: Source[] = [
     description: 'Curated long-run development indicators — income, health, education, demography — harmonised for every country.' },
   { name: 'World Values Survey (WVS)', url: 'https://www.worldvaluessurvey.org/', status: 'live', category: 'Wellbeing & values', match: 'World Values Survey',
     description: 'Global survey of values across ~100 societies. We aggregated Wave 7 into the Inglehart-Welzel cultural dimensions (secular & self-expression values).' },
+  { name: 'Hofstede cultural dimensions', url: 'https://geerthofstede.com/research-and-vsm/dimension-data-matrix/', status: 'live', category: 'Wellbeing & values', match: 'Hofstede',
+    description: 'Geert Hofstede’s six (here five) dimensions of national culture — power distance, individualism, masculinity, uncertainty avoidance and long-term orientation.' },
   { name: 'European Values Study (EVS)', url: 'https://europeanvaluesstudy.eu/', status: 'catalog', category: 'Wellbeing & values',
     description: 'Large-scale, repeated survey of human values across Europe; integrated dataset available via GESIS.' },
   { name: 'Wellcome Global Monitor', url: 'https://wellcome.org/reports/wellcome-global-monitor', status: 'catalog', category: 'Wellbeing & values',

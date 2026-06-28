@@ -1,0 +1,199 @@
+{
+  "meta": {
+    "title": "Long-term Orientation",
+    "valueLabel": "Long-term Orientation",
+    "unit": "index 0–100",
+    "changeMode": "pp",
+    "topic": "attitudes",
+    "summary": "Future-oriented pragmatism vs respect for tradition and the present. Hofstede’s cultural dimensions.",
+    "source": "Hofstede cultural dimensions (G. Hofstede)",
+    "license": "Public — Hofstede model",
+    "url": "https://geerthofstede.com/research-and-vsm/dimension-data-matrix/",
+    "parsedAt": "2026-06-28",
+    "kind": "survey"
+  },
+  "data": [
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2010",
+      "value": 31,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Bangladesh",
+      "group": "Asia",
+      "period": "2010",
+      "value": 40,
+      "iso": "BGD"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Other",
+      "period": "2010",
+      "value": 65,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Canada",
+      "group": "Other",
+      "period": "2010",
+      "value": 23,
+      "iso": "CAN"
+    },
+    {
+      "entity": "China",
+      "group": "Asia",
+      "period": "2010",
+      "value": 118,
+      "iso": "CHN"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2010",
+      "value": 13,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2010",
+      "value": 31,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2010",
+      "value": 96,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2010",
+      "value": 50,
+      "iso": "HUN"
+    },
+    {
+      "entity": "India",
+      "group": "Asia",
+      "period": "2010",
+      "value": 61,
+      "iso": "IND"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2010",
+      "value": 80,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2010",
+      "value": 44,
+      "iso": "NLD"
+    },
+    {
+      "entity": "New Zealand",
+      "group": "Asia",
+      "period": "2010",
+      "value": 30,
+      "iso": "NZL"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2010",
+      "value": 20,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Pakistan",
+      "group": "Asia",
+      "period": "2010",
+      "value": 0,
+      "iso": "PAK"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2010",
+      "value": 19,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2010",
+      "value": 32,
+      "iso": "POL"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2010",
+      "value": 48,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Slovakia",
+      "group": "Europe",
+      "period": "2010",
+      "value": 38,
+      "iso": "SVK"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2010",
+      "value": 75,
+      "iso": "KOR"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2010",
+      "value": 33,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2010",
+      "value": 87,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Thailand",
+      "group": "Asia",
+      "period": "2010",
+      "value": 56,
+      "iso": "THA"
+    },
+    {
+      "entity": "United Kingdom",
+      "group": "Europe",
+      "period": "2010",
+      "value": 25,
+      "iso": "GBR"
+    },
+    {
+      "entity": "United States",
+      "group": "Other",
+      "period": "2010",
+      "value": 29,
+      "iso": "USA"
+    },
+    {
+      "entity": "Vietnam",
+      "group": "Asia",
+      "period": "2010",
+      "value": 80,
+      "iso": "VNM"
+    }
+  ]
+}
