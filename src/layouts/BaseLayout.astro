@@ -15,6 +15,9 @@ const nav = [
   { id: 'surveys', label: 'Study', href: `${base}/surveys` },
 ];
 const fullTitle = title ? `${title} · BullDozer` : 'BullDozer — Marketing Analytics & Research';
+const desc = description ?? 'Marketing analytics & research — public, parsed survey and macro data, visual stories and a world map.';
+const canonical = new URL(Astro.url.pathname, 'https://shpara.com').href;
+const ogImage = `https://shpara.com${base}/og.png`;
 ---
 <!doctype html>
 <html lang="en">
@@ -23,7 +26,20 @@ const fullTitle = title ? `${title} · BullDozer` : 'BullDozer — Marketing Ana
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <title>{fullTitle}</title>
-    {description && <meta name="description" content={description} />}
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="BullDozer" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={desc} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
