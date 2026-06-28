@@ -19,7 +19,7 @@ const PAIRINGS: Record<string, { y: string; title: string }> = {
   'imf-inflation': { y: 'imf-gdp-growth', title: 'Inflation × growth' },
 };
 import { groupRollups, isSinglePeriod } from '@lib/analytics';
-import { formatChange, pctClass } from '@lib/format';
+import { formatChange, pctClass, formatNum } from '@lib/format';
 
 export function getStaticPaths() {
   return datasets.map((d) => ({ params: { slug: d.slug } }));
@@ -96,7 +96,7 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
               <tr>
                 <td>{g.group}</td>
                 <td class="num">{g.members}</td>
-                <td class="num">{g.value}{pctUnit}</td>
+                <td class="num">{formatNum(g.value)}{pctUnit}</td>
                 <td class={`num ${pctClass(g.pct)}`}>{formatChange(g.pct, ds.changeMode)}</td>
               </tr>
             ))}

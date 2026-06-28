@@ -1,7 +1,7 @@
 ---
 import type { Observation, ChangeMode } from '@lib/analytics';
 import { topGrowth, topDecline } from '@lib/analytics';
-import { formatChange, pctClass } from '@lib/format';
+import { formatChange, pctClass, formatNum } from '@lib/format';
 
 interface Props { data: Observation[]; n?: number; unit?: string; mode?: ChangeMode }
 const { data, n = 5, unit = '', mode = 'pct' } = Astro.props;
@@ -17,7 +17,7 @@ const down = topDecline(data, n, mode);
         {up.map((r) => (
           <tr>
             <td>{r.entity}</td>
-            <td class="num">{r.curr}{unit}</td>
+            <td class="num">{formatNum(r.curr)}{unit}</td>
             <td class={`num ${pctClass(r.pct)}`}>{formatChange(r.pct, mode)}</td>
           </tr>
         ))}
@@ -32,7 +32,7 @@ const down = topDecline(data, n, mode);
         {down.map((r) => (
           <tr>
             <td>{r.entity}</td>
-            <td class="num">{r.curr}{unit}</td>
+            <td class="num">{formatNum(r.curr)}{unit}</td>
             <td class={`num ${pctClass(r.pct)}`}>{formatChange(r.pct, mode)}</td>
           </tr>
         ))}

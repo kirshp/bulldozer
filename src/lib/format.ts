@@ -11,6 +11,11 @@ export function formatFull(n: number): string {
   return Math.round(n).toLocaleString('en-US');
 }
 
+/** Thousands separators, keeping up to 1 decimal (e.g. 74,953.3 / 51.1). */
+export function formatNum(n: number): string {
+  return n.toLocaleString('en-US', { maximumFractionDigits: 1 });
+}
+
 export function formatPct(pct: number): string {
   const sign = pct > 0 ? '+' : '';
   return `${sign}${pct.toFixed(1)}%`;

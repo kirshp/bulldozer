@@ -1,7 +1,7 @@
 ---
 import type { Observation, ChangeMode } from '@lib/analytics';
 import { topByVolume, computeChanges } from '@lib/analytics';
-import { formatChange, pctClass } from '@lib/format';
+import { formatChange, pctClass, formatNum } from '@lib/format';
 
 interface Props { data: Observation[]; n?: number; unit?: string; mode?: ChangeMode }
 const { data, n = 10, unit = '', mode = 'pct' } = Astro.props;
@@ -26,7 +26,7 @@ const width = (v: number) => Math.max(0, Math.min(100, ((v - base) / span) * 100
         <span>{r.entity}</span>
         <span class="bar-track"><span class={`bar-fill move-${cls}`} style={`width:${width(r.curr)}%`}></span></span>
         <span class="bar-val">
-          {r.curr}{unit}
+          {formatNum(r.curr)}{unit}
           {ch !== undefined && <em class={cls}>{formatChange(ch, mode)}</em>}
         </span>
       </div>

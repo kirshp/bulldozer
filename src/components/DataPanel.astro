@@ -87,6 +87,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
 
   const changeVal = (cv, pv, mode) => mode === 'pp' ? cv - pv : (pv ? (cv - pv) / pv * 100 : 0);
   const fmtChange = (v, mode) => (v > 0 ? '+' : '') + v.toFixed(Math.abs(v) < 1 ? 2 : 1) + (mode === 'pp' ? 'pp' : '%');
+  const fmtNum = (n) => n.toLocaleString('en-US', { maximumFractionDigits: 1 });
   const moveClass = (v) => v > 0.5 ? 'up' : v < -0.5 ? 'down' : 'flat';
 
   function rowsFor(ds) {
@@ -140,7 +141,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
       const w = Math.max(0, Math.min(100, (r.value - base) / span * 100));
       const cls = r.change == null ? 'flat' : moveClass(r.change);
       const chg = r.change == null ? '' : `<em class="${cls}">${fmtChange(r.change, m.changeMode)}</em>`;
-      return `<div class="bar-row"><span>${r.entity}</span><span class="bar-track"><span class="bar-fill move-${cls}" style="width:${w}%"></span></span><span class="bar-val">${r.value}${unit}${chg}</span></div>`;
+      return `<div class="bar-row"><span>${r.entity}</span><span class="bar-track"><span class="bar-fill move-${cls}" style="width:${w}%"></span></span><span class="bar-val">${fmtNum(r.value)}${unit}${chg}</span></div>`;
     }).join('');
   }
 
@@ -150,7 +151,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
     el('table-target').innerHTML = head + '<tbody>' + rows.map((r) => {
       const cls = r.change == null ? 'flat' : moveClass(r.change);
       const chg = r.change == null ? '—' : `<span class="${cls}">${fmtChange(r.change, m.changeMode)}</span>`;
-      return `<tr><td>${r.entity}</td><td>${r.group || ''}</td><td class="num">${r.value}${unit}</td><td class="num">${chg}</td></tr>`;
+      return `<tr><td>${r.entity}</td><td>${r.group || ''}</td><td class="num">${fmtNum(r.value)}${unit}</td><td class="num">${chg}</td></tr>`;
     }).join('') + '</tbody>';
   }
 
