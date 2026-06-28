@@ -12,7 +12,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvRows, parseCsvObjects } from './lib/csv.mjs';
-import { enRegion, REGION_4, latestTwo, pickPeriods, writeDataset, round } from './lib/datasets.mjs';
+import { enRegion, REGION_4, latestN, pickPeriodsN, writeDataset, round } from './lib/datasets.mjs';
 
 const ICLOUD = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs');
 const GAPMINDER_DIR = process.env.GAPMINDER_DIR || join(ICLOUD, 'BK', 'Opros', 'Inter_survey', 'Gapminder');
@@ -102,8 +102,8 @@ async function parseGapminder(geoMap) {
       if (!rec) byGeo.set(row.geo, (rec = {}));
       rec[row.time] = v;
     }
-    const [prev, curr] = pickPeriods(yearCounts);
-    if (!prev || !curr) {
+    const keep = pickPeriodsN(yearCounts, 8);
+    if (keep.length < 2) {
       console.log(`  – ${cfg.slug}: not enough years, skipped`);
       continue;
     }
@@ -111,14 +111,14 @@ async function parseGapminder(geoMap) {
     const data = [];
     for (const [geo, rec] of byGeo) {
       const g = geoMap.get(geo);
-      for (const period of [prev, curr]) {
+      for (const period of keep) {
         if (rec[period] == null) continue;
         data.push({ entity: g.name, group: g.region, period, value: round(rec[period], cfg.dp), iso: g.iso });
       }
     }
     await writeDataset('survey', cfg.slug, {
       title: cfg.title,
-      summary: `${cfg.summary} Gapminder, ${prev}–${curr}.`,
+      summary: `${cfg.summary} Gapminder, ${keep[0]}–${keep.at(-1)}.`,
       unit: cfg.unit,
       valueLabel: cfg.valueLabel,
       changeMode: cfg.changeMode,
@@ -188,18 +188,18 @@ async function parseWHR(geoMap) {
   }
 
   for (const [code, cfg] of Object.entries(WHR_INDICATORS)) {
-    const [prev, curr] = latestTwo([...yearsByCode.get(code)]);
-    if (!prev || !curr) continue;
+    const keep = latestN([...yearsByCode.get(code)], 8);
+    if (keep.length < 2) continue;
     const data = [];
     for (const [country, rec] of byCode.get(code)) {
-      for (const period of [prev, curr]) {
+      for (const period of keep) {
         if (rec.byYear[period] == null) continue;
         data.push({ entity: country, group: rec.region, period, value: round(rec.byYear[period], 3), iso: name2iso.get(country.toLowerCase()) || '' });
       }
     }
     await writeDataset('survey', cfg.slug, {
       title: cfg.title,
-      summary: `${cfg.summary} World Happiness Report, ${prev}–${curr}.`,
+      summary: `${cfg.summary} World Happiness Report, ${keep[0]}–${keep.at(-1)}.`,
       unit: cfg.unit,
       valueLabel: cfg.valueLabel,
       changeMode: 'pp',

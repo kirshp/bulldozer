@@ -10,7 +10,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { enRegion, latestTwo, writeDataset, round } from './lib/datasets.mjs';
+import { enRegion, latestN, writeDataset, round } from './lib/datasets.mjs';
 
 const SRC =
   process.env.IMF_WEO_CSV ||
@@ -84,15 +84,15 @@ async function main() {
     const map = collected[code];
     const allYears = new Set();
     for (const rec of map.values()) for (const y of Object.keys(rec.byYear)) allYears.add(y);
-    const [prev, curr] = latestTwo([...allYears], REF_YEAR);
-    if (!prev || !curr) {
+    const keep = latestN([...allYears], 8, REF_YEAR);
+    if (keep.length < 2) {
       console.log(`  – ${cfg.slug}: not enough years, skipped`);
       continue;
     }
 
     const data = [];
     for (const [country, rec] of map) {
-      for (const period of [prev, curr]) {
+      for (const period of keep) {
         const v = rec.byYear[period];
         if (v == null) continue;
         data.push({ entity: country, group: rec.region, period, value: round(v, cfg.dp), iso: rec.iso });
@@ -101,7 +101,7 @@ async function main() {
 
     await writeDataset('macro', cfg.slug, {
       title: cfg.title,
-      summary: `${cfg.summary} IMF WEO, ${prev}–${curr}.`,
+      summary: `${cfg.summary} IMF WEO, ${keep[0]}–${keep.at(-1)}.`,
       unit: cfg.unit,
       valueLabel: cfg.valueLabel,
       changeMode: cfg.changeMode,

@@ -5,6 +5,7 @@ import KpiRow from '@components/KpiRow.astro';
 import DataPanel from '@components/DataPanel.astro';
 import MoversTable from '@components/MoversTable.astro';
 import GroupChart from '@components/GroupChart.astro';
+import TrendChart from '@components/TrendChart.astro';
 import BivariateMap from '@components/BivariateMap.astro';
 import { datasets, getDataset } from '@data/datasets';
 
@@ -30,6 +31,7 @@ const ds = getDataset(slug!)!;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const groups = groupRollups(ds.data, ds.changeMode);
 const single = isSinglePeriod(ds.data);
+const periodCount = new Set(ds.data.map((o) => o.period)).size;
 const pairing = PAIRINGS[ds.slug];
 const pctUnit = ds.unit === '%' ? '%' : '';
 const panelIndicator = [{
@@ -62,6 +64,16 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
       <DataPanel indicators={panelIndicator} pinnedSlug={ds.slug} />
     </div>
   </section>
+
+  {periodCount > 2 && (
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <h2>Trend over time</h2>
+        <p class="sub">Group average by period, {[...new Set(ds.data.map((o) => o.period))].sort()[0]}–{[...new Set(ds.data.map((o) => o.period))].sort().at(-1)}.</p>
+        <TrendChart data={ds.data} unit={pctUnit} />
+      </div>
+    </section>
+  )}
 
   {pairing && (
     <section class="section" style="padding-top:0">

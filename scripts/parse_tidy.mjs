@@ -11,7 +11,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { enRegion, pickPeriods, writeDataset, round } from './lib/datasets.mjs';
+import { enRegion, pickPeriodsN, writeDataset, round } from './lib/datasets.mjs';
 
 const H = homedir();
 const TD = join(H, 'Documents', 'tableau_data');
@@ -116,14 +116,14 @@ async function parseSource(src) {
 
   let written = 0;
   for (const [code, cfg] of Object.entries(src.indicators)) {
-    const [prev, curr] = pickPeriods(yearCounts.get(code));
-    if (!prev || !curr) {
+    const keep = pickPeriodsN(yearCounts.get(code), 8);
+    if (keep.length < 2) {
       console.log(`  – ${cfg.title} (${src.tag}): not enough years, skipped`);
       continue;
     }
     const data = [];
     for (const [country, rec] of byCode.get(code)) {
-      for (const period of [prev, curr]) {
+      for (const period of keep) {
         let v = rec.byYear[period];
         if (v == null) continue;
         if (cfg.scale) v *= cfg.scale;
@@ -134,7 +134,7 @@ async function parseSource(src) {
     const slug = `${src.tag.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${code.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
     await writeDataset(src.kind, slug, {
       title: `${cfg.title} (${src.tag})`,
-      summary: `${cfg.title}. ${src.source}, ${prev}–${curr}.`,
+      summary: `${cfg.title}. ${src.source}, ${keep[0]}–${keep.at(-1)}.`,
       unit: cfg.unit,
       valueLabel: cfg.title,
       changeMode: cfg.mode,

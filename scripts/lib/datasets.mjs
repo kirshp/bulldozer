@@ -38,6 +38,26 @@ export function latestTwo(periods, maxYear) {
   return years.slice(-2).map(String);
 }
 
+/** The most recent N periods present, optionally capped at `maxYear`. */
+export function latestN(periods, n, maxYear) {
+  let years = [...new Set(periods)].map(Number).filter((y) => !Number.isNaN(y));
+  if (maxYear) years = years.filter((y) => y <= maxYear);
+  years.sort((a, b) => a - b);
+  return years.slice(-n).map(String);
+}
+
+/** The most recent N years with decent coverage (coverage-aware), capped. */
+export function pickPeriodsN(counts, n, maxYear) {
+  let entries = [...counts.entries()].map(([y, c]) => [Number(y), c]).filter(([y]) => !Number.isNaN(y));
+  if (maxYear) entries = entries.filter(([y]) => y <= maxYear);
+  if (!entries.length) return [];
+  const maxCount = Math.max(...entries.map(([, c]) => c));
+  const threshold = Math.max(5, maxCount * 0.5);
+  let eligible = entries.filter(([, c]) => c >= threshold).sort((a, b) => a[0] - b[0]);
+  if (eligible.length < 2) eligible = entries.sort((a, b) => a[0] - b[0]);
+  return eligible.slice(-n).map(([y]) => String(y));
+}
+
 /** Pick the two most recent years that have decent coverage, so a sparse
  *  tail (a handful of late reporters) doesn't produce a thin dashboard.
  *  `counts` is a Map<yearString, entityCount>. */

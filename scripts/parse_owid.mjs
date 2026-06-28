@@ -8,7 +8,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects, parseCsvRows } from './lib/csv.mjs';
-import { REGION_4, pickPeriods, writeDataset, round } from './lib/datasets.mjs';
+import { REGION_4, pickPeriodsN, writeDataset, round } from './lib/datasets.mjs';
 
 const GAP = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs', 'BK', 'Opros', 'Inter_survey', 'Gapminder', 'ddf--entities--geo--country.csv');
 const REF_YEAR = new Date().getFullYear();
@@ -59,16 +59,15 @@ async function main() {
       rec.byYear[y] = v;
       yearCounts.set(y, (yearCounts.get(y) ?? 0) + 1);
     }
-    const [prev, curr] = pickPeriods(yearCounts, REF_YEAR);
-    if (!curr) { console.log(`  – ${cfg.slug}: no usable years`); continue; }
-    const periods = prev === curr ? [curr] : [prev, curr];
+    const periods = pickPeriodsN(yearCounts, 8, REF_YEAR);
+    if (!periods.length) { console.log(`  – ${cfg.slug}: no usable years`); continue; }
     const data = [];
     for (const [iso, rec] of byIso) for (const p of periods) {
       if (rec.byYear[p] == null) continue;
       data.push({ entity: rec.name, group: region.get(iso) || 'Other', period: p, value: round(rec.byYear[p], cfg.dp), iso });
     }
     await writeDataset('macro', cfg.slug, {
-      title: cfg.title, summary: `${cfg.summary} Our World in Data, ${periods.join('–')}.`,
+      title: cfg.title, summary: `${cfg.summary} Our World in Data, ${periods[0]}–${periods.at(-1)}.`,
       unit: cfg.unit, valueLabel: cfg.title, changeMode: cfg.mode, topic: cfg.topic,
       source: 'Our World in Data', license: 'CC BY 4.0',
       url: `https://ourworldindata.org/grapher/${cfg.grapher}`, parsedAt: new Date().toISOString().slice(0, 10),

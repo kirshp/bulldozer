@@ -11,7 +11,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, pickPeriods, writeDataset, round } from './lib/datasets.mjs';
+import { REGION_4, pickPeriodsN, writeDataset, round } from './lib/datasets.mjs';
 
 const H = homedir();
 const WRP_CSV = process.env.WRP_CSV ||
@@ -39,8 +39,7 @@ async function iso3Region() {
 async function emit(slug, meta, rows, region) {
   const yearCounts = new Map();
   for (const r of rows) yearCounts.set(r.period, (yearCounts.get(r.period) ?? 0) + 1);
-  const [prev, curr] = pickPeriods(yearCounts);
-  const periods = prev === curr ? [curr] : [prev, curr];
+  const periods = pickPeriodsN(yearCounts, 8);
   const data = rows
     .filter((r) => periods.includes(r.period))
     .map((r) => ({ entity: r.entity, group: region.get(r.iso) || 'Other', period: r.period, value: r.value, iso: r.iso }));
