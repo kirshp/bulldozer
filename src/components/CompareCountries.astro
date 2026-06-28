@@ -1,5 +1,6 @@
 ---
 import { TOPICS, TOPIC_ORDER } from '@lib/topics';
+import isoAlpha2 from '@data/iso-alpha2.json';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: TOPICS[id].icon }));
 ---
@@ -12,8 +13,11 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
 </div>
 
 <script type="application/json" id="cmp-topics" set:html={JSON.stringify(topicMeta)}></script>
+<script type="application/json" id="cmp-a2" set:html={JSON.stringify(isoAlpha2)}></script>
 <script define:vars={{ base }}>
   const TOPICS = JSON.parse(document.getElementById('cmp-topics').textContent);
+  const isoAlpha2 = JSON.parse(document.getElementById('cmp-a2').textContent);
+  const flag = (iso) => { const a2 = iso && isoAlpha2[iso.toUpperCase()]; return a2 ? String.fromCodePoint(...[...a2].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) + ' ' : ''; };
   const add = document.getElementById('cmp-add');
   const chipsEl = document.getElementById('cmp-chips');
   const tableEl = document.getElementById('cmp-table');
@@ -31,10 +35,10 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
 
   function renderChips() {
     chipsEl.innerHTML = selected.map((iso) =>
-      `<span class="chip">${(byIso[iso] || {}).name || iso}<button data-rm="${iso}">×</button></span>`).join('');
+      `<span class="chip">${flag(iso)}${(byIso[iso] || {}).name || iso}<button data-rm="${iso}">×</button></span>`).join('');
     add.innerHTML = '<option value="">＋ add country…</option>' +
       countries.filter((c) => !selected.includes(c.iso))
-        .map((c) => `<option value="${c.iso}">${c.name}</option>`).join('');
+        .map((c) => `<option value="${c.iso}">${flag(c.iso)}${c.name}</option>`).join('');
   }
 
   function renderTable() {
@@ -43,7 +47,7 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     // union of indicators, keyed by slug → {title, topic, unit}
     const ind = new Map();
     for (const c of cols) for (const it of c.items) if (!ind.has(it.slug)) ind.set(it.slug, it);
-    let html = `<table class="data"><thead><tr><th>Indicator</th>${cols.map((c) => `<th class="num">${c.name}</th>`).join('')}</tr></thead><tbody>`;
+    let html = `<table class="data"><thead><tr><th>Indicator</th>${cols.map((c) => `<th class="num">${flag(c.iso)}${c.name}</th>`).join('')}</tr></thead><tbody>`;
     for (const t of TOPICS) {
       const rows = [...ind.values()].filter((i) => i.topic === t.id).sort((a, b) => a.title.localeCompare(b.title));
       if (!rows.length) continue;

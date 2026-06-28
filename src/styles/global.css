@@ -145,6 +145,13 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .gloss-term h3 { margin: 0 0 4px; }
 .gloss-term p { margin: 0; color: var(--text-dim); }
 
+/* Indicator pictogram */
+.ind-ic { display: inline-block; margin-right: 7px; font-size: 0.95em; opacity: 0.9; }
+
+/* Methodology note */
+.method-note { font-size: 13px; color: var(--text-dim); background: var(--bg-elev); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 14px 0 0; line-height: 1.55; }
+.method-note b { color: var(--text); font-weight: 600; }
+
 /* Back link — large tap target */
 .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 500; color: var(--accent); background: var(--bg-card); border: 1px solid var(--border); border-radius: 999px; padding: 9px 18px; margin-bottom: 18px; }
 .back-link:hover { text-decoration: none; border-color: var(--accent); }

@@ -164,7 +164,13 @@ export interface GroupRollup {
   pct: number;
 }
 
-export function groupRollups(data: Observation[], mode: ChangeMode = 'pct'): GroupRollup[] {
+/** Volumes/counts (population, total GDP) are additive — they can be summed.
+ *  Rates, per-capita values and indices must be averaged across countries. */
+export function isAdditive(unit: string): boolean {
+  return /\bbn\b/.test(unit) || unit === 'million' || unit === 'thousand';
+}
+
+export function groupRollups(data: Observation[], mode: ChangeMode = 'pct', additive = false): GroupRollup[] {
   const [prevPeriod, currPeriod] = lastTwoPeriods(data);
   const groups = new Map<string, Observation[]>();
   for (const d of data) {
@@ -173,25 +179,26 @@ export function groupRollups(data: Observation[], mode: ChangeMode = 'pct'): Gro
     arr.push(d);
     groups.set(d.group, arr);
   }
+  const r1 = (n: number) => Math.round(n * 10) / 10;
 
   const result: GroupRollup[] = [];
   for (const [group, rows] of groups) {
     const currRows = rows.filter((r) => r.period === currPeriod);
     const prevRows = rows.filter((r) => r.period === prevPeriod);
-    const currVal = currRows.reduce((a, b) => a + b.value, 0);
-    const prevVal = prevRows.reduce((a, b) => a + b.value, 0);
-    const members = new Set(currRows.map((r) => r.entity)).size;
+    const currSum = currRows.reduce((a, b) => a + b.value, 0);
+    const prevSum = prevRows.reduce((a, b) => a + b.value, 0);
+    const members = currRows.length;
     if (members === 0) continue;
 
-    // For rates, report the change of the group mean (in points); for volumes,
-    // the percent change of the group total. `value` is mean for rates, sum for volumes.
-    const value =
-      mode === 'pp' ? Math.round((currVal / members) * 10) / 10 : Math.round(currVal * 10) / 10;
-    const pct =
-      mode === 'pp'
-        ? Math.round((currVal / members - prevVal / (prevRows.length || 1)) * 10) / 10
-        : Math.round((prevVal ? ((currVal - prevVal) / prevVal) * 100 : 0) * 10) / 10;
-    result.push({ group, members, value, pct });
+    // Sum only for additive volumes; otherwise the simple cross-country mean.
+    const currMean = currSum / members;
+    const prevMean = prevSum / (prevRows.length || 1);
+    const value = additive ? r1(currSum) : r1(currMean);
+    let pct: number;
+    if (mode === 'pp') pct = r1(currMean - prevMean); // points change of the mean
+    else if (additive) pct = r1(prevSum ? ((currSum - prevSum) / prevSum) * 100 : 0);
+    else pct = r1(prevMean ? ((currMean - prevMean) / prevMean) * 100 : 0);
+    result.push({ group, members: new Set(currRows.map((r) => r.entity)).size, value, pct });
   }
   return result.sort((a, b) => b.value - a.value);
 }

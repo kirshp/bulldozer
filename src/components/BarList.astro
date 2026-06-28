@@ -2,10 +2,13 @@
 import type { Observation, ChangeMode } from '@lib/analytics';
 import { topByVolume, computeChanges } from '@lib/analytics';
 import { formatChange, pctClass, formatNum } from '@lib/format';
+import { flagFor } from '@lib/flags';
 
 interface Props { data: Observation[]; n?: number; unit?: string; mode?: ChangeMode }
 const { data, n = 10, unit = '', mode = 'pct' } = Astro.props;
 const rows = topByVolume(data, n);
+const isoOf = new Map(data.filter((o) => o.iso).map((o) => [o.entity, o.iso!]));
+const label = (e: string) => { const f = flagFor(isoOf.get(e)); return f ? f + ' ' + e : e; };
 
 // Movement per entity, to colour bars green/red/grey (Madeira dashboard style).
 const changeByEntity = new Map(computeChanges(data, mode).map((c) => [c.entity, c.pct]));
@@ -23,7 +26,7 @@ const width = (v: number) => Math.max(0, Math.min(100, ((v - base) / span) * 100
     const cls = ch === undefined ? 'flat' : pctClass(ch);
     return (
       <div class="bar-row">
-        <span>{r.entity}</span>
+        <span>{label(r.entity)}</span>
         <span class="bar-track"><span class={`bar-fill move-${cls}`} style={`width:${width(r.curr)}%`}></span></span>
         <span class="bar-val">
           {formatNum(r.curr)}{unit}

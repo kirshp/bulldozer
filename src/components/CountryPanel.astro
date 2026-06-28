@@ -1,6 +1,7 @@
 ---
 import WorldMap from '@components/WorldMap.astro';
 import isoNumeric from '@data/iso-numeric.json';
+import isoAlpha2 from '@data/iso-alpha2.json';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <div class="country-panel">
@@ -21,8 +22,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 </div>
 
 <script type="application/json" id="cp-iso" set:html={JSON.stringify(isoNumeric)}></script>
+<script type="application/json" id="cp-a2" set:html={JSON.stringify(isoAlpha2)}></script>
 <script define:vars={{ base }}>
   const isoNumeric = JSON.parse(document.getElementById('cp-iso').textContent);
+  const isoAlpha2 = JSON.parse(document.getElementById('cp-a2').textContent);
+  const flag = (iso) => { const a2 = iso && isoAlpha2[iso.toUpperCase()]; return a2 ? String.fromCodePoint(...[...a2].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) + ' ' : ''; };
   const numByIso = Object.fromEntries(Object.entries(isoNumeric).map(([n, a]) => [a, n]));
   const sel = document.getElementById('country-sel');
   const descEl = document.getElementById('country-desc');
@@ -93,7 +97,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   function render() {
     const c = countries.find((x) => x.iso === sel.value);
     if (!c) return;
-    nameEl.textContent = c.name;
+    nameEl.textContent = flag(c.iso) + c.name;
     descEl.textContent = describe(c);
     renderItems(c);
     highlight(c);
@@ -102,7 +106,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   fetch(`${base}/data/country-index.json`).then((r) => r.json()).then((data) => {
     countries = data;
-    sel.innerHTML = data.map((c) => `<option value="${c.iso}">${c.name}</option>`).join('');
+    sel.innerHTML = data.map((c) => `<option value="${c.iso}">${flag(c.iso)}${c.name}</option>`).join('');
     const want = new URLSearchParams(location.search).get('c');
     const def = data.find((c) => c.iso === want) || data.find((c) => c.iso === 'FIN') || data[0];
     if (def) sel.value = def.iso;

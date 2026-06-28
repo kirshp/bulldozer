@@ -19,8 +19,9 @@ const PAIRINGS: Record<string, { y: string; title: string }> = {
   'imf-gdp-growth': { y: 'imf-inflation', title: 'Growth × inflation' },
   'imf-inflation': { y: 'imf-gdp-growth', title: 'Inflation × growth' },
 };
-import { groupRollups, isSinglePeriod } from '@lib/analytics';
+import { groupRollups, isSinglePeriod, isAdditive } from '@lib/analytics';
 import { formatChange, pctClass, formatNum } from '@lib/format';
+import { TOPICS } from '@lib/topics';
 
 export function getStaticPaths() {
   return datasets.map((d) => ({ params: { slug: d.slug } }));
@@ -29,7 +30,8 @@ export function getStaticPaths() {
 const { slug } = Astro.params;
 const ds = getDataset(slug!)!;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const groups = groupRollups(ds.data, ds.changeMode);
+const additive = isAdditive(ds.unit);
+const groups = groupRollups(ds.data, ds.changeMode, additive);
 const single = isSinglePeriod(ds.data);
 const periodCount = new Set(ds.data.map((o) => o.period)).size;
 const pairing = PAIRINGS[ds.slug];
@@ -46,9 +48,15 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
   <section class="section">
     <div class="container">
       <a class="back-link" href={backHref}>← {ds.kind === 'survey' ? 'Study' : 'Macro'}</a>
-      <h2>{ds.title}</h2>
+      <h2><span class="ind-ic" aria-hidden="true">{TOPICS[ds.topic]?.icon}</span>{ds.title}</h2>
       <p class="sub">{ds.summary}</p>
       <Provenance meta={ds} />
+      {(ds.vintage || ds.method) && (
+        <p class="method-note">
+          {ds.vintage && <span><b>Period:</b> {ds.vintage}. </span>}
+          {ds.method && <span><b>Method:</b> {ds.method}</span>}
+        </p>
+      )}
       <p style="margin-top:12px"><a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/data/${ds.slug}.csv`} download>↓ Download CSV</a></p>
     </div>
   </section>
@@ -101,10 +109,10 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
       <div class="container">
         <h2>By group</h2>
         <p class="sub">Change by group, latest period.</p>
-        <GroupChart data={ds.data} mode={ds.changeMode} />
+        <GroupChart data={ds.data} mode={ds.changeMode} additive={additive} />
         <div style="height:24px"></div>
         <table class="data">
-          <thead><tr><th>Group</th><th class="num">Members</th><th class="num">{ds.changeMode === 'pp' ? 'Avg' : 'Total'}</th><th class="num">Change</th></tr></thead>
+          <thead><tr><th>Group</th><th class="num">Members</th><th class="num">{additive ? 'Total' : 'Avg'}</th><th class="num">Change</th></tr></thead>
           <tbody>
             {groups.map((g) => (
               <tr>
@@ -128,7 +136,7 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
         <div class="grid cols-3">
           {related.map((d) => (
             <a class="card link" href={`${base}/dataset/${d.slug}`}>
-              <h3 style="font-size:15px">{d.title}</h3>
+              <h3 style="font-size:15px"><span class="ind-ic" aria-hidden="true">{TOPICS[d.topic]?.icon}</span>{d.title}</h3>
               <p class="meta">{d.source}</p>
             </a>
           ))}

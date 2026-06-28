@@ -1,6 +1,7 @@
 ---
 import WorldMap from '@components/WorldMap.astro';
 import isoNumeric from '@data/iso-numeric.json';
+import isoAlpha2 from '@data/iso-alpha2.json';
 
 // Reusable interactive panel: indicator (optional) + period + country search +
 // Bars/Table/Map views. Used by /explore (all indicators) and each dataset
@@ -48,10 +49,14 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
 
 <script type="application/json" id="bd-config" set:html={JSON.stringify(config)}></script>
 <script type="application/json" id="bd-iso" set:html={JSON.stringify(isoNumeric)}></script>
+<script type="application/json" id="bd-a2" set:html={JSON.stringify(isoAlpha2)}></script>
 
 <script>
   const cfg = JSON.parse(document.getElementById('bd-config').textContent);
   const isoNumeric = JSON.parse(document.getElementById('bd-iso').textContent); // numeric -> alpha3
+  const isoAlpha2 = JSON.parse(document.getElementById('bd-a2').textContent);   // alpha3 -> alpha2
+  // Flag emoji from alpha-3; '' for aggregates/unknowns (decorative only).
+  const flag = (iso) => { const a2 = iso && isoAlpha2[iso.toUpperCase()]; return a2 ? String.fromCodePoint(...[...a2].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) + ' ' : ''; };
   const BASE = cfg.base;
   const el = (id) => document.getElementById(id);
   const selI = el('sel-indicator'), selP = el('sel-period'), selQ = el('sel-query');
@@ -156,7 +161,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
       const w = Math.max(0, Math.min(100, (r.value - base) / span * 100));
       const cls = r.change == null ? 'flat' : moveClass(r.change);
       const chg = r.change == null ? '' : `<em class="${cls}">${fmtChange(r.change, m.changeMode)}</em>`;
-      return `<div class="bar-row"><span>${r.entity}</span><span class="bar-track"><span class="bar-fill move-${cls}" style="width:${w}%"></span></span><span class="bar-val">${fmtNum(r.value)}${unit}${chg}</span></div>`;
+      return `<div class="bar-row"><span>${flag(r.iso)}${r.entity}</span><span class="bar-track"><span class="bar-fill move-${cls}" style="width:${w}%"></span></span><span class="bar-val">${fmtNum(r.value)}${unit}${chg}</span></div>`;
     }).join('');
   }
 
@@ -166,7 +171,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
     el('table-target').innerHTML = head + '<tbody>' + rows.map((r) => {
       const cls = r.change == null ? 'flat' : moveClass(r.change);
       const chg = r.change == null ? '—' : `<span class="${cls}">${fmtChange(r.change, m.changeMode)}</span>`;
-      return `<tr><td>${r.entity}</td><td>${r.group || ''}</td><td class="num">${fmtNum(r.value)}${unit}</td><td class="num">${chg}</td></tr>`;
+      return `<tr><td>${flag(r.iso)}${r.entity}</td><td>${r.group || ''}</td><td class="num">${fmtNum(r.value)}${unit}</td><td class="num">${chg}</td></tr>`;
     }).join('') + '</tbody>';
   }
 

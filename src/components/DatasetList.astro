@@ -23,7 +23,7 @@ const groups = TOPIC_ORDER
         {g.list.map((d) => (
           <a class="card link dl-card" href={`${base}/dataset/${d.slug}`}
              data-text={`${d.title} ${d.source} ${d.valueLabel}`.toLowerCase()}>
-            <h3 style="font-size:16px">{d.title}</h3>
+            <h3 style="font-size:16px"><span class="ind-ic" aria-hidden="true">{g.topic.icon}</span>{d.title}</h3>
             <p class="meta">{d.summary}</p>
             <span class="pill">{d.source}</span>
           </a>

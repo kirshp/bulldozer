@@ -5,9 +5,9 @@ import { formatChange } from '@lib/format';
 
 // Diverging bar chart of period-over-period change per group — the web port of
 // the Madeira dashboard trend chart (green = up, red = down, from a zero axis).
-interface Props { data: Observation[]; mode?: ChangeMode }
-const { data, mode = 'pct' } = Astro.props;
-const groups = groupRollups(data, mode).sort((a, b) => b.pct - a.pct);
+interface Props { data: Observation[]; mode?: ChangeMode; additive?: boolean }
+const { data, mode = 'pct', additive = false } = Astro.props;
+const groups = groupRollups(data, mode, additive).sort((a, b) => b.pct - a.pct);
 const maxAbs = Math.max(1, ...groups.map((g) => Math.abs(g.pct)));
 const half = (pct: number) => (Math.abs(pct) / maxAbs) * 50;
 ---

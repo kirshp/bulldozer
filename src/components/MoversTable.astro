@@ -2,11 +2,14 @@
 import type { Observation, ChangeMode } from '@lib/analytics';
 import { topGrowth, topDecline } from '@lib/analytics';
 import { formatChange, pctClass, formatNum } from '@lib/format';
+import { flagFor } from '@lib/flags';
 
 interface Props { data: Observation[]; n?: number; unit?: string; mode?: ChangeMode }
 const { data, n = 5, unit = '', mode = 'pct' } = Astro.props;
 const up = topGrowth(data, n, mode);
 const down = topDecline(data, n, mode);
+const isoOf = new Map(data.filter((o) => o.iso).map((o) => [o.entity, o.iso!]));
+const label = (e: string) => { const f = flagFor(isoOf.get(e)); return f ? f + ' ' + e : e; };
 ---
 <div class="grid cols-2">
   <div>
@@ -16,7 +19,7 @@ const down = topDecline(data, n, mode);
       <tbody>
         {up.map((r) => (
           <tr>
-            <td>{r.entity}</td>
+            <td>{label(r.entity)}</td>
             <td class="num">{formatNum(r.curr)}{unit}</td>
             <td class={`num ${pctClass(r.pct)}`}>{formatChange(r.pct, mode)}</td>
           </tr>
@@ -31,7 +34,7 @@ const down = topDecline(data, n, mode);
       <tbody>
         {down.map((r) => (
           <tr>
-            <td>{r.entity}</td>
+            <td>{label(r.entity)}</td>
             <td class="num">{formatNum(r.curr)}{unit}</td>
             <td class={`num ${pctClass(r.pct)}`}>{formatChange(r.pct, mode)}</td>
           </tr>
