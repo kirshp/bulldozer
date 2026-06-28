@@ -22,6 +22,7 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
 <div class="country-panel">
   <div class="controls">
     <label>Country<select id="country-sel"><option>Loading…</option></select></label>
+    <button type="button" id="cc-export" class="ghost-btn" style="margin:0; align-self:flex-end">↓ Download country CSV</button>
   </div>
 
   <div class="country-card">
@@ -226,6 +227,21 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     render();
   });
   sel.addEventListener('change', () => { render(); syncUrl(); });
+  // Export every indicator for the selected country as a CSV.
+  function exportCsv() {
+    if (!currentC) return;
+    const esc = (s) => `"${String(s ?? '').replace(/"/g, '""')}"`;
+    const head = ['indicator', 'kind', 'topic', 'value', 'unit', 'period', 'rank', 'total'];
+    const lines = [head.join(',')];
+    for (const it of [...currentC.items].sort((a, b) => (a.kind === b.kind ? a.title.localeCompare(b.title) : a.kind < b.kind ? 1 : -1)))
+      lines.push([esc(it.title), it.kind, it.topic, it.value, esc(it.unit), it.period, it.rank, it.total].join(','));
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${currentC.name.replace(/[^\w]+/g, '_')}_bulldozer.csv`;
+    a.click(); URL.revokeObjectURL(a.href);
+  }
+  document.getElementById('cc-export').addEventListener('click', exportCsv);
   ciSearch.addEventListener('input', () => { ciState.q = ciSearch.value.trim(); if (currentC) renderItems(currentC); });
   ciSort.addEventListener('change', () => { ciState.sort = ciSort.value; if (currentC) renderItems(currentC); });
   ciTopic.addEventListener('change', () => { ciState.topic = ciTopic.value; if (currentC) renderItems(currentC); });
