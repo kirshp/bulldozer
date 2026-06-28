@@ -20,5 +20,7 @@ export function methodologyFor(slug: string): Methodology {
     return { vintage: 'Pooled harmonized waves (to ~2017)', method: 'SDR2 harmonization across 22 survey projects; weighted by T_WEIGHT_L2U; country mean of the harmonized target item.' };
   if (slug === 'wrp-resilience')
     return { vintage: 'World Risk Poll 2023', method: 'Weighted by WGT; Resilience Index rescaled to 0–100.' };
+  if (slug.startsWith('wrp-'))
+    return { vintage: 'World Risk Poll 2023 (Gallup)', method: 'Weighted by WGT; share giving the stated response, country level.' };
   return {};
 }
