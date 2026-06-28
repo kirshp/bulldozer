@@ -71,7 +71,16 @@ const config = { base, indicators };
     document.getElementById('biv-summary').textContent = `${common.length} countries with both indicators · darker = low, brighter = high`;
   }
 
-  elx.addEventListener('change', render); ely.addEventListener('change', render);
-  fillSelect(elx, 'whr-happiness'); fillSelect(ely, 'imf-gdp-per-capita-ppp');
+  function syncUrl() {
+    const p = new URLSearchParams(location.search);
+    p.set('bx', elx.value); p.set('by', ely.value);
+    history.replaceState(null, '', location.pathname + '?' + p.toString() + location.hash);
+  }
+  elx.addEventListener('change', () => { render(); syncUrl(); });
+  ely.addEventListener('change', () => { render(); syncUrl(); });
+  const bp = new URLSearchParams(location.search);
+  const valid = (s) => cfg.indicators.some((d) => d.slug === s);
+  fillSelect(elx, valid(bp.get('bx')) ? bp.get('bx') : 'whr-happiness');
+  fillSelect(ely, valid(bp.get('by')) ? bp.get('by') : 'imf-gdp-per-capita-ppp');
   fetch(`${BASE}/data/country-index.json`).then((r) => r.json()).then((d) => { countries = d; render(); });
 </script>

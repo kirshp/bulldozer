@@ -70,12 +70,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     highlight(c);
   }
 
+  function syncUrl() {
+    const p = new URLSearchParams(location.search);
+    p.set('c', sel.value);
+    history.replaceState(null, '', location.pathname + '?' + p.toString() + location.hash);
+  }
   fetch(`${base}/data/country-index.json`).then((r) => r.json()).then((data) => {
     countries = data;
     sel.innerHTML = data.map((c) => `<option value="${c.iso}">${c.name}</option>`).join('');
-    const def = data.find((c) => c.iso === 'FIN') || data[0];
+    const want = new URLSearchParams(location.search).get('c');
+    const def = data.find((c) => c.iso === want) || data.find((c) => c.iso === 'FIN') || data[0];
     if (def) sel.value = def.iso;
     render();
   });
-  sel.addEventListener('change', render);
+  sel.addEventListener('change', () => { render(); syncUrl(); });
 </script>

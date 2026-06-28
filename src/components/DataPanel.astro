@@ -60,6 +60,18 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
   const cache = new Map();
   const meta = () => cfg.datasets.find((d) => d.slug === state.slug);
 
+  // ---- deep-link state from the URL ----
+  const params = new URLSearchParams(location.search);
+  if (!cfg.pinnedSlug && params.get('i') && cfg.datasets.some((d) => d.slug === params.get('i'))) state.slug = params.get('i');
+  if (['bar', 'table', 'map'].includes(params.get('v'))) state.view = params.get('v');
+  function syncUrl() {
+    const p = new URLSearchParams(location.search);
+    if (!cfg.pinnedSlug) p.set('i', state.slug);
+    if (state.period) p.set('p', state.period);
+    p.set('v', state.view);
+    history.replaceState(null, '', location.pathname + '?' + p.toString() + location.hash);
+  }
+
   if (selI) {
     for (const kind of ['macro', 'survey']) {
       const items = cfg.datasets.filter((x) => x.kind === kind);
@@ -73,10 +85,13 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
     selI.addEventListener('change', () => { state.slug = selI.value; state.pinned.clear(); state.showAll = false; fillPeriods(); render(); });
   }
 
+  let initialPeriod = params.get('p');
   function fillPeriods() {
     const m = meta(); selP.innerHTML = '';
     for (const p of m.periods) { const o = document.createElement('option'); o.value = p; o.textContent = p; selP.appendChild(o); }
-    state.period = m.periods[m.periods.length - 1]; selP.value = state.period;
+    state.period = (initialPeriod && m.periods.includes(initialPeriod)) ? initialPeriod : m.periods[m.periods.length - 1];
+    initialPeriod = null; // only honour the URL period on first load
+    selP.value = state.period;
   }
 
   async function load(slug) {
@@ -175,6 +190,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
     el('ex-summary').textContent = `${m.title} · ${state.period} · ${rows.length} countries · unit ${m.unit}`;
     for (const v of ['bar', 'table', 'map']) el('view-' + v).hidden = state.view !== v;
     if (state.view === 'bar') renderBars(rows); else if (state.view === 'table') renderTable(rows); else renderMap(rows);
+    syncUrl();
   }
 
   selP.addEventListener('change', () => { state.period = selP.value; render(); });
@@ -190,6 +206,8 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
     render();
   });
 
+  // reflect restored view in the toggle
+  [...el('view-toggle').children].forEach((x) => x.classList.toggle('active', x.dataset.view === state.view));
   fillPeriods();
   render();
 </script>
