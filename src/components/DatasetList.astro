@@ -1,0 +1,56 @@
+---
+import type { Dataset } from '@data/datasets';
+import { TOPICS, TOPIC_ORDER } from '@lib/topics';
+const { items } = Astro.props as { items: Dataset[] };
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const groups = TOPIC_ORDER
+  .map((id) => ({ topic: TOPICS[id], list: items.filter((d) => d.topic === id) }))
+  .filter((g) => g.list.length);
+---
+<div class="dlist">
+  <input id="dlist-search" class="dlist-search" type="search" placeholder="Search indicators…" autocomplete="off" />
+  <div id="dlist-empty" class="sub" hidden>No indicators match.</div>
+
+  {groups.map((g, i) => (
+    <details class="topic" open={i < 2} data-topic={g.topic.id}>
+      <summary>
+        <span class="topic-ic">{g.topic.icon}</span>
+        <span class="topic-name">{g.topic.label}</span>
+        <span class="topic-count">{g.list.length}</span>
+      </summary>
+      <div class="grid cols-2 topic-body">
+        {g.list.map((d) => (
+          <a class="card link dl-card" href={`${base}/dataset/${d.slug}`}
+             data-text={`${d.title} ${d.source} ${d.valueLabel}`.toLowerCase()}>
+            <h3 style="font-size:16px">{d.title}</h3>
+            <p class="meta">{d.summary}</p>
+            <span class="pill">{d.source}</span>
+          </a>
+        ))}
+      </div>
+    </details>
+  ))}
+</div>
+
+<script>
+  const q = document.getElementById('dlist-search');
+  const cards = [...document.querySelectorAll('.dl-card')];
+  const groups = [...document.querySelectorAll('.dlist .topic')];
+  const empty = document.getElementById('dlist-empty');
+  q.addEventListener('input', () => {
+    const s = q.value.trim().toLowerCase();
+    let any = false;
+    for (const c of cards) {
+      const hit = !s || c.getAttribute('data-text').includes(s);
+      c.style.display = hit ? '' : 'none';
+      if (hit) any = true;
+    }
+    for (const g of groups) {
+      const visible = [...g.querySelectorAll('.dl-card')].some((c) => c.style.display !== 'none');
+      g.style.display = visible ? '' : 'none';
+      if (s && visible) g.open = true;
+    }
+    empty.hidden = any;
+  });
+</script>

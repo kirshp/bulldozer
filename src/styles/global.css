@@ -197,6 +197,19 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .view-toggle button + button { border-left: 1px solid var(--border); }
 .view-toggle button.active { background: var(--accent); color: #1a1300; font-weight: 600; }
 
+/* Dataset list with topics + search */
+.dlist-search { width: 100%; background: var(--bg-card); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 15px; font-family: var(--font); margin-bottom: 18px; }
+.dlist-search:focus { outline: none; border-color: var(--accent); }
+.topic { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; background: var(--bg-elev); overflow: hidden; }
+.topic > summary { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; font-size: 17px; font-weight: 600; list-style: none; user-select: none; }
+.topic > summary::-webkit-details-marker { display: none; }
+.topic > summary::after { content: '▸'; margin-left: auto; color: var(--text-dim); transition: transform 0.15s; }
+.topic[open] > summary::after { transform: rotate(90deg); }
+.topic-ic { font-size: 20px; }
+.topic-count { font-family: var(--mono); font-size: 13px; color: var(--text-dim); background: var(--bg-card); border: 1px solid var(--border); border-radius: 999px; padding: 1px 9px; margin-left: 6px; }
+.topic[open] > summary { border-bottom: 1px solid var(--border); }
+.topic-body { padding: 16px; }
+
 /* Bivariate map */
 .bivmap-grid { display: grid; grid-template-columns: 1fr 150px; gap: 18px; align-items: center; }
 .bivmap .country { transition: fill 0.2s ease; }

@@ -1,35 +1,24 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SourceCatalog from '@components/SourceCatalog.astro';
+import DatasetList from '@components/DatasetList.astro';
 import { datasetsByKind } from '@data/datasets';
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const items = datasetsByKind('macro');
 ---
-<BaseLayout title="Macro" active="macro" description="IMF, World Bank and other macro indicators, with the economic sources we gathered.">
+<BaseLayout title="Statistics" active="macro" description="Objective country statistics — economy, demographics, health, education, environment, governance and risk.">
   <section class="section">
     <div class="container">
-      <span class="kicker">Macro indicators</span>
-      <h2>Macro datasets</h2>
-      <p class="sub">Economic indicators from the IMF, World Bank, Maddison, Penn World Table, OECD and BIS. {items.length} datasets.</p>
-      <div class="grid cols-2">
-        {items.map((d) => (
-          <a class="card link" href={`${base}/dataset/${d.slug}`}>
-            <h3>{d.title}</h3>
-            <p class="meta">{d.summary}</p>
-            <div class="prov">
-              <span class="pill">{d.source}</span>
-              <span class="pill">{d.unit}</span>
-            </div>
-          </a>
-        ))}
-      </div>
+      <span class="kicker">Statistics</span>
+      <h2>Country statistics</h2>
+      <p class="sub">Objective indicators across {datasetsByKind('macro').length} datasets — economy, demographics, health, education, environment, governance and risk. Search or browse by topic.</p>
+      <DatasetList items={items} />
     </div>
   </section>
 
   <section class="section" style="padding-top:0">
     <div class="container">
-      <h2>Economic sources we gathered</h2>
-      <p class="sub">Every macro source — with an official link and a short description.</p>
+      <h2>Sources we gathered</h2>
+      <p class="sub">Every statistical source — with an official link and a short description.</p>
       <SourceCatalog kind="macro" />
     </div>
   </section>

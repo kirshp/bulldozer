@@ -1,28 +1,17 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SourceCatalog from '@components/SourceCatalog.astro';
+import DatasetList from '@components/DatasetList.astro';
 import { datasetsByKind } from '@data/datasets';
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const items = datasetsByKind('survey');
 ---
-<BaseLayout title="Surveys" active="surveys" description="Parsed public opinion, governance and wellbeing surveys — with the programmes we gathered.">
+<BaseLayout title="Surveys" active="surveys" description="Opinion and perception surveys — happiness, attitudes and values, risk perception.">
   <section class="section">
     <div class="container">
       <span class="kicker">Public surveys</span>
-      <h2>Survey datasets</h2>
-      <p class="sub">Survey, governance &amp; wellbeing indicators parsed from open sources. {items.length} datasets.</p>
-      <div class="grid cols-2">
-        {items.map((d) => (
-          <a class="card link" href={`${base}/dataset/${d.slug}`}>
-            <h3>{d.title}</h3>
-            <p class="meta">{d.summary}</p>
-            <div class="prov">
-              <span class="pill">{d.source}</span>
-              <span class="pill">{d.license}</span>
-            </div>
-          </a>
-        ))}
-      </div>
+      <h2>Opinion &amp; perception surveys</h2>
+      <p class="sub">What people say — {items.length} survey datasets on wellbeing, attitudes and risk perception. Search or browse by topic.</p>
+      <DatasetList items={items} />
     </div>
   </section>
 

@@ -5,6 +5,7 @@
  * (scripts/parse_*.mjs) can add datasets without touching code.
  */
 import type { Observation } from '@lib/analytics';
+import { isOpinionSurvey, topicFor } from '@lib/topics';
 
 export type DatasetKind = 'survey' | 'macro';
 export type ChangeMode = 'pct' | 'pp';
@@ -23,6 +24,8 @@ export interface DatasetMeta {
   /** How period-over-period change is expressed: percentage points for
    *  rate/percentage data, multiplicative percent for counts/volumes. */
   changeMode: ChangeMode;
+  /** Topic id (see lib/topics) for grouping the lists. */
+  topic: string;
 }
 
 export interface Dataset extends DatasetMeta {
@@ -49,6 +52,9 @@ function build(modules: Record<string, { default: RawDataset }>): Dataset[] {
     return {
       slug,
       ...raw.meta,
+      // kind reflects opinion surveys vs objective statistics, not the source folder
+      kind: isOpinionSurvey(slug) ? 'survey' : 'macro',
+      topic: topicFor(slug),
       changeMode: raw.meta.changeMode ?? deriveChangeMode(raw.meta.unit),
       data: raw.data,
     };
