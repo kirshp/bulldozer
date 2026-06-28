@@ -197,6 +197,12 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .view-toggle button + button { border-left: 1px solid var(--border); }
 .view-toggle button.active { background: var(--accent); color: #1a1300; font-weight: 600; }
 
+/* Country profile */
+.country-desc { font-size: 16px; color: var(--text); background: var(--bg-elev); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 12px 16px; margin: 14px 0 4px; }
+#country-items table.data td { padding: 7px 8px; }
+#country-map { position: sticky; top: 76px; }
+@media (max-width: 820px) { #country-map { position: static; } }
+
 /* World map */
 .worldmap { margin-top: 8px; }
 .worldmap svg { width: 100%; height: auto; display: block; }

@@ -17,6 +17,9 @@ const projection = geoNaturalEarth1().fitSize([W, H], fc);
 const pathGen = geoPath(projection);
 
 const countries = fc.features.map((f: any) => ({ num: String(f.id), name: f.properties.name, d: pathGen(f) }));
+
+interface Props { legendId?: string; showLegend?: boolean }
+const { legendId = 'map-legend', showLegend = true } = Astro.props;
 ---
 <div class="worldmap">
   <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="World choropleth" preserveAspectRatio="xMidYMid meet">
@@ -32,5 +35,5 @@ const countries = fc.features.map((f: any) => ({ num: String(f.id), name: f.prop
       ><title>{c.name}</title></path>
     ))}
   </svg>
-  <div class="map-legend" id="map-legend"></div>
+  {showLegend && <div class="map-legend" id={legendId}></div>}
 </div>

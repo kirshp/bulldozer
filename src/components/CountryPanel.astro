@@ -1,0 +1,81 @@
+---
+import WorldMap from '@components/WorldMap.astro';
+import isoNumeric from '@data/iso-numeric.json';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<div class="country-panel">
+  <div class="controls">
+    <label>Country<select id="country-sel"><option>Loading…</option></select></label>
+  </div>
+
+  <p class="country-desc" id="country-desc"></p>
+
+  <div class="grid cols-2" style="align-items:start; margin-top:8px">
+    <div id="country-items"></div>
+    <div id="country-map"><WorldMap legendId="country-legend" showLegend={false} /></div>
+  </div>
+</div>
+
+<script type="application/json" id="cp-iso" set:html={JSON.stringify(isoNumeric)}></script>
+<script define:vars={{ base }}>
+  const isoNumeric = JSON.parse(document.getElementById('cp-iso').textContent);
+  const numByIso = Object.fromEntries(Object.entries(isoNumeric).map(([n, a]) => [a, n]));
+  const sel = document.getElementById('country-sel');
+  const descEl = document.getElementById('country-desc');
+  const itemsEl = document.getElementById('country-items');
+  const mapEl = document.getElementById('country-map');
+  let countries = [];
+
+  const fmt = (v, unit) => `${v}${unit && unit.includes('%') ? '%' : ''}`;
+  const find = (c, slug) => c.items.find((i) => i.slug === slug);
+
+  function describe(c) {
+    const bits = [];
+    const gdp = find(c, 'imf-gdp-per-capita-ppp') || find(c, 'imf-gdp-per-capita');
+    const life = find(c, 'gapminder-life-expectancy');
+    const happy = find(c, 'whr-happiness');
+    const dem = find(c, 'v-dem-v2x-libdem');
+    if (gdp) bits.push(`GDP per capita ${Math.round(gdp.value).toLocaleString()} ${gdp.unit} (#${gdp.rank})`);
+    if (life) bits.push(`life expectancy ${life.value} yrs`);
+    if (happy) bits.push(`happiness ${happy.value} (#${happy.rank})`);
+    if (dem) bits.push(`liberal-democracy ${dem.value} (#${dem.rank})`);
+    return `${c.name} · ${c.region || 'world'}. ${bits.join(' · ')}.`;
+  }
+
+  function renderItems(c) {
+    const groups = { macro: [], survey: [] };
+    for (const it of c.items) (groups[it.kind] || groups.survey).push(it);
+    const block = (label, arr) => arr.length ? `<h3 style="font-size:14px;margin:14px 0 8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">${label}</h3>` +
+      `<table class="data"><tbody>` + arr.map((it) =>
+        `<tr><td><a href="${base}/dataset/${it.slug}">${it.title}</a></td>` +
+        `<td class="num">${fmt(it.value, it.unit)}</td>` +
+        `<td class="num" style="color:var(--text-dim)">#${it.rank}/${it.total}</td></tr>`).join('') + `</tbody></table>` : '';
+    itemsEl.innerHTML = block('Economy', groups.macro) + block('Society & governance', groups.survey);
+  }
+
+  function highlight(c) {
+    const num = numByIso[c.iso];
+    mapEl.querySelectorAll('.country').forEach((p) => {
+      const on = p.getAttribute('data-num') === num;
+      p.setAttribute('fill', on ? 'var(--accent)' : 'var(--bg-elev)');
+      p.style.opacity = on ? '1' : '0.45';
+    });
+  }
+
+  function render() {
+    const c = countries.find((x) => x.iso === sel.value);
+    if (!c) return;
+    descEl.textContent = describe(c);
+    renderItems(c);
+    highlight(c);
+  }
+
+  fetch(`${base}/data/country-index.json`).then((r) => r.json()).then((data) => {
+    countries = data;
+    sel.innerHTML = data.map((c) => `<option value="${c.iso}">${c.name}</option>`).join('');
+    const def = data.find((c) => c.iso === 'FIN') || data[0];
+    if (def) sel.value = def.iso;
+    render();
+  });
+  sel.addEventListener('change', render);
+</script>
