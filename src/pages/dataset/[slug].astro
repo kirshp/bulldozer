@@ -33,6 +33,7 @@ const groups = groupRollups(ds.data, ds.changeMode);
 const single = isSinglePeriod(ds.data);
 const periodCount = new Set(ds.data.map((o) => o.period)).size;
 const pairing = PAIRINGS[ds.slug];
+const related = datasets.filter((d) => d.topic === ds.topic && d.slug !== ds.slug).slice(0, 6);
 const pctUnit = ds.unit === '%' ? '%' : '';
 const panelIndicator = [{
   slug: ds.slug, title: ds.title, kind: ds.kind, unit: ds.unit, valueLabel: ds.valueLabel,
@@ -115,6 +116,23 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
             ))}
           </tbody>
         </table>
+      </div>
+    </section>
+  )}
+
+  {related.length > 0 && (
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <h2>Related indicators</h2>
+        <p class="sub">More in {ds.topic}.</p>
+        <div class="grid cols-3">
+          {related.map((d) => (
+            <a class="card link" href={`${base}/dataset/${d.slug}`}>
+              <h3 style="font-size:15px">{d.title}</h3>
+              <p class="meta">{d.source}</p>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
   )}

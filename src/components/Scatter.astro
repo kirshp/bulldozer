@@ -54,8 +54,9 @@ const fmtX = (v: number) => (v >= 1000 ? `${Math.round(v / 1000)}k` : `${v}`);
         fill={colorFor(p.group)} fill-opacity={p.highlight ? 1 : 0.78}
         stroke={p.highlight ? 'var(--text)' : 'none'} stroke-width="1.5" />
     ))}
-    {points.filter((p) => labelSet.has(p.label)).map((p) => (
-      <text x={X(p.x) + 8} y={Y(p.y) + 3} class="pt-label" fill={p.highlight ? 'var(--text)' : 'var(--text-dim)'}>{p.label}</text>
-    ))}
+    {points.filter((p) => labelSet.has(p.label)).map((p) => {
+      const right = X(p.x) > W * 0.74;
+      return <text x={right ? X(p.x) - 8 : X(p.x) + 8} y={Y(p.y) + 3} text-anchor={right ? 'end' : 'start'} class="pt-label" fill={p.highlight ? 'var(--text)' : 'var(--text-dim)'}>{p.label}</text>;
+    })}
   </svg>
 </div>
