@@ -57,10 +57,12 @@ a:hover { text-decoration: underline; }
 .nav a { color: var(--text-dim); font-size: 14px; font-weight: 500; }
 .nav a:hover, .nav a.active { color: var(--text); text-decoration: none; }
 @media (max-width: 560px) {
-  .site-header .container { gap: 12px; padding: 0 14px; }
-  .brand .name { display: none; }
-  .nav { gap: 16px; }
-  .nav a { font-size: 14px; white-space: nowrap; }
+  .site-header .container { gap: 10px; padding: 0 12px; }
+  .brand { gap: 7px; }
+  .brand .mark { width: 22px; height: 22px; font-size: 13px; }
+  .brand .name { font-size: 14px; }
+  .nav { gap: 13px; }
+  .nav a { font-size: 12px; white-space: nowrap; }
 }
 
 /* Hero */
