@@ -18,9 +18,10 @@ export const REGION_RU_EN = {
   '—': 'Advanced / other',
 };
 
-/** Gapminder world_4region → English. */
+/** Gapminder world_4region → English. (Gapminder uses the plural "americas".) */
 export const REGION_4 = {
   africa: 'Africa',
+  americas: 'Americas',
   america: 'Americas',
   asia: 'Asia',
   europe: 'Europe',

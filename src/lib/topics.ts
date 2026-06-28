@@ -26,7 +26,8 @@ export const TOPIC_ORDER = [
 /** True opinion/perception surveys (everything else is objective statistics). */
 export function isOpinionSurvey(slug: string): boolean {
   return slug.startsWith('whr-') || slug.startsWith('lits-') || slug === 'wrp-resilience'
-    || slug.startsWith('hofstede-') || slug.startsWith('wvs-') || slug.startsWith('afro-') || slug.startsWith('ess-');
+    || slug.startsWith('hofstede-') || slug.startsWith('wvs-') || slug.startsWith('afro-') || slug.startsWith('ess-')
+    || slug.startsWith('sdr2-');
 }
 
 /** Assign a topic to a dataset by slug. */
