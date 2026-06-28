@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getDataset } from '@data/datasets';
+import { colorFor } from '@lib/palette';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const ds = getDataset('v-dem-v2x-libdem')!;
+const periods = [...new Set(ds.data.map((o) => o.period))].sort();
+const period = periods[periods.length - 1];
+const rows = ds.data.filter((o) => o.period === period).sort((a, b) => b.value - a.value);
+const top = rows[0];
+const top20 = rows.slice(0, 20);
+const bottom5 = rows.slice(-5).reverse();
+const vMax = rows[0].value;
+const medal = (i: number) => ['#FFD24A', '#C7CDD4', '#E08A4B'][i] || 'var(--accent)';
+---
+<BaseLayout title="The World's Strongest Democracies" active="news"
+  description={`${top.entity} leads the V-Dem Liberal Democracy Index (${period}). A visual story.`}>
+  <section class="story-hero">
+    <div class="container">
+      <a class="meta" href={`${base}/`}>← News</a>
+      <span class="kicker">Data story · V-Dem Liberal Democracy Index {period}</span>
+      <h1>The world’s strongest<br/>democracy is <span class="hl">{top.entity}</span>.</h1>
+      <div class="hero-figure">
+        <div class="hero-num">{top.value.toFixed(3)}</div>
+        <div class="hero-cap">liberal democracy index (0–1)<br/>#1 of {rows.length} countries · {top.group}</div>
+      </div>
+      <p class="sub" style="max-width:640px">
+        V-Dem’s expert-coded index combines free and fair elections, rule of law, and checks on power into a
+        single 0–1 score. Here is who leads — and who sits at the bottom.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>The top 20</h2>
+      <p class="sub">Liberal democracy index, {period}.</p>
+      <div class="rank">
+        {top20.map((r, i) => (
+          <div class="rank-row">
+            <span class="rank-no" style={`color:${i < 3 ? medal(i) : 'var(--text-dim)'}`}>{i + 1}</span>
+            <span class="rank-name">{r.entity}</span>
+            <span class="rank-track"><span class="rank-fill" style={`width:${(r.value / vMax) * 100}%; background:${i < 3 ? medal(i) : 'linear-gradient(90deg,var(--accent-2),var(--accent))'}`}></span></span>
+            <span class="rank-val">{r.value.toFixed(3)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>At the other end</h2>
+      <p class="sub">The five lowest-scoring countries, {period}.</p>
+      <div class="rank">
+        {bottom5.map((r) => (
+          <div class="rank-row">
+            <span class="rank-no down">↓</span>
+            <span class="rank-name">{r.entity}</span>
+            <span class="rank-track"><span class="rank-fill move-down" style={`width:${(r.value / vMax) * 100}%`}></span></span>
+            <span class="rank-val">{r.value.toFixed(3)}</span>
+          </div>
+        ))}
+      </div>
+      <p class="sub" style="margin-top:24px">
+        Source: <a href="https://www.v-dem.net/" target="_blank" rel="noopener">V-Dem Institute</a>.
+        See it on the <a href={`${base}/explore`}>world map →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

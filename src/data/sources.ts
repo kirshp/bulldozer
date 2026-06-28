@@ -93,3 +93,10 @@ export const sourceCategories = [
   'Public opinion barometers',
   'Health & demography',
 ];
+
+/** Macro page shows economic sources; Surveys page shows the rest. */
+export function sourcesByKind(kind: 'macro' | 'survey'): Source[] {
+  return sources.filter((s) =>
+    kind === 'macro' ? s.category === 'Macro & economics' : s.category !== 'Macro & economics',
+  );
+}

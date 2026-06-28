@@ -1,0 +1,37 @@
+---
+import { sourcesByKind } from '@data/sources';
+import { datasets } from '@data/datasets';
+
+interface Props { kind: 'macro' | 'survey' }
+const { kind } = Astro.props;
+const list = sourcesByKind(kind);
+
+function liveCount(match?: string) {
+  return match ? datasets.filter((d) => d.source.includes(match)).length : 0;
+}
+// keep category order, but only categories present for this kind
+const cats = [...new Set(list.map((s) => s.category))];
+---
+<div class="grid" style="gap:28px">
+  {cats.map((cat) => (
+    <div>
+      {cats.length > 1 && <h3 style="margin:0 0 14px">{cat}</h3>}
+      <div class="grid cols-2">
+        {list.filter((s) => s.category === cat).map((s) => {
+          const n = liveCount(s.match);
+          return (
+            <div class="card source-card">
+              <div class="source-head">
+                <h3><a href={s.url} target="_blank" rel="noopener">{s.name} ↗</a></h3>
+                {s.status === 'live'
+                  ? <span class="badge live">Live · {n} {n === 1 ? 'dataset' : 'datasets'}</span>
+                  : <span class="badge catalog">Catalogue</span>}
+              </div>
+              <p class="meta">{s.description}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  ))}
+</div>

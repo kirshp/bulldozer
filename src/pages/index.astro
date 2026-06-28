@@ -1,31 +1,52 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { datasets, datasetsByKind } from '@data/datasets';
+import { datasets, datasetsByKind, getDataset } from '@data/datasets';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const surveys = datasetsByKind('survey');
-const macro = datasetsByKind('macro');
-const sections = [
-  { id: 'surveys', title: 'Surveys', href: `${base}/surveys`, count: surveys.length, desc: 'Public survey & development indicators — happiness, human development, literacy, inequality — with movers and group rollups.' },
-  { id: 'macro', title: 'Macro', href: `${base}/macro`, count: macro.length, desc: 'IMF World Economic Outlook indicators: GDP growth, inflation, government debt, unemployment and more.' },
-  { id: 'glossary', title: 'Glossary', href: `${base}/glossary`, count: null, desc: 'Plain-language explanations of every metric and methodology used across the platform.' },
+
+const stories = [
+  { href: `${base}/stories/happiest-countries`, tag: 'World Happiness Report', title: 'The world’s happiest countries', dek: 'Who tops the ranking, how happiness tracks income, and what actually drives it.' },
+  { href: `${base}/stories/strongest-democracies`, tag: 'V-Dem', title: 'The world’s strongest democracies', dek: 'The liberal-democracy leaders — and the countries at the bottom of the scale.' },
+];
+const [feature, ...rest] = stories;
+
+const picks = ['imf-gdp-growth', 'v-dem-v2x-libdem', 'gapminder-life-expectancy', 'imf-inflation', 'qog-ti-cpi', 'gapminder-internet']
+  .map((s) => getDataset(s)).filter(Boolean) as NonNullable<ReturnType<typeof getDataset>>[];
+
+const browse = [
+  { title: 'Explore', href: `${base}/explore`, desc: 'Pick any indicator, period and country — bars, table or world map.' },
+  { title: 'Surveys', href: `${base}/surveys`, desc: `${datasetsByKind('survey').length} survey, governance & wellbeing indicators — and the programmes we gathered.` },
+  { title: 'Macro', href: `${base}/macro`, desc: `${datasetsByKind('macro').length} IMF, World Bank & other economic indicators — and their sources.` },
+  { title: 'Glossary', href: `${base}/glossary`, desc: 'Plain-language explanations of every metric and method.' },
 ];
 ---
-<BaseLayout active="home" description="Marketing analytics & research built on Madeira Ativa — public parsed surveys, IMF macro data, and a metrics glossary.">
+<BaseLayout active="news" description="Marketing analytics & research — visual data stories and a world of public, parsed survey and macro data.">
   <section class="hero">
     <div class="container">
       <span class="kicker">Marketing Analytics &amp; Research</span>
       <h1>Move data like <span class="hl">heavy machinery.</span></h1>
-      <p>BullDozer turns public, parsed survey and macro data into clean dashboards — built on the Madeira Ativa analytics engine. Every number is sourced, every metric is explained.</p>
+      <p>Visual data stories and {datasets.length} public, parsed datasets — surveys, IMF & World Bank macro, democracy and wellbeing — every number sourced, every metric explained.</p>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="grid cols-3">
-        {sections.map((s) => (
-          <a class="card link" href={s.href}>
-            <h3>{s.title} {s.count !== null && <span class="meta">· {s.count}</span>}</h3>
-            <p class="meta">{s.desc}</p>
+      <span class="kicker">News &amp; data stories</span>
+      <h2>What the data is saying</h2>
+      <p class="sub">Visual stories built on public data.</p>
+
+      <a class="card link news-card news-feature" href={feature.href} style="display:block; margin-top:8px">
+        <span class="tag">{feature.tag}</span>
+        <h3>{feature.title}</h3>
+        <p class="meta">{feature.dek}</p>
+        <p class="meta" style="color:var(--accent)">Read the story →</p>
+      </a>
+
+      <div class="grid cols-2" style="margin-top:16px">
+        {rest.map((s) => (
+          <a class="card link news-card" href={s.href}>
+            <span class="tag">{s.tag}</span>
+            <h3>{s.title}</h3>
+            <p class="meta">{s.dek}</p>
           </a>
         ))}
       </div>
@@ -34,17 +55,29 @@ const sections = [
 
   <section class="section" style="padding-top:0">
     <div class="container">
-      <h2>All datasets</h2>
-      <p class="sub">{datasets.length} public datasets, each with cited provenance.</p>
-      <div class="grid cols-2">
-        {datasets.map((d) => (
+      <h2>Featured dashboards</h2>
+      <p class="sub">Jump straight into the numbers.</p>
+      <div class="grid cols-3">
+        {picks.map((d) => (
           <a class="card link" href={`${base}/dataset/${d.slug}`}>
-            <h3>{d.title}</h3>
+            <h3 style="font-size:16px">{d.title}</h3>
             <p class="meta">{d.summary}</p>
-            <div class="prov">
-              <span class="pill"><b>{d.kind}</b></span>
-              <span class="pill">{d.source}</span>
-            </div>
+            <span class="pill">{d.source}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>Browse</h2>
+      <p class="sub">All {datasets.length} datasets, every source, fully interactive.</p>
+      <div class="grid cols-2">
+        {browse.map((b) => (
+          <a class="card link" href={b.href}>
+            <h3>{b.title}</h3>
+            <p class="meta">{b.desc}</p>
           </a>
         ))}
       </div>

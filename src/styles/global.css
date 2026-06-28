@@ -137,6 +137,43 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .gloss-term h3 { margin: 0 0 4px; }
 .gloss-term p { margin: 0; color: var(--text-dim); }
 
+/* Story / News */
+.story-hero { padding: 56px 0 36px; border-bottom: 1px solid var(--border); background: radial-gradient(900px 380px at 78% -10%, rgba(255,176,0,0.10), transparent); }
+.story-hero h1 { font-size: 46px; line-height: 1.04; letter-spacing: -1.2px; margin: 14px 0 22px; }
+.story-hero h1 .hl { color: var(--accent); }
+.hero-figure { display: flex; align-items: baseline; gap: 16px; margin-bottom: 18px; }
+.hero-num { font-family: var(--mono); font-size: 64px; font-weight: 800; line-height: 1; background: linear-gradient(180deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero-cap { font-size: 13px; color: var(--text-dim); }
+
+.rank { display: flex; flex-direction: column; gap: 7px; }
+.rank-row { display: grid; grid-template-columns: 30px 150px 1fr 64px; align-items: center; gap: 12px; font-size: 14px; }
+.rank-no { font-family: var(--mono); font-weight: 700; text-align: center; }
+.rank-name { font-weight: 500; }
+.rank-track { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 6px; height: 14px; overflow: hidden; }
+.rank-fill { display: block; height: 100%; border-radius: 6px; min-width: 4px; }
+.rank-val { text-align: right; font-family: var(--mono); }
+@media (max-width: 640px) { .rank-row { grid-template-columns: 26px 100px 1fr 56px; } }
+
+.drivers { display: flex; flex-direction: column; gap: 10px; max-width: 640px; }
+.drv-row { display: grid; grid-template-columns: 180px 1fr 48px; align-items: center; gap: 12px; font-size: 14px; }
+.drv-track { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 6px; height: 16px; overflow: hidden; }
+.drv-fill { display: block; height: 100%; border-radius: 6px; min-width: 4px; }
+.drv-val { text-align: right; font-family: var(--mono); font-size: 13px; }
+
+.chart-svg svg { width: 100%; height: auto; display: block; }
+.chart-svg .axis { font-size: 11px; fill: var(--text-dim); font-family: var(--mono); }
+.chart-svg .axis-title { font-size: 12px; fill: var(--text-dim); }
+.chart-svg .pt-label { font-size: 11px; font-family: var(--font); }
+.legend-regions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: 12px; color: var(--text-dim); }
+.lr { display: inline-flex; align-items: center; gap: 6px; }
+.lr-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+.news-card { position: relative; overflow: hidden; }
+.news-card .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
+.news-card h3 { font-size: 20px; margin: 8px 0; letter-spacing: -0.4px; }
+.news-feature { background: radial-gradient(600px 240px at 90% 0%, rgba(255,176,0,0.12), transparent), var(--bg-card); }
+.news-feature h3 { font-size: 26px; }
+
 /* Sources catalogue */
 .source-card .source-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .source-card h3 { font-size: 15px; margin: 0 0 8px; }

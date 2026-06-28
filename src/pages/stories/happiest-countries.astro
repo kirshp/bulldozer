@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Scatter from '@components/Scatter.astro';
+import { getDataset } from '@data/datasets';
+import { colorFor, regionList } from '@lib/palette';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function latestRows(slug: string) {
+  const ds = getDataset(slug);
+  if (!ds) return { rows: [] as any[], period: '', ds: null as any };
+  const periods = [...new Set(ds.data.map((o) => o.period))].sort();
+  const period = periods[periods.length - 1];
+  const rows = ds.data.filter((o) => o.period === period);
+  return { rows, period, ds };
+}
+
+const happy = latestRows('whr-happiness');
+const ranked = [...happy.rows].sort((a, b) => b.value - a.value);
+const top = ranked[0];
+const top20 = ranked.slice(0, 20);
+const hMax = ranked[0].value;
+
+// Happiness vs GDP per capita (PPP) — join by ISO
+const gdp = latestRows('imf-gdp-per-capita-ppp');
+const gdpByIso = new Map(gdp.rows.filter((r) => r.iso).map((r) => [r.iso, r.value]));
+const points = happy.rows
+  .filter((r) => r.iso && gdpByIso.has(r.iso))
+  .map((r) => ({ x: gdpByIso.get(r.iso)!, y: r.value, label: r.entity, group: r.group, highlight: r.entity === top.entity }));
+
+// Drivers of happiness for the #1 country
+const driverDefs = [
+  { slug: 'whr-driver-gdp', label: 'GDP per capita', color: '#f59e0b' },
+  { slug: 'whr-driver-social', label: 'Social support', color: '#60a5fa' },
+  { slug: 'whr-driver-health', label: 'Healthy life expectancy', color: '#34d399' },
+  { slug: 'whr-driver-freedom', label: 'Freedom', color: '#a78bfa' },
+  { slug: 'whr-driver-generosity', label: 'Generosity', color: '#f472b6' },
+  { slug: 'whr-driver-corruption', label: 'Low corruption', color: '#fb923c' },
+];
+const drivers = driverDefs.map((d) => {
+  const { rows } = latestRows(d.slug);
+  const row = rows.find((r) => r.entity === top.entity);
+  return { ...d, value: row ? row.value : 0 };
+}).sort((a, b) => b.value - a.value);
+const dMax = Math.max(...drivers.map((d) => d.value), 0.1);
+
+// Regional averages
+const byRegion = new Map<string, number[]>();
+for (const r of happy.rows) {
+  if (!r.group) continue;
+  const a = byRegion.get(r.group) ?? [];
+  a.push(r.value);
+  byRegion.set(r.group, a);
+}
+const regions = [...byRegion.entries()]
+  .map(([region, vals]) => ({ region, avg: vals.reduce((s, v) => s + v, 0) / vals.length, n: vals.length }))
+  .sort((a, b) => b.avg - a.avg);
+const rMax = Math.max(...regions.map((r) => r.avg));
+
+const medal = (i: number) => ['#FFD24A', '#C7CDD4', '#E08A4B'][i] || 'var(--accent)';
+---
+<BaseLayout title="The World's Happiest Countries" active="news"
+  description={`${top.entity} is the world's happiest country (${happy.period}). A visual story from the World Happiness Report.`}>
+
+  <section class="story-hero">
+    <div class="container">
+      <a class="meta" href={`${base}/`}>← News</a>
+      <span class="kicker">Data story · World Happiness Report {happy.period}</span>
+      <h1>The world’s happiest<br/>country is <span class="hl">{top.entity}</span>.</h1>
+      <div class="hero-figure">
+        <div class="hero-num">{top.value.toFixed(3)}</div>
+        <div class="hero-cap">life-evaluation score (0–10)<br/>#1 of {ranked.length} countries · {top.group}</div>
+      </div>
+      <p class="sub" style="max-width:640px">
+        Each year the Gallup World Poll asks people to rate their life on a ladder from 0 to 10.
+        {top.entity} tops the ranking again — but the score is only half the story. Below: who else leads,
+        how happiness tracks income, and what actually drives it.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>The top 20</h2>
+      <p class="sub">Life-evaluation score, {happy.period}.</p>
+      <div class="rank">
+        {top20.map((r, i) => (
+          <div class="rank-row">
+            <span class="rank-no" style={`color:${i < 3 ? medal(i) : 'var(--text-dim)'}`}>{i + 1}</span>
+            <span class="rank-name">{r.entity}</span>
+            <span class="rank-track"><span class="rank-fill" style={`width:${(r.value / hMax) * 100}%; background:${i < 3 ? medal(i) : 'linear-gradient(90deg,var(--accent-2),var(--accent))'}`}></span></span>
+            <span class="rank-val">{r.value.toFixed(3)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>Richer tends to mean happier — up to a point</h2>
+      <p class="sub">Each dot is a country: GDP per capita (PPP, log scale) vs happiness. {points.length} countries.</p>
+      <Scatter points={points} xLabel="GDP per capita, PPP (international $, log scale)" yLabel="Happiness (0–10)" xLog={true} labelTop={6} />
+      <div class="legend-regions">
+        {regionList.map((r) => (
+          <span class="lr"><span class="lr-dot" style={`background:${colorFor(r)}`}></span>{r}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>What makes {top.entity} happy</h2>
+      <p class="sub">How much each factor contributes to {top.entity}’s score (ladder points).</p>
+      <div class="drivers">
+        {drivers.map((d) => (
+          <div class="drv-row">
+            <span class="drv-name">{d.label}</span>
+            <span class="drv-track"><span class="drv-fill" style={`width:${(d.value / dMax) * 100}%; background:${d.color}`}></span></span>
+            <span class="drv-val">{d.value.toFixed(2)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>Happiness by region</h2>
+      <p class="sub">Average life-evaluation score, {happy.period}.</p>
+      <div class="bars">
+        {regions.map((r) => (
+          <div class="bar-row">
+            <span>{r.region}</span>
+            <span class="bar-track"><span class="bar-fill" style={`width:${(r.avg / rMax) * 100}%; background:${colorFor(r.region)}`}></span></span>
+            <span class="bar-val">{r.avg.toFixed(2)} <em class="flat">· {r.n}</em></span>
+          </div>
+        ))}
+      </div>
+      <p class="sub" style="margin-top:24px">
+        Source: <a href="https://worldhappiness.report/" target="_blank" rel="noopener">World Happiness Report</a> (Gallup World Poll),
+        GDP from IMF WEO. <a href={`${base}/explore`}>Explore the data →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
