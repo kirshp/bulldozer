@@ -170,19 +170,27 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
     }).join('') + '</tbody>';
   }
 
-  function lerp(t) { const a = [28, 31, 35], b = [255, 176, 0]; const c = a.map((x, i) => Math.round(x + (b[i] - x) * Math.max(0, Math.min(1, t)))); return `rgb(${c[0]},${c[1]},${c[2]})`; }
+  const mix = (a, b, t) => { t = Math.max(0, Math.min(1, t)); const c = a.map((x, i) => Math.round(x + (b[i] - x) * t)); return `rgb(${c[0]},${c[1]},${c[2]})`; };
+  const DARK = [28, 31, 35], AMBER = [255, 176, 0], GREY = [70, 74, 82], RED = [248, 113, 113], GREEN = [52, 211, 153];
 
   function renderMap(rows) {
     const m = meta(); const unit = m.unit.includes('%') ? '%' : '';
     const byIso = new Map(); for (const r of rows) if (r.iso) byIso.set(r.iso, r.value);
     const vals = [...byIso.values()]; const min = Math.min(...vals), max = Math.max(...vals), span = (max - min) || 1;
+    const diverging = min < 0 && max > 0; // signed indicator → red ↔ green around zero
+    const colorFor = (v) => diverging
+      ? (v < 0 ? mix(GREY, RED, v / min) : mix(GREY, GREEN, v / max))
+      : mix(DARK, AMBER, (v - min) / span);
     el('view-map').querySelectorAll('.country').forEach((p) => {
       const iso = isoNumeric[p.getAttribute('data-num')];
       const v = iso != null ? byIso.get(iso) : undefined;
       if (v == null) { p.setAttribute('fill', 'var(--bg-elev)'); p.style.opacity = '0.5'; }
-      else { p.setAttribute('fill', lerp((v - min) / span)); p.style.opacity = '1'; }
+      else { p.setAttribute('fill', colorFor(v)); p.style.opacity = '1'; }
     });
-    el('map-legend').innerHTML = `<span>${isFinite(min) ? min : '—'}${unit}</span><span class="legend-bar"></span><span>${isFinite(max) ? max : '—'}${unit}</span><span class="legend-label">${m.valueLabel} · ${state.period}</span>`;
+    const bar = diverging
+      ? 'linear-gradient(90deg,#f87171,#464a52,#34d399)'
+      : 'linear-gradient(90deg,#1c1f23,var(--accent))';
+    el('map-legend').innerHTML = `<span>${isFinite(min) ? fmtNum(min) : '—'}${unit}</span><span class="legend-bar" style="background:${bar}"></span><span>${isFinite(max) ? fmtNum(max) : '—'}${unit}</span><span class="legend-label">${m.valueLabel} · ${state.period}${diverging ? ' · 0-centred' : ''}</span>`;
   }
 
   async function render() {
