@@ -33,7 +33,7 @@ export interface Dataset extends DatasetMeta {
 }
 
 interface RawDataset {
-  meta: Omit<DatasetMeta, 'slug' | 'changeMode'> & { changeMode?: ChangeMode };
+  meta: Omit<DatasetMeta, 'slug' | 'changeMode' | 'topic'> & { changeMode?: ChangeMode; topic?: string };
   data: Observation[];
 }
 
@@ -54,7 +54,7 @@ function build(modules: Record<string, { default: RawDataset }>): Dataset[] {
       ...raw.meta,
       // kind reflects opinion surveys vs objective statistics, not the source folder
       kind: isOpinionSurvey(slug) ? 'survey' : 'macro',
-      topic: topicFor(slug),
+      topic: raw.meta.topic ?? topicFor(slug),
       changeMode: raw.meta.changeMode ?? deriveChangeMode(raw.meta.unit),
       data: raw.data,
     };

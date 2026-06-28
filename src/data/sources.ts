@@ -30,6 +30,8 @@ export const sources: Source[] = [
     description: 'Tax wedge on labour — taxes and contributions as a share of total labour cost across OECD countries.' },
   { name: 'BIS — Credit statistics', url: 'https://www.bis.org/statistics/totcredit.htm', status: 'live', category: 'Macro & economics', match: 'Bank for International Settlements',
     description: 'Credit to the private non-financial sector, households and government as a share of GDP, from the Bank for International Settlements.' },
+  { name: 'Our World in Data', url: 'https://ourworldindata.org/', status: 'live', category: 'Macro & economics', match: 'Our World in Data',
+    description: 'Open research and data on development, health, energy, education and more — schooling, poverty, electricity, renewables, military spending and beyond.' },
 
   // ── Governance & democracy ─────────────────────────────────────────
   { name: 'V-Dem — Varieties of Democracy', url: 'https://www.v-dem.net/data/the-v-dem-dataset/', status: 'live', category: 'Governance & democracy', match: 'V-Dem',
