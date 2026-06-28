@@ -41,7 +41,7 @@ const config = { base, indicators };
   function fillSelect(sel, def) {
     for (const kind of ['macro', 'survey']) {
       const items = cfg.indicators.filter((x) => x.kind === kind);
-      const g = document.createElement('optgroup'); g.label = kind === 'macro' ? 'Statistics' : 'Surveys';
+      const g = document.createElement('optgroup'); g.label = kind === 'macro' ? 'Macro' : 'Study';
       for (const d of items) { const o = document.createElement('option'); o.value = d.slug; o.textContent = d.title; g.appendChild(o); }
       sel.appendChild(g);
     }

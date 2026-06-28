@@ -50,7 +50,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         `<tr><td><a href="${base}/dataset/${it.slug}">${it.title}</a></td>` +
         `<td class="num">${fmt(it.value, it.unit)}</td>` +
         `<td class="num" style="color:var(--text-dim)">#${it.rank}/${it.total}</td></tr>`).join('') + `</tbody></table>` : '';
-    itemsEl.innerHTML = block('Statistics', groups.macro) + block('Surveys', groups.survey);
+    itemsEl.innerHTML = block('Macro', groups.macro) + block('Study', groups.survey);
   }
 
   function highlight(c) {

@@ -42,7 +42,7 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
 <BaseLayout title={ds.title} description={ds.summary} active={active}>
   <section class="section">
     <div class="container">
-      <p class="meta"><a href={backHref}>← {ds.kind === 'survey' ? 'Surveys' : 'Statistics'}</a></p>
+      <p class="meta"><a href={backHref}>← {ds.kind === 'survey' ? 'Study' : 'Macro'}</a></p>
       <h2>{ds.title}</h2>
       <p class="sub">{ds.summary}</p>
       <Provenance meta={ds} />
