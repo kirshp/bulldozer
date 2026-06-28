@@ -95,6 +95,19 @@ async function main() {
     title: 'Mobile Subscriptions', valueLabel: 'Mobile cellular subscriptions per 100 people', unit: 'per 100', changeMode: 'pct', topic: 'connectivity',
     summary: 'Mobile cellular subscriptions per 100 people (can exceed 100 where people hold multiple SIMs). World Bank / ITU.', ...WB,
   }, ctx, 2022); // cap: 2023/24 carry provisional outliers
+  // Stock markets & listed companies (World Development Indicators)
+  await emit('wb-market-cap', 'CM.MKT.LCAP.GD.ZS', {
+    title: 'Stock Market Capitalisation', valueLabel: 'Listed-company market cap (% of GDP)', unit: '% of GDP', changeMode: 'pct', topic: 'economy',
+    summary: 'Total market capitalisation of listed domestic companies as a share of GDP — financial-market depth. World Bank.', ...WB,
+  }, ctx);
+  await emit('wb-stocks-traded', 'CM.MKT.TRAD.GD.ZS', {
+    title: 'Stocks Traded', valueLabel: 'Value of stocks traded (% of GDP)', unit: '% of GDP', changeMode: 'pct', topic: 'economy',
+    summary: 'Total value of shares traded during the year as a share of GDP — stock-market activity and liquidity. World Bank.', ...WB,
+  }, ctx);
+  await emit('wb-listed-companies', 'CM.MKT.LDOM.NO', {
+    title: 'Listed Companies', valueLabel: 'Domestic companies listed on the stock exchange', unit: 'count', changeMode: 'pct', topic: 'economy',
+    summary: 'Number of domestic companies listed on the country’s stock exchange(s) at year end. World Bank.', ...WB,
+  }, ctx);
   console.log('✓ World Bank: datasets written');
 }
 main();
