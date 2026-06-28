@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "title": "Trust in the EU (S. Caucasus)",
+    "valueLabel": "Share who trust the European Union",
+    "unit": "%",
+    "changeMode": "pp",
+    "topic": "attitudes",
+    "summary": "Share who somewhat or fully trust the European Union. Caucasus Barometer 2013 — Armenia, Azerbaijan, Georgia.",
+    "source": "Caucasus Barometer (CRRC)",
+    "license": "CRRC terms — public aggregates",
+    "url": "https://caucasusbarometer.org/",
+    "parsedAt": "2026-06-28",
+    "kind": "survey"
+  },
+  "data": [
+    {
+      "entity": "Armenia",
+      "group": "Europe",
+      "period": "2013",
+      "value": 31.58,
+      "iso": "ARM"
+    },
+    {
+      "entity": "Azerbaijan",
+      "group": "Europe",
+      "period": "2013",
+      "value": 29.47,
+      "iso": "AZE"
+    },
+    {
+      "entity": "Georgia",
+      "group": "Europe",
+      "period": "2013",
+      "value": 39.2,
+      "iso": "GEO"
+    }
+  ]
+}

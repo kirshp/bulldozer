@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "title": "Life Satisfaction (S. Caucasus)",
+    "valueLabel": "Mean life satisfaction (1–10)",
+    "unit": "index 1–10",
+    "changeMode": "pp",
+    "topic": "wellbeing",
+    "summary": "Mean overall life satisfaction on a 1–10 scale. Caucasus Barometer 2013 — Armenia, Azerbaijan, Georgia.",
+    "source": "Caucasus Barometer (CRRC)",
+    "license": "CRRC terms — public aggregates",
+    "url": "https://caucasusbarometer.org/",
+    "parsedAt": "2026-06-28",
+    "kind": "survey"
+  },
+  "data": [
+    {
+      "entity": "Armenia",
+      "group": "Europe",
+      "period": "2013",
+      "value": 5.56,
+      "iso": "ARM"
+    },
+    {
+      "entity": "Azerbaijan",
+      "group": "Europe",
+      "period": "2013",
+      "value": 5.47,
+      "iso": "AZE"
+    },
+    {
+      "entity": "Georgia",
+      "group": "Europe",
+      "period": "2013",
+      "value": 5.41,
+      "iso": "GEO"
+    }
+  ]
+}

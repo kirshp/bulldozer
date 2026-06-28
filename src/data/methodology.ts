@@ -16,6 +16,8 @@ export function methodologyFor(slug: string): Methodology {
     return { vintage: 'LiTS IV (~2022–2023)', method: 'Country mean of the item; transition region only, single wave.' };
   if (slug.startsWith('hofstede-'))
     return { vintage: 'Dimension matrix (2010)', method: 'Published national scores (0–100); a fixed model, not a time series.' };
+  if (slug.startsWith('cb-'))
+    return { vintage: 'Caucasus Barometer 2013 (last wave incl. Azerbaijan)', method: 'CRRC; weighted by indwt; South Caucasus only (Armenia, Azerbaijan, Georgia).' };
   if (slug.startsWith('sdr2-'))
     return { vintage: 'Pooled harmonized waves (to ~2017)', method: 'SDR2 harmonization across 22 survey projects; weighted by T_WEIGHT_L2U; country mean of the harmonized target item.' };
   if (slug === 'wrp-resilience')
