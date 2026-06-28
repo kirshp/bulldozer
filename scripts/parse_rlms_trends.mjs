@@ -38,11 +38,21 @@ async function main() {
     summary: 'Share of Russian adults who hold a plastic bank card — annual trend (asked through 2019). RLMS-HSE longitudinal survey.', ...COMMON,
   }, series('bank_card'));
 
+  await writeDataset('survey', 'rlms-smoking', {
+    title: 'Smoking (Russia)', valueLabel: 'Adults who currently smoke', unit: '%', changeMode: 'pp', topic: 'health',
+    summary: 'Share of Russian adults who currently smoke — annual trend. RLMS-HSE longitudinal survey.', ...COMMON,
+  }, series('smoking'));
+
+  await writeDataset('survey', 'rlms-alcohol', {
+    title: 'Alcohol Use (Russia)', valueLabel: 'Adults who drank alcohol in the last 30 days', unit: '%', changeMode: 'pp', topic: 'health',
+    summary: 'Share of Russian adults who consumed alcohol in the past 30 days — annual trend. RLMS-HSE longitudinal survey.', ...COMMON,
+  }, series('alcohol'));
+
   await writeDataset('survey', 'rlms-income', {
     title: 'Median Monthly Income (Russia)', valueLabel: 'Median personal income, last 30 days (₽)', unit: '₽/month', changeMode: 'pct', topic: 'economy',
     summary: 'Weighted median of personal income over the last 30 days, in rubles — annual trend. RLMS-HSE longitudinal survey.', ...COMMON,
   }, series('income'));
 
-  console.log('✓ RLMS: 3 Russia trend datasets written');
+  console.log('✓ RLMS: 5 Russia trend datasets written');
 }
 main();
