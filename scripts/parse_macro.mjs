@@ -38,6 +38,18 @@ const INDICATORS = {
     summary: 'Gross domestic product per capita, current US dollars.' },
   BCA_NGDPD: { slug: 'imf-current-account', title: 'Current Account Balance', unit: '% of GDP', valueLabel: 'Current account', changeMode: 'pp', dp: 1,
     summary: 'Current account balance as a share of GDP.' },
+  NGDPD: { slug: 'imf-gdp-usd', title: 'GDP (current US$)', unit: 'USD bn', valueLabel: 'GDP', changeMode: 'pct', dp: 1,
+    summary: 'Gross domestic product at current prices, billions of US dollars.' },
+  PPPGDP: { slug: 'imf-gdp-ppp', title: 'GDP (PPP)', unit: 'intl$ bn', valueLabel: 'GDP, PPP', changeMode: 'pct', dp: 1,
+    summary: 'Gross domestic product based on purchasing-power-parity, billions of international dollars.' },
+  PPPPC: { slug: 'imf-gdp-per-capita-ppp', title: 'GDP per Capita (PPP)', unit: 'intl$', valueLabel: 'GDP per capita, PPP', changeMode: 'pct', dp: 0,
+    summary: 'GDP per capita based on purchasing-power-parity, international dollars.' },
+  PPPSH: { slug: 'imf-world-gdp-share', title: 'Share of World GDP (PPP)', unit: '%', valueLabel: 'Share of world GDP', changeMode: 'pp', dp: 2,
+    summary: 'Country share of world GDP, PPP basis.' },
+  LP: { slug: 'imf-population', title: 'Population', unit: 'million', valueLabel: 'Population', changeMode: 'pct', dp: 1,
+    summary: 'Total population, millions of people.' },
+  GGXCNL_NGDP: { slug: 'imf-fiscal-balance', title: 'Fiscal Balance', unit: '% of GDP', valueLabel: 'Govt net lending/borrowing', changeMode: 'pp', dp: 1,
+    summary: 'General government net lending/borrowing as a share of GDP.' },
 };
 
 async function main() {

@@ -1,0 +1,183 @@
+/**
+ * Generic parser for the harmonised tidy CSV sources (World Bank WDI, QoG,
+ * Maddison, Penn World Table, OECD, BIS, V-Dem). They share the schema
+ *   [source,] iso3, country, region, indicator_code, indicator, [unit,] year, value
+ * Russian labels in the sources are replaced with curated English titles here.
+ *
+ *   node scripts/parse_tidy.mjs
+ * Sources are local/curated; output JSON is committed.
+ */
+import { readFile } from 'node:fs/promises';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+import { parseCsvObjects } from './lib/csv.mjs';
+import { enRegion, pickPeriods, writeDataset, round } from './lib/datasets.mjs';
+
+const H = homedir();
+const TD = join(H, 'Documents', 'tableau_data');
+const SURV = join(H, 'Library', 'Mobile Documents', 'com~apple~CloudDocs', 'BK', 'Opros', 'Inter_survey');
+const today = new Date().toISOString().slice(0, 10);
+
+// helper builders
+const pct = (title, unit, dp = 1) => ({ title, unit, mode: 'pct', dp });
+const pp = (title, unit, dp = 1) => ({ title, unit, mode: 'pp', dp });
+const idx = (title, dp = 3) => ({ title, unit: 'index 0–1', mode: 'pp', dp });
+
+const SOURCES = [
+  {
+    tag: 'WB', kind: 'macro', file: join(TD, 'macro', 'wdi_tidy.csv'),
+    source: 'World Bank — World Development Indicators', license: 'CC BY 4.0',
+    url: 'https://databank.worldbank.org/source/world-development-indicators',
+    indicators: {
+      'NY.GDP.MKTP.CD': { ...pct('GDP (current US$)', 'USD bn', 1), scale: 1e-9 },
+      'NY.GDP.PCAP.CD': pct('GDP per Capita (US$)', 'USD', 0),
+      'NY.GDP.PCAP.PP.CD': pct('GDP per Capita (PPP)', 'intl$', 0),
+      'NY.GDP.MKTP.KD.ZG': pp('GDP Growth', '% YoY', 1),
+      'FP.CPI.TOTL.ZG': pp('Inflation (CPI)', '% YoY', 1),
+      'SL.UEM.TOTL.ZS': pp('Unemployment Rate', '%', 1),
+      'SP.POP.TOTL': { ...pct('Population', 'million', 2), scale: 1e-6 },
+      'SP.DYN.LE00.IN': pp('Life Expectancy', 'years', 1),
+      'SE.ADT.LITR.ZS': pp('Adult Literacy', '%', 1),
+      'SI.POV.GINI': pp('Income Inequality (Gini)', 'index 0–100', 1),
+      'IT.NET.USER.ZS': pp('Internet Users', '%', 1),
+      'SP.URB.TOTL.IN.ZS': pp('Urban Population', '%', 1),
+      'SP.DYN.TFRT.IN': pp('Fertility Rate', 'births/woman', 2),
+      'EN.GHG.CO2.PC.CE.AR5': pct('CO₂ per Capita', 't', 2),
+      'GC.DOD.TOTL.GD.ZS': pp('Government Debt', '% of GDP', 1),
+    },
+  },
+  {
+    tag: 'QoG', kind: 'survey', file: join(SURV, 'QoG_Quality_of_Government', 'qog_ts_tidy.csv'),
+    source: 'Quality of Government Institute (University of Gothenburg)', license: 'Open — academic use',
+    url: 'https://www.gu.se/en/quality-government/qog-data',
+    indicators: {
+      undp_hdi: idx('Human Development Index', 3),
+      vdem_polyarchy: idx('Electoral Democracy', 3),
+      vdem_libdem: idx('Liberal Democracy', 3),
+      ti_cpi: pp('Corruption Perceptions Index', '0–100', 1),
+      fh_status: pp('Freedom House Status', '1=free…3=not', 2),
+      wbgi_cce: pp('Control of Corruption', 'estimate', 2),
+      wbgi_gee: pp('Government Effectiveness', 'estimate', 2),
+      wbgi_rle: pp('Rule of Law', 'estimate', 2),
+      wbgi_vae: pp('Voice & Accountability', 'estimate', 2),
+      rsf_pfi: pp('Press Freedom (RSF)', 'score', 1),
+      wdi_chexppgdp: pp('Health Spending', '% of GDP', 1),
+      wdi_expedu: pp('Education Spending', '% of GDP', 1),
+      wdi_mortinf: pct('Infant Mortality', 'per 1k births', 1),
+    },
+  },
+  {
+    tag: 'V-Dem', kind: 'survey', file: join(SURV, 'V-Dem_Varieties_of_Democracy', 'vdem_full_tidy.csv'),
+    source: 'V-Dem Institute — Varieties of Democracy', license: 'CC BY-SA 4.0',
+    url: 'https://www.v-dem.net/data/the-v-dem-dataset/',
+    indicators: {
+      v2x_polyarchy: idx('Electoral Democracy'), v2x_libdem: idx('Liberal Democracy'),
+      v2x_partipdem: idx('Participatory Democracy'), v2x_delibdem: idx('Deliberative Democracy'),
+      v2x_egaldem: idx('Egalitarian Democracy'), v2x_civlib: idx('Civil Liberties'),
+      v2x_rule: idx('Rule of Law'), v2x_corr: idx('Political Corruption'),
+      v2x_freexp_altinf: idx('Freedom of Expression'), v2xel_frefair: idx('Clean Elections'),
+      v2x_jucon: idx('Judicial Constraints on Executive'), v2x_gender: idx('Gender Equality'),
+    },
+  },
+  {
+    tag: 'Maddison', kind: 'macro', file: join(TD, 'history', 'maddison_tidy.csv'),
+    source: 'Maddison Project Database (University of Groningen)', license: 'CC BY 4.0',
+    url: 'https://www.rug.nl/ggdc/historicaldevelopment/maddison/',
+    indicators: {
+      MAD_GDPPC: pct('GDP per Capita (Maddison)', '2011 intl$', 0),
+      MAD_POP: pct('Population (Maddison)', 'thousand', 0),
+    },
+  },
+  {
+    tag: 'PWT', kind: 'macro', file: join(TD, 'productivity', 'pwt_productivity_tidy.csv'),
+    source: 'Penn World Table 10.01', license: 'CC BY 4.0',
+    url: 'https://www.rug.nl/ggdc/productivity/pwt/',
+    indicators: { PWT_GDP_PER_HOUR: pct('Labour Productivity (GDP per hour)', '2017 intl$/hr', 1) },
+  },
+  {
+    tag: 'OECD', kind: 'macro', file: join(TD, 'taxes', 'oecd_taxwedge_tidy.csv'),
+    source: 'OECD Taxing Wages', license: 'OECD terms — public data',
+    url: 'https://www.oecd.org/en/data/datasets/taxing-wages.html',
+    indicators: { OECD_TAXWEDGE: pp('Tax Wedge (single, avg wage)', '% of labour cost', 1) },
+  },
+  {
+    tag: 'BIS', kind: 'macro', file: join(TD, 'credit_debt', 'bis_credit_tidy.csv'),
+    source: 'Bank for International Settlements — Credit statistics', license: 'BIS terms — public data',
+    url: 'https://www.bis.org/statistics/totcredit.htm',
+    indicators: {
+      BIS_CREDIT_PNFS: pp('Credit to Private Non-financial Sector', '% of GDP', 1),
+      BIS_CREDIT_HH: pp('Credit to Households', '% of GDP', 1),
+      BIS_CREDIT_GOV: pp('Credit to Government', '% of GDP', 1),
+    },
+  },
+];
+
+async function parseSource(src) {
+  let text;
+  try {
+    text = await readFile(src.file, 'utf8');
+  } catch {
+    console.log(`– ${src.tag}: source missing, skipped`);
+    return 0;
+  }
+  // code → country → { region, iso, byYear }, plus per-code year coverage
+  const byCode = new Map(Object.keys(src.indicators).map((c) => [c, new Map()]));
+  const yearCounts = new Map(Object.keys(src.indicators).map((c) => [c, new Map()]));
+  for (const row of parseCsvObjects(text)) {
+    const cfg = src.indicators[row.indicator_code];
+    if (!cfg) continue;
+    const v = Number(row.value);
+    if (!row.country || row.value === '' || Number.isNaN(v)) continue;
+    const map = byCode.get(row.indicator_code);
+    let rec = map.get(row.country);
+    if (!rec) map.set(row.country, (rec = { region: enRegion(row.region), iso: (row.iso3 || '').toUpperCase(), byYear: {} }));
+    rec.byYear[row.year] = v;
+    const yc = yearCounts.get(row.indicator_code);
+    yc.set(row.year, (yc.get(row.year) ?? 0) + 1);
+  }
+
+  let written = 0;
+  for (const [code, cfg] of Object.entries(src.indicators)) {
+    const [prev, curr] = pickPeriods(yearCounts.get(code));
+    if (!prev || !curr) {
+      console.log(`  – ${cfg.title} (${src.tag}): not enough years, skipped`);
+      continue;
+    }
+    const data = [];
+    for (const [country, rec] of byCode.get(code)) {
+      for (const period of [prev, curr]) {
+        let v = rec.byYear[period];
+        if (v == null) continue;
+        if (cfg.scale) v *= cfg.scale;
+        data.push({ entity: country, group: rec.region, period, value: round(v, cfg.dp), iso: rec.iso });
+      }
+    }
+    if (!data.length) continue;
+    const slug = `${src.tag.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${code.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    await writeDataset(src.kind, slug, {
+      title: `${cfg.title} (${src.tag})`,
+      summary: `${cfg.title}. ${src.source}, ${prev}–${curr}.`,
+      unit: cfg.unit,
+      valueLabel: cfg.title,
+      changeMode: cfg.mode,
+      source: src.source,
+      license: src.license,
+      url: src.url,
+      parsedAt: today,
+    }, data);
+    written++;
+  }
+  return written;
+}
+
+async function main() {
+  console.log('Tidy sources → WDI, QoG, V-Dem, Maddison, PWT, OECD, BIS');
+  let total = 0;
+  for (const src of SOURCES) total += await parseSource(src);
+  console.log(`✓ ${total} datasets written.`);
+}
+
+main().catch((err) => {
+  console.error('✗ parse_tidy failed:', err.message);
+  process.exit(1);
+});

@@ -106,7 +106,7 @@ const index = {
 
     // ---- helpers ----
     function changeVal(cv, pv, mode) { return mode === 'pp' ? cv - pv : (pv ? (cv - pv) / pv * 100 : 0); }
-    function fmtChange(v, mode) { return (v > 0 ? '+' : '') + v.toFixed(1) + (mode === 'pp' ? 'pp' : '%'); }
+    function fmtChange(v, mode) { return (v > 0 ? '+' : '') + v.toFixed(Math.abs(v) < 1 ? 2 : 1) + (mode === 'pp' ? 'pp' : '%'); }
     function moveClass(v) { return v > 0.5 ? 'up' : v < -0.5 ? 'down' : 'flat'; }
 
     function rowsFor(ds) {

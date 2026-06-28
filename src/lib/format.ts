@@ -16,10 +16,12 @@ export function formatPct(pct: number): string {
   return `${sign}${pct.toFixed(1)}%`;
 }
 
-/** Format a change value with the right unit: percent or percentage points. */
+/** Format a change value with the right unit: percent or percentage points.
+ *  Small index changes (|v| < 1) get an extra decimal so they don't read as 0. */
 export function formatChange(value: number, mode: 'pct' | 'pp' = 'pct'): string {
   const sign = value > 0 ? '+' : '';
-  return `${sign}${value.toFixed(1)}${mode === 'pp' ? 'pp' : '%'}`;
+  const dp = Math.abs(value) < 1 ? 2 : 1;
+  return `${sign}${value.toFixed(dp)}${mode === 'pp' ? 'pp' : '%'}`;
 }
 
 export function pctClass(pct: number): 'up' | 'down' | 'flat' {

@@ -137,6 +137,13 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .gloss-term h3 { margin: 0 0 4px; }
 .gloss-term p { margin: 0; color: var(--text-dim); }
 
+/* Sources catalogue */
+.source-card .source-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.source-card h3 { font-size: 15px; margin: 0 0 8px; }
+.badge { flex-shrink: 0; font-size: 11px; padding: 3px 9px; border-radius: 999px; white-space: nowrap; font-weight: 600; }
+.badge.live { background: rgba(52,211,153,0.14); color: var(--up); border: 1px solid rgba(52,211,153,0.3); }
+.badge.catalog { background: var(--bg-elev); color: var(--text-dim); border: 1px solid var(--border); }
+
 /* Explorer controls */
 .controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; margin: 18px 0 8px; }
 .controls label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }

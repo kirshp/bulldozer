@@ -44,6 +44,24 @@ const GAPMINDER = [
   { file: 'ddf--datapoints--income_per_person_with_projections--by--geo--time.csv',
     slug: 'gapminder-income', title: 'Income per Person', unit: 'int$', valueLabel: 'GDP/capita PPP', changeMode: 'pct', dp: 0,
     summary: 'GDP per capita, PPP, inflation-adjusted international dollars.' },
+  { file: 'ddf--datapoints--energy_use_per_person--by--geo--time.csv',
+    slug: 'gapminder-energy', title: 'Energy Use per Person', unit: 'kg oil eq', valueLabel: 'Energy use', changeMode: 'pct', dp: 0,
+    summary: 'Energy use per person, kg of oil equivalent.' },
+  { file: 'ddf--datapoints--gdp_per_capita_yearly_growth--by--geo--time.csv',
+    slug: 'gapminder-gdp-growth', title: 'GDP per Capita Growth', unit: '% YoY', valueLabel: 'GDP/capita growth', changeMode: 'pp', dp: 1,
+    summary: 'Annual growth of GDP per capita.' },
+  { file: 'ddf--datapoints--median_age_years--by--geo--time.csv',
+    slug: 'gapminder-median-age', title: 'Median Age', unit: 'years', valueLabel: 'Median age', changeMode: 'pp', dp: 1,
+    summary: 'Median age of the population.' },
+  { file: 'ddf--datapoints--murder_per_100000_people--by--geo--time.csv',
+    slug: 'gapminder-homicide', title: 'Homicide Rate', unit: 'per 100k', valueLabel: 'Homicides', changeMode: 'pct', dp: 1,
+    summary: 'Intentional homicides per 100,000 people.' },
+  { file: 'ddf--datapoints--urban_population_percent_of_total--by--geo--time.csv',
+    slug: 'gapminder-urban', title: 'Urban Population', unit: '%', valueLabel: 'Urban population', changeMode: 'pp', dp: 1,
+    summary: 'Share of the population living in urban areas.' },
+  { file: 'ddf--datapoints--population_density_per_square_km--by--geo--time.csv',
+    slug: 'gapminder-density', title: 'Population Density', unit: 'per km²', valueLabel: 'Population density', changeMode: 'pct', dp: 1,
+    summary: 'People per square kilometre of land area.' },
 ];
 
 async function loadGeoMap() {
@@ -127,49 +145,70 @@ function buildName2Iso(geoMap) {
   return m;
 }
 
+const WHR_INDICATORS = {
+  Ladder: { slug: 'whr-happiness', title: 'Happiness (Cantril Ladder)', unit: 'score 0–10', valueLabel: 'Life evaluation',
+    summary: 'Self-reported life evaluation on a 0–10 ladder.' },
+  GDP: { slug: 'whr-driver-gdp', title: 'Happiness Driver: GDP', unit: 'ladder pts', valueLabel: 'GDP contribution',
+    summary: 'Contribution of GDP per capita to the happiness score.' },
+  Social: { slug: 'whr-driver-social', title: 'Happiness Driver: Social Support', unit: 'ladder pts', valueLabel: 'Social support contribution',
+    summary: 'Contribution of social support to the happiness score.' },
+  Health: { slug: 'whr-driver-health', title: 'Happiness Driver: Healthy Life Expectancy', unit: 'ladder pts', valueLabel: 'Health contribution',
+    summary: 'Contribution of healthy life expectancy to the happiness score.' },
+  Freedom: { slug: 'whr-driver-freedom', title: 'Happiness Driver: Freedom', unit: 'ladder pts', valueLabel: 'Freedom contribution',
+    summary: 'Contribution of freedom to make life choices to the happiness score.' },
+  Generosity: { slug: 'whr-driver-generosity', title: 'Happiness Driver: Generosity', unit: 'ladder pts', valueLabel: 'Generosity contribution',
+    summary: 'Contribution of generosity to the happiness score.' },
+  Corruption: { slug: 'whr-driver-corruption', title: 'Happiness Driver: Low Corruption', unit: 'ladder pts', valueLabel: 'Low-corruption contribution',
+    summary: 'Contribution of perceived low corruption to the happiness score.' },
+};
+
 async function parseWHR(geoMap) {
   let text;
   try {
     text = await readFile(WHR_CSV, 'utf8');
   } catch {
-    console.log('  – whr-happiness: source missing, skipped');
+    console.log('  – whr: source missing, skipped');
     return;
   }
   const name2iso = buildName2Iso(geoMap);
-  const byCountry = new Map();
-  const years = new Set();
+
+  // code → country → { region, byYear }
+  const byCode = new Map(Object.keys(WHR_INDICATORS).map((c) => [c, new Map()]));
+  const yearsByCode = new Map(Object.keys(WHR_INDICATORS).map((c) => [c, new Set()]));
   for (const row of parseCsvObjects(text)) {
-    if (row.indicator_code !== 'Ladder') continue;
+    const cfg = WHR_INDICATORS[row.indicator_code];
+    if (!cfg) continue;
     const v = Number(row.value);
     if (Number.isNaN(v)) continue;
-    years.add(row.year);
-    let rec = byCountry.get(row.country);
-    if (!rec) byCountry.set(row.country, (rec = { region: enRegion(row.region), byYear: {} }));
+    yearsByCode.get(row.indicator_code).add(row.year);
+    const map = byCode.get(row.indicator_code);
+    let rec = map.get(row.country);
+    if (!rec) map.set(row.country, (rec = { region: enRegion(row.region), byYear: {} }));
     rec.byYear[row.year] = v;
   }
-  const [prev, curr] = latestTwo([...years]);
-  if (!prev || !curr) {
-    console.log('  – whr-happiness: not enough years, skipped');
-    return;
-  }
-  const data = [];
-  for (const [country, rec] of byCountry) {
-    for (const period of [prev, curr]) {
-      if (rec.byYear[period] == null) continue;
-      data.push({ entity: country, group: rec.region, period, value: round(rec.byYear[period], 3), iso: name2iso.get(country.toLowerCase()) || '' });
+
+  for (const [code, cfg] of Object.entries(WHR_INDICATORS)) {
+    const [prev, curr] = latestTwo([...yearsByCode.get(code)]);
+    if (!prev || !curr) continue;
+    const data = [];
+    for (const [country, rec] of byCode.get(code)) {
+      for (const period of [prev, curr]) {
+        if (rec.byYear[period] == null) continue;
+        data.push({ entity: country, group: rec.region, period, value: round(rec.byYear[period], 3), iso: name2iso.get(country.toLowerCase()) || '' });
+      }
     }
+    await writeDataset('survey', cfg.slug, {
+      title: cfg.title,
+      summary: `${cfg.summary} World Happiness Report, ${prev}–${curr}.`,
+      unit: cfg.unit,
+      valueLabel: cfg.valueLabel,
+      changeMode: 'pp',
+      source: 'World Happiness Report (Gallup World Poll)',
+      license: 'CC BY 4.0',
+      url: 'https://worldhappiness.report/',
+      parsedAt: new Date().toISOString().slice(0, 10),
+    }, data);
   }
-  await writeDataset('survey', 'whr-happiness', {
-    title: 'Happiness (Cantril Ladder)',
-    summary: `Self-reported life evaluation on a 0–10 ladder. World Happiness Report, ${prev}–${curr}.`,
-    unit: 'score 0–10',
-    valueLabel: 'Life evaluation',
-    changeMode: 'pp',
-    source: 'World Happiness Report (Gallup World Poll)',
-    license: 'CC BY 4.0',
-    url: 'https://worldhappiness.report/',
-    parsedAt: new Date().toISOString().slice(0, 10),
-  }, data);
 }
 
 async function main() {

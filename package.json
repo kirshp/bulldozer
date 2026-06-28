@@ -10,7 +10,8 @@
     "fetch:imf": "node scripts/fetch_imf.mjs",
     "parse:macro": "node scripts/parse_macro.mjs",
     "parse:surveys": "node scripts/parse_surveys.mjs",
-    "data:build": "node scripts/parse_macro.mjs && node scripts/parse_surveys.mjs",
+    "parse:tidy": "node scripts/parse_tidy.mjs",
+    "data:build": "node scripts/parse_macro.mjs && node scripts/parse_surveys.mjs && node scripts/parse_tidy.mjs",
     "digest": "node scripts/telegram_digest.mjs"
   },
   "dependencies": {
