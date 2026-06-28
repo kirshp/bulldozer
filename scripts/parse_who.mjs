@@ -25,11 +25,13 @@ async function geo() {
   return m;
 }
 
-/** Fetch one GHO indicator → latest both-sexes value per country, ignoring
- *  future projections (WHO modelled series run to 2030 — keep actuals only). */
-async function ghoLatest(code, maxYear = 2022) {
-  const url = `${API}/${code}?$filter=SpatialDimType eq 'COUNTRY' and Dim1 eq 'SEX_BTSX'`;
-  const res = await fetch(url, { headers: { Accept: 'application/json' } });
+/** Fetch one GHO indicator → latest value per country, ignoring future
+ *  projections (WHO modelled series run to 2030 — keep actuals only).
+ *  `dim` filters Dim1 (e.g. SEX_BTSX); pass null for indicators with no Dim1. */
+async function ghoLatest(code, { dim = 'SEX_BTSX', maxYear = 2024 } = {}) {
+  let filter = `SpatialDimType eq 'COUNTRY'`;
+  if (dim) filter += ` and Dim1 eq '${dim}'`;
+  const res = await fetch(`${API}/${code}?$filter=${filter}`, { headers: { Accept: 'application/json' } });
   if (!res.ok) throw new Error(`GHO ${code}: ${res.status}`);
   const rows = (await res.json()).value || [];
   const latest = new Map(); // iso3 -> {year, value}
@@ -42,9 +44,9 @@ async function ghoLatest(code, maxYear = 2022) {
   return latest;
 }
 
-async function emit(slug, code, meta, g) {
+async function emit(slug, code, meta, g, opts) {
   let latest;
-  try { latest = await ghoLatest(code); } catch (e) { console.warn(`– ${slug}: ${e.message}; skipped.`); return; }
+  try { latest = await ghoLatest(code, opts); } catch (e) { console.warn(`– ${slug}: ${e.message}; skipped.`); return; }
   const data = [...latest.entries()].map(([iso, { year, value }]) => {
     const info = g.get(iso);
     return { entity: info?.name || iso, group: info?.region || 'Other', period: String(year), value: round(value, 2), iso };
@@ -54,15 +56,35 @@ async function emit(slug, code, meta, g) {
 
 async function main() {
   const g = await geo();
+  const WHO = { source: 'WHO Global Health Observatory', license: 'CC BY-NC-SA 3.0 IGO', url: 'https://www.who.int/data/gho' };
+
   await emit('who-alcohol', 'SA_0000001688', {
     title: 'Alcohol Consumption per Capita', valueLabel: 'Litres of pure alcohol per person (15+)', unit: 'litres', changeMode: 'pct', topic: 'health',
-    summary: 'Total recorded + unrecorded alcohol consumption per person aged 15+, in litres of pure alcohol. WHO Global Health Observatory.',
-    source: 'WHO Global Health Observatory', license: 'CC BY-NC-SA 3.0 IGO', url: 'https://www.who.int/data/gho',
-  }, g);
+    summary: 'Total recorded + unrecorded alcohol consumption per person aged 15+, in litres of pure alcohol. WHO Global Health Observatory.', ...WHO,
+  }, g, { maxYear: 2022 });
   await emit('who-tobacco', 'M_Est_tob_curr_std', {
     title: 'Tobacco Use Prevalence', valueLabel: 'Age-standardised current tobacco use (15+)', unit: '%', changeMode: 'pp', topic: 'health',
-    summary: 'Age-standardised prevalence of current tobacco use among people aged 15+, both sexes. WHO Global Health Observatory.',
-    source: 'WHO Global Health Observatory', license: 'CC BY-NC-SA 3.0 IGO', url: 'https://www.who.int/data/gho',
+    summary: 'Age-standardised prevalence of current tobacco use among people aged 15+, both sexes. WHO Global Health Observatory.', ...WHO,
+  }, g, { maxYear: 2022 });
+  await emit('who-suicide', 'MH_12', {
+    title: 'Suicide Rate', valueLabel: 'Age-standardised suicides per 100,000', unit: 'per 100k', changeMode: 'pct', topic: 'health',
+    summary: 'Age-standardised suicide mortality rate per 100,000 population, both sexes. WHO Global Health Observatory.', ...WHO,
+  }, g);
+  await emit('who-road-deaths', 'RS_198', {
+    title: 'Road Traffic Deaths', valueLabel: 'Road traffic deaths per 100,000', unit: 'per 100k', changeMode: 'pct', topic: 'safety',
+    summary: 'Estimated road traffic death rate per 100,000 population. WHO Global Health Observatory.', ...WHO,
+  }, g, { dim: null });
+  await emit('who-obesity', 'NCD_BMI_30A', {
+    title: 'Adult Obesity', valueLabel: 'Age-standardised obesity prevalence (18+)', unit: '%', changeMode: 'pp', topic: 'health',
+    summary: 'Age-standardised prevalence of obesity (BMI ≥ 30) among adults aged 18+, both sexes. WHO Global Health Observatory.', ...WHO,
+  }, g, { maxYear: 2022 });
+  await emit('who-uhc', 'UHC_INDEX_REPORTED', {
+    title: 'Universal Health Coverage Index', valueLabel: 'UHC service coverage index (0–100)', unit: 'index 0–100', changeMode: 'pp', topic: 'health',
+    summary: 'WHO/World Bank Universal Health Coverage service coverage index (0–100), SDG 3.8.1. WHO Global Health Observatory.', ...WHO,
+  }, g, { dim: null });
+  await emit('who-hypertension', 'NCD_HYP_PREVALENCE_A', {
+    title: 'Hypertension Prevalence', valueLabel: 'Age-standardised hypertension (30–79)', unit: '%', changeMode: 'pp', topic: 'health',
+    summary: 'Age-standardised prevalence of hypertension among adults aged 30–79, both sexes. WHO Global Health Observatory.', ...WHO,
   }, g);
   console.log('✓ WHO GHO: datasets written');
 }
