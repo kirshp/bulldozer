@@ -64,8 +64,8 @@ export const sources: Source[] = [
     description: 'Public opinion across the Middle East and North Africa on politics, economy and society.' },
   { name: 'Caucasus Barometer (CRRC)', url: 'https://caucasusbarometer.org/', status: 'catalog', category: 'Public opinion barometers',
     description: 'Annual household survey for Armenia, Azerbaijan and Georgia from the Caucasus Research Resource Centers.' },
-  { name: 'EBRD — Life in Transition Survey (LiTS)', url: 'https://www.ebrd.com/what-we-do/economic-research-and-data/data/lits.html', status: 'catalog', category: 'Public opinion barometers',
-    description: 'Attitudes to transition, markets and democracy across Central/Eastern Europe and Central Asia; visualiser aggregates on hand.' },
+  { name: 'EBRD — Life in Transition Survey (LiTS)', url: 'https://www.ebrd.com/what-we-do/economic-research-and-data/data/lits.html', status: 'live', category: 'Public opinion barometers', match: 'EBRD — Life in Transition',
+    description: 'Attitudes to transition, markets and democracy across Central/Eastern Europe and Central Asia. Trust, risk tolerance, religion and more.' },
   { name: 'SDR — Survey Data Recycling', url: 'https://dataharmonization.org/', status: 'catalog', category: 'Public opinion barometers',
     description: 'Large harmonised ex-post integration of international survey projects; SDR2 master file gathered.' },
 

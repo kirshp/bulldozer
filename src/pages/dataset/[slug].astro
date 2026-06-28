@@ -6,7 +6,7 @@ import DataPanel from '@components/DataPanel.astro';
 import MoversTable from '@components/MoversTable.astro';
 import GroupChart from '@components/GroupChart.astro';
 import { datasets, getDataset } from '@data/datasets';
-import { groupRollups } from '@lib/analytics';
+import { groupRollups, isSinglePeriod } from '@lib/analytics';
 import { formatChange, pctClass } from '@lib/format';
 
 export function getStaticPaths() {
@@ -17,6 +17,7 @@ const { slug } = Astro.params;
 const ds = getDataset(slug!)!;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const groups = groupRollups(ds.data, ds.changeMode);
+const single = isSinglePeriod(ds.data);
 const pctUnit = ds.unit === '%' ? '%' : '';
 const panelIndicator = [{
   slug: ds.slug, title: ds.title, kind: ds.kind, unit: ds.unit, valueLabel: ds.valueLabel,
@@ -49,15 +50,17 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <h2>Movers</h2>
-      <p class="sub">Biggest period-over-period changes.</p>
-      <MoversTable data={ds.data} n={5} unit={pctUnit} mode={ds.changeMode} />
-    </div>
-  </section>
+  {!single && (
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <h2>Movers</h2>
+        <p class="sub">Biggest period-over-period changes.</p>
+        <MoversTable data={ds.data} n={5} unit={pctUnit} mode={ds.changeMode} />
+      </div>
+    </section>
+  )}
 
-  {groups.length > 0 && (
+  {groups.length > 0 && !single && (
     <section class="section" style="padding-top:0" id="groups">
       <div class="container">
         <h2>By group</h2>

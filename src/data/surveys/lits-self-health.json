@@ -1,0 +1,275 @@
+{
+  "meta": {
+    "title": "Self-assessed Health",
+    "summary": "Mean self-assessment of own health. EBRD Life in Transition Survey IV, 2023.",
+    "unit": "mean 1–5",
+    "valueLabel": "How would you assess your health",
+    "changeMode": "pp",
+    "source": "EBRD — Life in Transition Survey IV",
+    "license": "EBRD terms — public aggregates",
+    "url": "https://www.ebrd.com/what-we-do/economic-research-and-data/data/lits.html",
+    "parsedAt": "2026-06-28",
+    "kind": "survey"
+  },
+  "data": [
+    {
+      "entity": "Albania",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.05,
+      "iso": "ALB"
+    },
+    {
+      "entity": "Armenia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.89,
+      "iso": "ARM"
+    },
+    {
+      "entity": "Azerbaijan",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.43,
+      "iso": "AZE"
+    },
+    {
+      "entity": "Belarus",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.43,
+      "iso": "BLR"
+    },
+    {
+      "entity": "Bosnia & Herzegov.",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.04,
+      "iso": "BIH"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.29,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.06,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Czechia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.04,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Estonia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.52,
+      "iso": "EST"
+    },
+    {
+      "entity": "Georgia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.65,
+      "iso": "GEO"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.25,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2023",
+      "value": 1.72,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.17,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Jordan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 2.35,
+      "iso": "JOR"
+    },
+    {
+      "entity": "Kazakhstan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 2.35,
+      "iso": "KAZ"
+    },
+    {
+      "entity": "Kosovo",
+      "group": "Europe",
+      "period": "2023",
+      "value": 1.83,
+      "iso": ""
+    },
+    {
+      "entity": "Kyrgyz Republic",
+      "group": "Asia",
+      "period": "2023",
+      "value": 2.39,
+      "iso": "KGZ"
+    },
+    {
+      "entity": "Latvia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.68,
+      "iso": "LVA"
+    },
+    {
+      "entity": "Lebanon",
+      "group": "Asia",
+      "period": "2023",
+      "value": 2.25,
+      "iso": "LBN"
+    },
+    {
+      "entity": "Lithuania",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.15,
+      "iso": "LTU"
+    },
+    {
+      "entity": "Moldova",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.8,
+      "iso": "MDA"
+    },
+    {
+      "entity": "Mongolia",
+      "group": "Asia",
+      "period": "2023",
+      "value": 2.37,
+      "iso": "MNG"
+    },
+    {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.11,
+      "iso": "MNE"
+    },
+    {
+      "entity": "Morocco",
+      "group": "Africa",
+      "period": "2023",
+      "value": 2.4,
+      "iso": "MAR"
+    },
+    {
+      "entity": "North Macedonia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2,
+      "iso": "MKD"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.14,
+      "iso": "POL"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.03,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.51,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.15,
+      "iso": "SRB"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.24,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Slovenia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.23,
+      "iso": "SVN"
+    },
+    {
+      "entity": "Tajikistan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 2.35,
+      "iso": "TJK"
+    },
+    {
+      "entity": "Tunisia",
+      "group": "Africa",
+      "period": "2023",
+      "value": 2.64,
+      "iso": "TUN"
+    },
+    {
+      "entity": "Türkiye",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.32,
+      "iso": "TUR"
+    },
+    {
+      "entity": "Uzbekistan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 2.08,
+      "iso": "UZB"
+    },
+    {
+      "entity": "West Bank & Gaza",
+      "group": "Asia",
+      "period": "2023",
+      "value": 1.95,
+      "iso": "PSE"
+    },
+    {
+      "entity": "Algeria",
+      "group": "Africa",
+      "period": "2023",
+      "value": 2.42,
+      "iso": "DZA"
+    }
+  ]
+}

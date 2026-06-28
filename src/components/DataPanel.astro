@@ -97,7 +97,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
 
   function renderBars(rows) {
     const m = meta(); const unit = m.unit.includes('%') ? '%' : '';
-    const top = rows.slice(0, 25); const vals = top.map((r) => r.value);
+    const top = rows.slice(0, 60); const vals = top.map((r) => r.value);
     const base = Math.min(0, ...vals), max = Math.max(1, ...vals), span = (max - base) || 1;
     el('bar-target').innerHTML = top.map((r) => {
       const w = Math.max(0, Math.min(100, (r.value - base) / span * 100));

@@ -52,7 +52,13 @@ export function periods(data: Observation[]): string[] {
 
 export function lastTwoPeriods(data: Observation[]): [string, string] {
   const p = periods(data);
+  if (p.length < 2) return [p[p.length - 1], p[p.length - 1]]; // single period → no change
   return [p[p.length - 2], p[p.length - 1]];
+}
+
+/** True when the dataset only has one period (no period-over-period change). */
+export function isSinglePeriod(data: Observation[]): boolean {
+  return periods(data).length < 2;
 }
 
 /** Sum of value per entity within a single period. */

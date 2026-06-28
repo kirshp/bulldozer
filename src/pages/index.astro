@@ -1,7 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { datasets, datasetsByKind, getDataset } from '@data/datasets';
+import { upcoming } from '@data/releases';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const month = new Date().getMonth() + 1;
+const calendar = upcoming(month).slice(0, 6);
 
 const stories = [
   { href: `${base}/stories/happiest-countries`, tag: 'World Happiness Report', title: 'The world’s happiest countries', dek: 'Who tops the ranking, how happiness tracks income, and what actually drives it.' },
@@ -63,6 +66,24 @@ const browse = [
             <h3 style="font-size:16px">{d.title}</h3>
             <p class="meta">{d.summary}</p>
             <span class="pill">{d.source}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>Data release calendar</h2>
+      <p class="sub">When the next big numbers drop — sorted by what’s coming up.</p>
+      <div class="releases">
+        {calendar.map((r) => (
+          <a class="rel-row" href={r.url} target="_blank" rel="noopener">
+            <span class={`rel-when ${r.kind}`}>{r.window}</span>
+            <span class="rel-body">
+              <b>{r.name} ↗</b>
+              <span class="meta">{r.description}</span>
+            </span>
           </a>
         ))}
       </div>

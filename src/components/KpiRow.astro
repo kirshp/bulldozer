@@ -13,7 +13,9 @@ const band = mode === 'pp' ? '±0.5pp band' : '±0.5% band';
   <div class="kpi">
     <div class="label">Avg ({k.currPeriod})</div>
     <div class="value">{avg.toFixed(1)}{unit}</div>
-    <div class={`delta ${pctClass(k.totalPct)}`}>{formatChange(k.totalPct, mode)} vs {k.prevPeriod}</div>
+    {k.prevPeriod === k.currPeriod
+      ? <div class="delta flat">single period</div>
+      : <div class={`delta ${pctClass(k.totalPct)}`}>{formatChange(k.totalPct, mode)} vs {k.prevPeriod}</div>}
   </div>
   <div class="kpi">
     <div class="label">Improving</div>

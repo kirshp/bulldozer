@@ -197,6 +197,17 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .view-toggle button + button { border-left: 1px solid var(--border); }
 .view-toggle button.active { background: var(--accent); color: #1a1300; font-weight: 600; }
 
+/* Release calendar */
+.releases { display: flex; flex-direction: column; gap: 8px; }
+.rel-row { display: grid; grid-template-columns: 180px 1fr; gap: 16px; align-items: start; padding: 12px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; }
+.rel-row:hover { border-color: var(--accent); text-decoration: none; }
+.rel-when { font-family: var(--mono); font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; text-align: center; align-self: start; }
+.rel-when.macro { color: var(--accent); background: rgba(255,176,0,0.12); border: 1px solid rgba(255,176,0,0.25); }
+.rel-when.survey { color: #60a5fa; background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.25); }
+.rel-body { display: flex; flex-direction: column; gap: 3px; }
+.rel-body b { color: var(--text); font-weight: 600; }
+@media (max-width: 600px) { .rel-row { grid-template-columns: 1fr; gap: 6px; } }
+
 /* Country profile */
 .country-desc { font-size: 16px; color: var(--text); background: var(--bg-elev); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 12px 16px; margin: 14px 0 4px; }
 #country-items table.data td { padding: 7px 8px; }
