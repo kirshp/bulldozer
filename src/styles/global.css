@@ -197,6 +197,18 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .view-toggle button + button { border-left: 1px solid var(--border); }
 .view-toggle button.active { background: var(--accent); color: #1a1300; font-weight: 600; }
 
+/* Bivariate map */
+.bivmap-grid { display: grid; grid-template-columns: 1fr 150px; gap: 18px; align-items: center; }
+.bivmap .country { transition: fill 0.2s ease; }
+.bivmap .country:hover { stroke: var(--text); stroke-width: 0.8; }
+.biv-legend { display: flex; flex-direction: column; gap: 6px; font-size: 11px; color: var(--text-dim); }
+.biv-matrix { display: flex; flex-direction: column; gap: 2px; }
+.biv-mrow { display: flex; gap: 2px; }
+.biv-cell { width: 30px; height: 30px; border-radius: 3px; }
+.biv-yaxis { writing-mode: vertical-rl; transform: rotate(180deg); align-self: flex-start; height: 96px; font-family: var(--mono); }
+.biv-xaxis { font-family: var(--mono); }
+@media (max-width: 700px) { .bivmap-grid { grid-template-columns: 1fr; } .biv-yaxis { writing-mode: horizontal-tb; transform: none; height: auto; } }
+
 /* Release calendar */
 .releases { display: flex; flex-direction: column; gap: 8px; }
 .rel-row { display: grid; grid-template-columns: 180px 1fr; gap: 16px; align-items: start; padding: 12px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; }

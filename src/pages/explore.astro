@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DataPanel from '@components/DataPanel.astro';
 import CountryPanel from '@components/CountryPanel.astro';
+import BivariateExplore from '@components/BivariateExplore.astro';
 import { datasets } from '@data/datasets';
 
 const indicators = datasets.map((d) => ({
@@ -16,6 +17,15 @@ const indicators = datasets.map((d) => ({
       <h2>Explore the data</h2>
       <p class="sub">Pick an indicator, period and countries. Switch between bars, table and world map.</p>
       <DataPanel indicators={indicators} />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <span class="kicker">Bivariate map</span>
+      <h2>Two indicators, one map</h2>
+      <p class="sub">See how two measures combine across the world — colour mixes amber (X) and blue (Y).</p>
+      <BivariateExplore indicators={indicators} />
     </div>
   </section>
 
