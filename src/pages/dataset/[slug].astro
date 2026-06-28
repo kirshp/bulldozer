@@ -4,6 +4,7 @@ import Provenance from '@components/Provenance.astro';
 import KpiRow from '@components/KpiRow.astro';
 import BarList from '@components/BarList.astro';
 import MoversTable from '@components/MoversTable.astro';
+import GroupChart from '@components/GroupChart.astro';
 import { datasets, getDataset } from '@data/datasets';
 import { groupRollups } from '@lib/analytics';
 import { formatChange, pctClass } from '@lib/format';
@@ -53,10 +54,12 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
   </section>
 
   {groups.length > 0 && (
-    <section class="section" style="padding-top:0">
+    <section class="section" style="padding-top:0" id="groups">
       <div class="container">
         <h2>By group</h2>
-        <p class="sub">Rollup across {groups.length} groups.</p>
+        <p class="sub">Change by group, latest period.</p>
+        <GroupChart data={ds.data} mode={ds.changeMode} />
+        <div style="height:24px"></div>
         <table class="data">
           <thead><tr><th>Group</th><th class="num">Members</th><th class="num">{ds.changeMode === 'pp' ? 'Avg' : 'Total'}</th><th class="num">Change</th></tr></thead>
           <tbody>

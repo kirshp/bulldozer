@@ -1,13 +1,16 @@
 ---
-import type { Observation } from '@lib/analytics';
-import { topByVolume } from '@lib/analytics';
+import type { Observation, ChangeMode } from '@lib/analytics';
+import { topByVolume, computeChanges } from '@lib/analytics';
+import { formatChange, pctClass } from '@lib/format';
 
-interface Props { data: Observation[]; n?: number; unit?: string }
-const { data, n = 10, unit = '' } = Astro.props;
+interface Props { data: Observation[]; n?: number; unit?: string; mode?: ChangeMode }
+const { data, n = 10, unit = '', mode = 'pct' } = Astro.props;
 const rows = topByVolume(data, n);
 
-// Anchor the scale at zero (or below, if values go negative) so negative
-// values render as short bars instead of overflowing.
+// Movement per entity, to colour bars green/red/grey (Madeira dashboard style).
+const changeByEntity = new Map(computeChanges(data, mode).map((c) => [c.entity, c.pct]));
+
+// Anchor the scale at zero (or below, if values go negative).
 const values = rows.map((r) => r.curr);
 const base = Math.min(0, ...values);
 const max = Math.max(1, ...values);
@@ -15,11 +18,18 @@ const span = max - base || 1;
 const width = (v: number) => Math.max(0, Math.min(100, ((v - base) / span) * 100));
 ---
 <div class="bars">
-  {rows.map((r) => (
-    <div class="bar-row">
-      <span>{r.entity}</span>
-      <span class="bar-track"><span class="bar-fill" style={`width:${width(r.curr)}%`}></span></span>
-      <span class="bar-val">{r.curr}{unit}</span>
-    </div>
-  ))}
+  {rows.map((r) => {
+    const ch = changeByEntity.get(r.entity);
+    const cls = ch === undefined ? 'flat' : pctClass(ch);
+    return (
+      <div class="bar-row">
+        <span>{r.entity}</span>
+        <span class="bar-track"><span class={`bar-fill move-${cls}`} style={`width:${width(r.curr)}%`}></span></span>
+        <span class="bar-val">
+          {r.curr}{unit}
+          {ch !== undefined && <em class={cls}>{formatChange(ch, mode)}</em>}
+        </span>
+      </div>
+    );
+  })}
 </div>
