@@ -1,0 +1,283 @@
+{
+  "meta": {
+    "title": "Trust in People (ESS)",
+    "valueLabel": "Most people can be trusted (0–10)",
+    "unit": "mean 0–10",
+    "changeMode": "pp",
+    "topic": "attitudes",
+    "summary": "Mean generalised social trust on a 0–10 scale. European Social Survey, pooled recent rounds.",
+    "source": "European Social Survey",
+    "license": "ESS terms — public aggregates",
+    "url": "https://www.europeansocialsurvey.org/",
+    "parsedAt": "2026-06-28",
+    "kind": "survey"
+  },
+  "data": [
+    {
+      "entity": "Albania",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.01,
+      "iso": "ALB"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2023",
+      "value": 5.28,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2023",
+      "value": 5.01,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.51,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 5.76,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Cyprus",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.9,
+      "iso": "CYP"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.69,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.8,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2023",
+      "value": 6.8,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Estonia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 5.53,
+      "iso": "EST"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.97,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 6.62,
+      "iso": "FIN"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.47,
+      "iso": "FRA"
+    },
+    {
+      "entity": "UK",
+      "group": "Europe",
+      "period": "2023",
+      "value": 5.28,
+      "iso": "GBR"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.08,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.41,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.44,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 5.44,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Israel",
+      "group": "Asia",
+      "period": "2023",
+      "value": 5.07,
+      "iso": "ISR"
+    },
+    {
+      "entity": "Iceland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 6.31,
+      "iso": "ISL"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.67,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Lithuania",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.96,
+      "iso": "LTU"
+    },
+    {
+      "entity": "Luxembourg",
+      "group": "Europe",
+      "period": "2023",
+      "value": 5.1,
+      "iso": "LUX"
+    },
+    {
+      "entity": "Latvia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.97,
+      "iso": "LVA"
+    },
+    {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.95,
+      "iso": "MNE"
+    },
+    {
+      "entity": "North Macedonia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.59,
+      "iso": "MKD"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2023",
+      "value": 5.99,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2023",
+      "value": 6.6,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.92,
+      "iso": "POL"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.91,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.86,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 3.83,
+      "iso": "SRB"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.16,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2023",
+      "value": 6.08,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Slovenia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.28,
+      "iso": "SVN"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.07,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Turkey",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2.61,
+      "iso": "TUR"
+    },
+    {
+      "entity": "Ukraine",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4.12,
+      "iso": "UKR"
+    }
+  ]
+}

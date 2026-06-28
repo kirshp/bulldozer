@@ -62,8 +62,8 @@ export const sources: Source[] = [
   // ── Public opinion (regional barometers) ───────────────────────────
   { name: 'Eurobarometer', url: 'https://europa.eu/eurobarometer/', status: 'catalog', category: 'Public opinion barometers',
     description: 'European Commission’s standard survey of public opinion across EU member states since 1974.' },
-  { name: 'European Social Survey (ESS)', url: 'https://www.europeansocialsurvey.org/', status: 'catalog', category: 'Public opinion barometers',
-    description: 'Academically-driven, methodologically rigorous biennial survey of attitudes and behaviour across Europe.' },
+  { name: 'European Social Survey (ESS)', url: 'https://www.europeansocialsurvey.org/', status: 'live', category: 'Public opinion barometers', match: 'European Social Survey',
+    description: 'Rigorous biennial survey of attitudes across Europe. We aggregated trust in people and satisfaction with democracy.' },
   { name: 'ISSP — International Social Survey Programme', url: 'https://issp.org/', status: 'catalog', category: 'Public opinion barometers',
     description: 'Annual cross-national survey on rotating social-science themes (role of government, religion, work…).' },
   { name: 'Afrobarometer', url: 'https://www.afrobarometer.org/', status: 'live', category: 'Public opinion barometers', match: 'Afrobarometer',
