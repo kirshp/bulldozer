@@ -1,16 +1,12 @@
 /**
- * Dataset registry. Every dataset here is PUBLIC and parsed from an open
- * source — provenance (source, licence, url, parsedAt) is mandatory metadata
- * and is surfaced in the UI.
+ * Dataset registry. Every dataset is PUBLIC and parsed from an open source —
+ * provenance (source, licence, url, parsedAt) is mandatory and surfaced in the
+ * UI. JSON files in ./surveys and ./macro are auto-registered, so the parsers
+ * (scripts/parse_*.mjs) can add datasets without touching code.
  */
 import type { Observation } from '@lib/analytics';
 
-import eurobarometerTrust from './surveys/eurobarometer-trust.json';
-import gallupOptimism from './surveys/gallup-economic-optimism.json';
-import imfGdpGrowth from './macro/imf-gdp-growth.json';
-
 export type DatasetKind = 'survey' | 'macro';
-
 export type ChangeMode = 'pct' | 'pp';
 
 export interface DatasetMeta {
@@ -34,28 +30,34 @@ export interface Dataset extends DatasetMeta {
 }
 
 interface RawDataset {
-  meta: Omit<DatasetMeta, 'slug' | 'changeMode'>;
+  meta: Omit<DatasetMeta, 'slug' | 'changeMode'> & { changeMode?: ChangeMode };
   data: Observation[];
 }
 
-/** Percentage / rate units are compared in percentage points; everything
- *  else (counts, volumes) multiplicatively. */
+/** Percentage / rate units compare in percentage points; counts multiplicatively. */
 function deriveChangeMode(unit: string): ChangeMode {
   return unit.includes('%') ? 'pp' : 'pct';
 }
 
-const registry: Record<string, RawDataset> = {
-  'eurobarometer-trust': eurobarometerTrust as RawDataset,
-  'gallup-economic-optimism': gallupOptimism as RawDataset,
-  'imf-gdp-growth': imfGdpGrowth as RawDataset,
-};
+const surveyModules = import.meta.glob<{ default: RawDataset }>('./surveys/*.json', { eager: true });
+const macroModules = import.meta.glob<{ default: RawDataset }>('./macro/*.json', { eager: true });
 
-export const datasets: Dataset[] = Object.entries(registry).map(([slug, d]) => ({
-  slug,
-  ...d.meta,
-  changeMode: deriveChangeMode(d.meta.unit),
-  data: d.data,
-}));
+function build(modules: Record<string, { default: RawDataset }>): Dataset[] {
+  return Object.entries(modules).map(([path, mod]) => {
+    const slug = path.split('/').pop()!.replace(/\.json$/, '');
+    const raw = mod.default;
+    return {
+      slug,
+      ...raw.meta,
+      changeMode: raw.meta.changeMode ?? deriveChangeMode(raw.meta.unit),
+      data: raw.data,
+    };
+  });
+}
+
+export const datasets: Dataset[] = [...build(surveyModules), ...build(macroModules)].sort((a, b) =>
+  a.title.localeCompare(b.title),
+);
 
 export function getDataset(slug: string): Dataset | undefined {
   return datasets.find((d) => d.slug === slug);

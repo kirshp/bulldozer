@@ -9,7 +9,7 @@ const items = datasetsByKind('survey');
     <div class="container">
       <span class="kicker">Public surveys</span>
       <h2>Survey datasets</h2>
-      <p class="sub">Opinion &amp; market research parsed from open sources. {items.length} datasets.</p>
+      <p class="sub">Survey &amp; development indicators parsed from open sources (Gapminder, World Happiness Report). {items.length} datasets.</p>
       <div class="grid cols-2">
         {items.map((d) => (
           <a class="card link" href={`${base}/dataset/${d.slug}`}>

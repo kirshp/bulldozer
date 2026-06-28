@@ -23,11 +23,12 @@ jobs:
 
       - run: npm ci
 
-      - name: Fetch IMF macro data
-        run: npm run fetch:imf
-
-      # Add more parsers here as they are built, e.g.:
-      # - run: node scripts/parse_eurobarometer.mjs
+      # Parsers read curated tidy sources (IMF WEO, Gapminder, WHR). When those
+      # local/curated files aren't present in CI, the parsers soft-skip — so this
+      # job is a no-op unless run on a runner that has the sources mounted.
+      # Day-to-day, run `npm run data:build` locally and commit the output.
+      - name: Rebuild datasets from sources
+        run: npm run data:build
 
       - name: Commit updated datasets
         run: |

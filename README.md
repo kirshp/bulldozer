@@ -42,8 +42,26 @@ surveys, macro indicators and (later) brand data all flow through one analytics 
 npm install
 npm run dev          # http://localhost:4321/bulldozer/
 npm run build        # → dist/
-npm run fetch:imf    # refresh IMF macro data (optionally: node scripts/fetch_imf.mjs PCPIPCH 2023,2024)
+npm run data:build   # rebuild all datasets from curated sources (macro + surveys)
+npm run parse:macro  # IMF WEO tidy → src/data/macro/*.json
+npm run parse:surveys# Gapminder + World Happiness → src/data/surveys/*.json
+npm run fetch:imf    # optional: live IMF DataMapper API fallback
 ```
+
+## Data sources
+
+The parsers read curated, public, tidy exports from local paths (overridable by env):
+
+| Parser | Default source | Env override |
+|---|---|---|
+| `parse:macro` | `~/Documents/tableau_data/macro/imf_weo_apr2026_tidy.csv` | `IMF_WEO_CSV`, `REF_YEAR` |
+| `parse:surveys` (Gapminder) | `…/BK/Opros/Inter_survey/Gapminder/` | `GAPMINDER_DIR` |
+| `parse:surveys` (WHR) | `~/Documents/tableau_data/happiness/whr_tidy.csv` | `WHR_CSV` |
+
+Output is small normalised JSON (latest two periods per indicator) committed to
+the repo. Russian region/indicator labels in the sources are mapped to English.
+Each parser soft-skips when its source is absent, so CI without the curated
+files still succeeds.
 
 ## Add a dataset
 

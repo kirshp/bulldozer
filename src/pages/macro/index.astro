@@ -9,7 +9,7 @@ const items = datasetsByKind('macro');
     <div class="container">
       <span class="kicker">Macro indicators</span>
       <h2>Macro datasets</h2>
-      <p class="sub">Economic indicators pulled from open APIs (IMF DataMapper, World Bank). {items.length} datasets. Regenerate with <code>npm run fetch:imf</code>.</p>
+      <p class="sub">Economic indicators from the IMF World Economic Outlook (Apr 2026). {items.length} datasets. Regenerate with <code>npm run parse:macro</code>.</p>
       <div class="grid cols-2">
         {items.map((d) => (
           <a class="card link" href={`${base}/dataset/${d.slug}`}>
