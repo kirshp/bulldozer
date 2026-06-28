@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Scatter from '@components/Scatter.astro';
+import { getDataset } from '@data/datasets';
+import { colorFor, regionList } from '@lib/palette';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const sec = getDataset('wvs-secular')!;
+const emo = getDataset('wvs-emancipative')!;
+const secByIso = new Map(sec.data.map((o) => [o.iso, o]));
+
+const HIGHLIGHT = new Set(['Germany', 'United States', 'Japan', 'China', 'Russia', 'Sweden', 'Egypt', 'Brazil', 'Nigeria', 'India', 'Iran', 'South Korea']);
+const points = emo.data
+  .filter((o) => o.iso && secByIso.has(o.iso))
+  .map((o) => ({ x: o.value, y: secByIso.get(o.iso)!.value, label: o.entity, group: o.group, highlight: HIGHLIGHT.has(o.entity) }));
+
+const top = (arr: any[], key: (p: any) => number) => [...arr].sort((a, b) => key(b) - key(a));
+const mostSecular = top(points, (p) => p.y)[0];
+const mostTraditional = top(points, (p) => -p.y)[0];
+const mostSelfExp = top(points, (p) => p.x)[0];
+const mostSurvival = top(points, (p) => -p.x)[0];
+---
+<BaseLayout title="The Cultural Map of the World" active="news"
+  description="The Inglehart-Welzel cultural map from the World Values Survey: where every country sits on two value dimensions.">
+  <section class="story-hero">
+    <div class="container">
+      <a class="meta" href={`${base}/`}>← News</a>
+      <span class="kicker">Data story · World Values Survey · Inglehart-Welzel</span>
+      <h1>The map of the<br/>world’s <span class="hl">values</span>.</h1>
+      <p class="sub" style="max-width:660px">
+        Ronald Inglehart and Christian Welzel showed that cultures vary along two big dimensions:
+        <b>traditional ↔ secular-rational</b> values, and <b>survival ↔ self-expression</b> values.
+        Plotting every country from the World Values Survey reveals familiar cultural clusters.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>The cultural map</h2>
+      <p class="sub">{points.length} countries · horizontal = self-expression, vertical = secular values.</p>
+      <Scatter points={points} xLabel="Survival → Self-expression values" yLabel="Traditional → Secular values" labelTop={0} />
+      <div class="legend-regions">
+        {regionList.map((r) => (<span class="lr"><span class="lr-dot" style={`background:${colorFor(r)}`}></span>{r}</span>))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>The four extremes</h2>
+      <div class="grid cols-2">
+        <div class="card"><h3>Most secular-rational</h3><p class="meta">{mostSecular.label} — religion and tradition weigh least on public life.</p></div>
+        <div class="card"><h3>Most traditional</h3><p class="meta">{mostTraditional.label} — religion, family and authority are central.</p></div>
+        <div class="card"><h3>Most self-expression</h3><p class="meta">{mostSelfExp.label} — emphasis on freedom, tolerance and participation.</p></div>
+        <div class="card"><h3>Most survival-oriented</h3><p class="meta">{mostSurvival.label} — security and economic survival come first.</p></div>
+      </div>
+      <p class="sub" style="margin-top:24px">
+        Source: <a href="https://www.worldvaluessurvey.org/" target="_blank" rel="noopener">World Values Survey</a> Wave 7,
+        Welzel’s SACSECVAL &amp; RESEMAVAL indices. <a href={`${base}/explore`}>Explore the data →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
