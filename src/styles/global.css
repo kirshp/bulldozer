@@ -145,6 +145,11 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .gloss-term h3 { margin: 0 0 4px; }
 .gloss-term p { margin: 0; color: var(--text-dim); }
 
+/* Back link — large tap target */
+.back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 500; color: var(--accent); background: var(--bg-card); border: 1px solid var(--border); border-radius: 999px; padding: 9px 18px; margin-bottom: 18px; }
+.back-link:hover { text-decoration: none; border-color: var(--accent); }
+@media (max-width: 560px) { .back-link { font-size: 16px; padding: 12px 22px; } }
+
 /* Story / News */
 .story-hero { padding: 56px 0 36px; border-bottom: 1px solid var(--border); background: radial-gradient(900px 380px at 78% -10%, rgba(255,176,0,0.10), transparent); }
 .story-hero h1 { font-size: 46px; line-height: 1.04; letter-spacing: -1.2px; margin: 14px 0 22px; }
