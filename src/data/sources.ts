@@ -22,7 +22,7 @@ export const sources: Source[] = [
     description: 'IMF projections and estimates of growth, inflation, debt, employment and external balances for ~190 economies.' },
   { name: 'World Bank — World Development Indicators', url: 'https://databank.worldbank.org/source/world-development-indicators', status: 'live', category: 'Macro & economics', match: 'World Development Indicators',
     description: 'The World Bank’s flagship cross-country compilation of development statistics: economy, population, health, environment.' },
-  { name: 'Maddison Project Database', url: 'https://www.rug.nl/ggdc/historicaldevelopment/maddison/', status: 'live', category: 'Macro & economics', match: 'Maddison',
+  { name: 'Maddison Project Database', url: 'https://www.rug.nl/ggdc/historicaldevelopment/maddison/', status: 'catalog', category: 'Macro & economics',
     description: 'Long-run historical GDP per capita and population back to year 1, for comparing economic development over centuries.' },
   { name: 'Penn World Table', url: 'https://www.rug.nl/ggdc/productivity/pwt/', status: 'live', category: 'Macro & economics', match: 'Penn World Table',
     description: 'Cross-country national accounts with comparable measures of output, inputs and productivity (GDP per hour worked).' },

@@ -25,40 +25,27 @@ const idx = (title, dp = 3) => ({ title, unit: 'index 0–1', mode: 'pp', dp });
 
 const SOURCES = [
   {
-    tag: 'WB', kind: 'macro', file: join(TD, 'macro', 'wdi_tidy.csv'),
+    // World Bank kept only for indicators not covered by IMF (macro) or
+    // Gapminder (development) — avoids duplicating the same concept.
+    tag: 'WB', kind: 'survey', file: join(TD, 'macro', 'wdi_tidy.csv'),
     source: 'World Bank — World Development Indicators', license: 'CC BY 4.0',
     url: 'https://databank.worldbank.org/source/world-development-indicators',
     indicators: {
-      'NY.GDP.MKTP.CD': { ...pct('GDP (current US$)', 'USD bn', 1), scale: 1e-9 },
-      'NY.GDP.PCAP.CD': pct('GDP per Capita (US$)', 'USD', 0),
-      'NY.GDP.PCAP.PP.CD': pct('GDP per Capita (PPP)', 'intl$', 0),
-      'NY.GDP.MKTP.KD.ZG': pp('GDP Growth', '% YoY', 1),
-      'FP.CPI.TOTL.ZG': pp('Inflation (CPI)', '% YoY', 1),
-      'SL.UEM.TOTL.ZS': pp('Unemployment Rate', '%', 1),
-      'SP.POP.TOTL': { ...pct('Population', 'million', 2), scale: 1e-6 },
-      'SP.DYN.LE00.IN': pp('Life Expectancy', 'years', 1),
-      'SE.ADT.LITR.ZS': pp('Adult Literacy', '%', 1),
-      'SI.POV.GINI': pp('Income Inequality (Gini)', 'index 0–100', 1),
-      'IT.NET.USER.ZS': pp('Internet Users', '%', 1),
-      'SP.URB.TOTL.IN.ZS': pp('Urban Population', '%', 1),
       'SP.DYN.TFRT.IN': pp('Fertility Rate', 'births/woman', 2),
       'EN.GHG.CO2.PC.CE.AR5': pct('CO₂ per Capita', 't', 2),
-      'GC.DOD.TOTL.GD.ZS': pp('Government Debt', '% of GDP', 1),
     },
   },
   {
+    // Governance indicators only. HDI comes from Gapminder; electoral/liberal
+    // democracy from V-Dem — those QoG copies are dropped to avoid duplicates.
     tag: 'QoG', kind: 'survey', file: join(SURV, 'QoG_Quality_of_Government', 'qog_ts_tidy.csv'),
     source: 'Quality of Government Institute (University of Gothenburg)', license: 'Open — academic use',
     url: 'https://www.gu.se/en/quality-government/qog-data',
     indicators: {
-      undp_hdi: idx('Human Development Index', 3),
-      vdem_polyarchy: idx('Electoral Democracy', 3),
-      vdem_libdem: idx('Liberal Democracy', 3),
       ti_cpi: pp('Corruption Perceptions Index', '0–100', 1),
       fh_status: pp('Freedom House Status', '1=free…3=not', 2),
       wbgi_cce: pp('Control of Corruption', 'estimate', 2),
       wbgi_gee: pp('Government Effectiveness', 'estimate', 2),
-      wbgi_rle: pp('Rule of Law', 'estimate', 2),
       wbgi_vae: pp('Voice & Accountability', 'estimate', 2),
       rsf_pfi: pp('Press Freedom (RSF)', 'score', 1),
       wdi_chexppgdp: pp('Health Spending', '% of GDP', 1),
@@ -77,15 +64,6 @@ const SOURCES = [
       v2x_rule: idx('Rule of Law'), v2x_corr: idx('Political Corruption'),
       v2x_freexp_altinf: idx('Freedom of Expression'), v2xel_frefair: idx('Clean Elections'),
       v2x_jucon: idx('Judicial Constraints on Executive'), v2x_gender: idx('Gender Equality'),
-    },
-  },
-  {
-    tag: 'Maddison', kind: 'macro', file: join(TD, 'history', 'maddison_tidy.csv'),
-    source: 'Maddison Project Database (University of Groningen)', license: 'CC BY 4.0',
-    url: 'https://www.rug.nl/ggdc/historicaldevelopment/maddison/',
-    indicators: {
-      MAD_GDPPC: pct('GDP per Capita (Maddison)', '2011 intl$', 0),
-      MAD_POP: pct('Population (Maddison)', 'thousand', 0),
     },
   },
   {

@@ -1,2381 +1,2857 @@
 {
   "meta": {
-    "title": "GDP per Capita (Maddison) (Maddison)",
-    "summary": "GDP per Capita (Maddison). Maddison Project Database (University of Groningen), 2021–2022.",
-    "unit": "2011 intl$",
-    "valueLabel": "GDP per Capita (Maddison)",
+    "title": "CO₂ per Capita (WB)",
+    "summary": "CO₂ per Capita. World Bank — World Development Indicators, 2023–2024.",
+    "unit": "t",
+    "valueLabel": "CO₂ per Capita",
     "changeMode": "pct",
-    "source": "Maddison Project Database (University of Groningen)",
+    "source": "World Bank — World Development Indicators",
     "license": "CC BY 4.0",
-    "url": "https://www.rug.nl/ggdc/historicaldevelopment/maddison/",
+    "url": "https://databank.worldbank.org/source/world-development-indicators",
     "parsedAt": "2026-06-28",
-    "kind": "macro"
+    "kind": "survey"
   },
   "data": [
     {
+      "entity": "Aruba",
+      "group": "Americas",
+      "period": "2023",
+      "value": 5,
+      "iso": "ABW"
+    },
+    {
+      "entity": "Aruba",
+      "group": "Americas",
+      "period": "2024",
+      "value": 5.15,
+      "iso": "ABW"
+    },
+    {
       "entity": "Afghanistan",
       "group": "South Asia",
-      "period": "2021",
-      "value": 1486,
+      "period": "2023",
+      "value": 0.28,
       "iso": "AFG"
     },
     {
       "entity": "Afghanistan",
       "group": "South Asia",
-      "period": "2022",
-      "value": 1358,
+      "period": "2024",
+      "value": 0.28,
       "iso": "AFG"
     },
     {
       "entity": "Angola",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 6137,
+      "period": "2023",
+      "value": 0.74,
       "iso": "AGO"
     },
     {
       "entity": "Angola",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 6119,
+      "period": "2024",
+      "value": 0.74,
       "iso": "AGO"
     },
     {
       "entity": "Albania",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 12456,
+      "period": "2023",
+      "value": 1.75,
       "iso": "ALB"
     },
     {
       "entity": "Albania",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 12978,
+      "period": "2024",
+      "value": 1.79,
       "iso": "ALB"
     },
     {
       "entity": "United Arab Emirates",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 72460,
+      "period": "2023",
+      "value": 18.38,
       "iso": "ARE"
     },
     {
       "entity": "United Arab Emirates",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 77204,
+      "period": "2024",
+      "value": 18.26,
       "iso": "ARE"
     },
     {
       "entity": "Argentina",
       "group": "Americas",
-      "period": "2021",
-      "value": 17471,
+      "period": "2023",
+      "value": 4.17,
       "iso": "ARG"
     },
     {
       "entity": "Argentina",
       "group": "Americas",
-      "period": "2022",
-      "value": 18292,
+      "period": "2024",
+      "value": 4.01,
       "iso": "ARG"
     },
     {
       "entity": "Armenia",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 12242,
+      "period": "2023",
+      "value": 2.53,
       "iso": "ARM"
     },
     {
       "entity": "Armenia",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 13838,
+      "period": "2024",
+      "value": 2.47,
       "iso": "ARM"
     },
     {
+      "entity": "American Samoa",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 0,
+      "iso": "ASM"
+    },
+    {
+      "entity": "American Samoa",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0,
+      "iso": "ASM"
+    },
+    {
+      "entity": "Antigua and Barbuda",
+      "group": "Americas",
+      "period": "2023",
+      "value": 3.69,
+      "iso": "ATG"
+    },
+    {
+      "entity": "Antigua and Barbuda",
+      "group": "Americas",
+      "period": "2024",
+      "value": 3.8,
+      "iso": "ATG"
+    },
+    {
       "entity": "Australia",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 50705,
+      "period": "2023",
+      "value": 14.16,
       "iso": "AUS"
     },
     {
       "entity": "Australia",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 52049,
+      "period": "2024",
+      "value": 14.1,
       "iso": "AUS"
     },
     {
       "entity": "Austria",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 42185,
+      "period": "2023",
+      "value": 6.4,
       "iso": "AUT"
     },
     {
       "entity": "Austria",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 43793,
+      "period": "2024",
+      "value": 6.32,
       "iso": "AUT"
     },
     {
       "entity": "Azerbaijan",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 16972,
+      "period": "2023",
+      "value": 4.11,
       "iso": "AZE"
     },
     {
       "entity": "Azerbaijan",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 17683,
+      "period": "2024",
+      "value": 3.81,
       "iso": "AZE"
     },
     {
       "entity": "Burundi",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 723,
+      "period": "2023",
+      "value": 0.07,
       "iso": "BDI"
     },
     {
       "entity": "Burundi",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 717,
+      "period": "2024",
+      "value": 0.07,
       "iso": "BDI"
     },
     {
       "entity": "Belgium",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 40971,
+      "period": "2023",
+      "value": 7.28,
       "iso": "BEL"
     },
     {
       "entity": "Belgium",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 41872,
+      "period": "2024",
+      "value": 7.31,
       "iso": "BEL"
     },
     {
       "entity": "Benin",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 2395,
+      "period": "2023",
+      "value": 0.49,
       "iso": "BEN"
     },
     {
       "entity": "Benin",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 2477,
+      "period": "2024",
+      "value": 0.49,
       "iso": "BEN"
     },
     {
       "entity": "Burkina Faso",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1707,
+      "period": "2023",
+      "value": 0.27,
       "iso": "BFA"
     },
     {
       "entity": "Burkina Faso",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1705,
+      "period": "2024",
+      "value": 0.27,
       "iso": "BFA"
     },
     {
       "entity": "Bangladesh",
       "group": "South Asia",
-      "period": "2021",
-      "value": 4684,
+      "period": "2023",
+      "value": 0.69,
       "iso": "BGD"
     },
     {
       "entity": "Bangladesh",
       "group": "South Asia",
-      "period": "2022",
-      "value": 4926,
+      "period": "2024",
+      "value": 0.72,
       "iso": "BGD"
     },
     {
       "entity": "Bulgaria",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 19754,
+      "period": "2023",
+      "value": 5.73,
       "iso": "BGR"
     },
     {
       "entity": "Bulgaria",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 20592,
+      "period": "2024",
+      "value": 5.31,
       "iso": "BGR"
     },
     {
       "entity": "Bahrain",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 37323,
+      "period": "2023",
+      "value": 24.53,
       "iso": "BHR"
     },
     {
       "entity": "Bahrain",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 38652,
+      "period": "2024",
+      "value": 23.9,
       "iso": "BHR"
     },
     {
+      "entity": "Bahamas, The",
+      "group": "Americas",
+      "period": "2023",
+      "value": 3.53,
+      "iso": "BHS"
+    },
+    {
+      "entity": "Bahamas, The",
+      "group": "Americas",
+      "period": "2024",
+      "value": 3.64,
+      "iso": "BHS"
+    },
+    {
       "entity": "Bosnia and Herzegovina",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 11554,
+      "period": "2023",
+      "value": 6.54,
       "iso": "BIH"
     },
     {
       "entity": "Bosnia and Herzegovina",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 12143,
+      "period": "2024",
+      "value": 6.45,
       "iso": "BIH"
     },
     {
       "entity": "Belarus",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 19542,
+      "period": "2023",
+      "value": 5.86,
       "iso": "BLR"
     },
     {
       "entity": "Belarus",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 18700,
+      "period": "2024",
+      "value": 5.94,
       "iso": "BLR"
     },
     {
+      "entity": "Belize",
+      "group": "Americas",
+      "period": "2023",
+      "value": 0.91,
+      "iso": "BLZ"
+    },
+    {
+      "entity": "Belize",
+      "group": "Americas",
+      "period": "2024",
+      "value": 0.93,
+      "iso": "BLZ"
+    },
+    {
+      "entity": "Bermuda",
+      "group": "Americas",
+      "period": "2023",
+      "value": 3.99,
+      "iso": "BMU"
+    },
+    {
+      "entity": "Bermuda",
+      "group": "Americas",
+      "period": "2024",
+      "value": 4.14,
+      "iso": "BMU"
+    },
+    {
       "entity": "Bolivia",
       "group": "Americas",
-      "period": "2021",
-      "value": 6356,
+      "period": "2023",
+      "value": 1.99,
       "iso": "BOL"
     },
     {
       "entity": "Bolivia",
       "group": "Americas",
-      "period": "2022",
-      "value": 6481,
+      "period": "2024",
+      "value": 2.29,
       "iso": "BOL"
     },
     {
       "entity": "Brazil",
       "group": "Americas",
-      "period": "2021",
-      "value": 14293,
+      "period": "2023",
+      "value": 2.27,
       "iso": "BRA"
     },
     {
       "entity": "Brazil",
       "group": "Americas",
-      "period": "2022",
-      "value": 14640,
+      "period": "2024",
+      "value": 2.32,
       "iso": "BRA"
     },
     {
       "entity": "Barbados",
       "group": "Americas",
-      "period": "2021",
-      "value": 10387,
+      "period": "2023",
+      "value": 2.45,
       "iso": "BRB"
     },
     {
       "entity": "Barbados",
       "group": "Americas",
-      "period": "2022",
-      "value": 11546,
+      "period": "2024",
+      "value": 2.52,
       "iso": "BRB"
     },
     {
+      "entity": "Brunei Darussalam",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 21.14,
+      "iso": "BRN"
+    },
+    {
+      "entity": "Brunei Darussalam",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 20.24,
+      "iso": "BRN"
+    },
+    {
+      "entity": "Bhutan",
+      "group": "South Asia",
+      "period": "2023",
+      "value": 1.98,
+      "iso": "BTN"
+    },
+    {
+      "entity": "Bhutan",
+      "group": "South Asia",
+      "period": "2024",
+      "value": 2.01,
+      "iso": "BTN"
+    },
+    {
       "entity": "Botswana",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 15612,
+      "period": "2023",
+      "value": 2.71,
       "iso": "BWA"
     },
     {
       "entity": "Botswana",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 16352,
+      "period": "2024",
+      "value": 2.74,
       "iso": "BWA"
     },
     {
       "entity": "Central African Republic",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 607,
+      "period": "2023",
+      "value": 0.06,
       "iso": "CAF"
     },
     {
       "entity": "Central African Republic",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 596,
+      "period": "2024",
+      "value": 0.06,
       "iso": "CAF"
     },
     {
       "entity": "Canada",
       "group": "Americas",
-      "period": "2021",
-      "value": 44380,
+      "period": "2023",
+      "value": 14.15,
       "iso": "CAN"
     },
     {
       "entity": "Canada",
       "group": "Americas",
-      "period": "2022",
-      "value": 45530,
+      "period": "2024",
+      "value": 14,
       "iso": "CAN"
     },
     {
       "entity": "Switzerland",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 62595,
+      "period": "2023",
+      "value": 3.79,
       "iso": "CHE"
     },
     {
       "entity": "Switzerland",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 63323,
+      "period": "2024",
+      "value": 3.75,
       "iso": "CHE"
     },
     {
       "entity": "Chile",
       "group": "Americas",
-      "period": "2021",
-      "value": 22325,
+      "period": "2023",
+      "value": 3.92,
       "iso": "CHL"
     },
     {
       "entity": "Chile",
       "group": "Americas",
-      "period": "2022",
-      "value": 22741,
+      "period": "2024",
+      "value": 3.94,
       "iso": "CHL"
     },
     {
-      "entity": "China, People's Republic of",
+      "entity": "China",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 18667,
+      "period": "2023",
+      "value": 9.23,
       "iso": "CHN"
     },
     {
-      "entity": "China, People's Republic of",
+      "entity": "China",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 19238,
+      "period": "2024",
+      "value": 9.32,
       "iso": "CHN"
     },
     {
-      "entity": "Côte d'Ivoire",
+      "entity": "Cote d'Ivoire",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 3853,
+      "period": "2023",
+      "value": 0.58,
       "iso": "CIV"
     },
     {
-      "entity": "Côte d'Ivoire",
+      "entity": "Cote d'Ivoire",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 4012,
+      "period": "2024",
+      "value": 0.59,
       "iso": "CIV"
     },
     {
       "entity": "Cameroon",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 2792,
+      "period": "2023",
+      "value": 0.36,
       "iso": "CMR"
     },
     {
       "entity": "Cameroon",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 2812,
+      "period": "2024",
+      "value": 0.35,
       "iso": "CMR"
     },
     {
-      "entity": "Congo, Dem. Rep. of the",
+      "entity": "Congo, Dem. Rep.",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 817,
+      "period": "2023",
+      "value": 0.06,
       "iso": "COD"
     },
     {
-      "entity": "Congo, Dem. Rep. of the",
+      "entity": "Congo, Dem. Rep.",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 844,
+      "period": "2024",
+      "value": 0.06,
       "iso": "COD"
     },
     {
-      "entity": "Congo, Republic of ",
+      "entity": "Congo, Rep.",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 4168,
+      "period": "2023",
+      "value": 1.27,
       "iso": "COG"
     },
     {
-      "entity": "Congo, Republic of ",
+      "entity": "Congo, Rep.",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 4188,
+      "period": "2024",
+      "value": 1.34,
       "iso": "COG"
     },
     {
       "entity": "Colombia",
       "group": "Americas",
-      "period": "2021",
-      "value": 13553,
+      "period": "2023",
+      "value": 1.77,
       "iso": "COL"
     },
     {
       "entity": "Colombia",
       "group": "Americas",
-      "period": "2022",
-      "value": 14469,
+      "period": "2024",
+      "value": 1.8,
       "iso": "COL"
     },
     {
       "entity": "Comoros",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1886,
+      "period": "2023",
+      "value": 0.52,
       "iso": "COM"
     },
     {
       "entity": "Comoros",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1900,
+      "period": "2024",
+      "value": 0.51,
       "iso": "COM"
     },
     {
       "entity": "Cabo Verde",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 6173,
+      "period": "2023",
+      "value": 1.25,
       "iso": "CPV"
     },
     {
       "entity": "Cabo Verde",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 7203,
+      "period": "2024",
+      "value": 1.29,
       "iso": "CPV"
     },
     {
       "entity": "Costa Rica",
       "group": "Americas",
-      "period": "2021",
-      "value": 14932,
+      "period": "2023",
+      "value": 1.59,
       "iso": "CRI"
     },
     {
       "entity": "Costa Rica",
       "group": "Americas",
-      "period": "2022",
-      "value": 15497,
+      "period": "2024",
+      "value": 1.63,
       "iso": "CRI"
     },
     {
-      "entity": "Czechoslovakia",
-      "group": "Eastern Europe",
-      "period": "2021",
-      "value": 30071,
-      "iso": "CSK"
-    },
-    {
-      "entity": "Czechoslovakia",
-      "group": "Eastern Europe",
-      "period": "2022",
-      "value": 30641,
-      "iso": "CSK"
-    },
-    {
       "entity": "Cuba",
       "group": "Americas",
-      "period": "2021",
-      "value": 7486,
+      "period": "2023",
+      "value": 1.82,
       "iso": "CUB"
     },
     {
       "entity": "Cuba",
       "group": "Americas",
-      "period": "2022",
-      "value": 7649,
+      "period": "2024",
+      "value": 1.91,
       "iso": "CUB"
     },
     {
+      "entity": "Cayman Islands",
+      "group": "Americas",
+      "period": "2023",
+      "value": 4.92,
+      "iso": "CYM"
+    },
+    {
+      "entity": "Cayman Islands",
+      "group": "Americas",
+      "period": "2024",
+      "value": 5,
+      "iso": "CYM"
+    },
+    {
       "entity": "Cyprus",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 30252,
+      "period": "2023",
+      "value": 5.36,
       "iso": "CYP"
     },
     {
       "entity": "Cyprus",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 31523,
+      "period": "2024",
+      "value": 5.4,
       "iso": "CYP"
     },
     {
-      "entity": "Czech Republic",
+      "entity": "Czechia",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 31453,
+      "period": "2023",
+      "value": 7.88,
       "iso": "CZE"
     },
     {
-      "entity": "Czech Republic",
+      "entity": "Czechia",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 32247,
+      "period": "2024",
+      "value": 7.13,
       "iso": "CZE"
     },
     {
       "entity": "Germany",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 46159,
+      "period": "2023",
+      "value": 7.08,
       "iso": "DEU"
     },
     {
       "entity": "Germany",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 46648,
+      "period": "2024",
+      "value": 6.94,
       "iso": "DEU"
     },
     {
       "entity": "Djibouti",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 3542,
+      "period": "2023",
+      "value": 0.76,
       "iso": "DJI"
     },
     {
       "entity": "Djibouti",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 3623,
+      "period": "2024",
+      "value": 0.77,
       "iso": "DJI"
     },
     {
       "entity": "Dominica",
       "group": "Americas",
-      "period": "2021",
-      "value": 8419,
+      "period": "2023",
+      "value": 1.22,
       "iso": "DMA"
     },
     {
       "entity": "Dominica",
       "group": "Americas",
-      "period": "2022",
-      "value": 8880,
+      "period": "2024",
+      "value": 1.27,
       "iso": "DMA"
     },
     {
       "entity": "Denmark",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 49259,
+      "period": "2023",
+      "value": 4.41,
       "iso": "DNK"
     },
     {
       "entity": "Denmark",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 50690,
+      "period": "2024",
+      "value": 4.28,
       "iso": "DNK"
     },
     {
       "entity": "Dominican Republic",
       "group": "Americas",
-      "period": "2021",
-      "value": 17047,
+      "period": "2023",
+      "value": 2.89,
       "iso": "DOM"
     },
     {
       "entity": "Dominican Republic",
       "group": "Americas",
-      "period": "2022",
-      "value": 17714,
+      "period": "2024",
+      "value": 2.99,
       "iso": "DOM"
     },
     {
       "entity": "Algeria",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 13337,
+      "period": "2023",
+      "value": 4.13,
       "iso": "DZA"
     },
     {
       "entity": "Algeria",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 13506,
+      "period": "2024",
+      "value": 3.98,
       "iso": "DZA"
     },
     {
       "entity": "Ecuador",
       "group": "Americas",
-      "period": "2021",
-      "value": 9938,
+      "period": "2023",
+      "value": 2.6,
       "iso": "ECU"
     },
     {
       "entity": "Ecuador",
       "group": "Americas",
-      "period": "2022",
-      "value": 10124,
+      "period": "2024",
+      "value": 2.64,
       "iso": "ECU"
     },
     {
-      "entity": "Egypt",
+      "entity": "Egypt, Arab Rep.",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 12868,
+      "period": "2023",
+      "value": 2.41,
       "iso": "EGY"
     },
     {
-      "entity": "Egypt",
+      "entity": "Egypt, Arab Rep.",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 13205,
+      "period": "2024",
+      "value": 2.5,
       "iso": "EGY"
+    },
+    {
+      "entity": "Eritrea",
+      "group": "Sub-Saharan Africa",
+      "period": "2023",
+      "value": 0.22,
+      "iso": "ERI"
+    },
+    {
+      "entity": "Eritrea",
+      "group": "Sub-Saharan Africa",
+      "period": "2024",
+      "value": 0.22,
+      "iso": "ERI"
     },
     {
       "entity": "Spain",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 32553,
+      "period": "2023",
+      "value": 4.57,
       "iso": "ESP"
     },
     {
       "entity": "Spain",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 34123,
+      "period": "2024",
+      "value": 4.51,
       "iso": "ESP"
     },
     {
       "entity": "Estonia",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 30499,
+      "period": "2023",
+      "value": 8.37,
       "iso": "EST"
     },
     {
       "entity": "Estonia",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 30067,
+      "period": "2024",
+      "value": 7.76,
       "iso": "EST"
     },
     {
       "entity": "Ethiopia",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 2191,
+      "period": "2023",
+      "value": 0.15,
       "iso": "ETH"
     },
     {
       "entity": "Ethiopia",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 2289,
+      "period": "2024",
+      "value": 0.15,
       "iso": "ETH"
     },
     {
       "entity": "Finland",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 39978,
+      "period": "2023",
+      "value": 5.89,
       "iso": "FIN"
     },
     {
       "entity": "Finland",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 40701,
+      "period": "2024",
+      "value": 5.54,
       "iso": "FIN"
     },
     {
+      "entity": "Fiji",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 1.56,
+      "iso": "FJI"
+    },
+    {
+      "entity": "Fiji",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 1.62,
+      "iso": "FJI"
+    },
+    {
       "entity": "France",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 38242,
+      "period": "2023",
+      "value": 4.16,
       "iso": "FRA"
     },
     {
       "entity": "France",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 39066,
+      "period": "2024",
+      "value": 4,
       "iso": "FRA"
     },
     {
+      "entity": "Faroe Islands",
+      "group": "Europe & Central Asia",
+      "period": "2023",
+      "value": 0.04,
+      "iso": "FRO"
+    },
+    {
+      "entity": "Faroe Islands",
+      "group": "Europe & Central Asia",
+      "period": "2024",
+      "value": 0.04,
+      "iso": "FRO"
+    },
+    {
+      "entity": "Micronesia, Fed. Sts.",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 0,
+      "iso": "FSM"
+    },
+    {
+      "entity": "Micronesia, Fed. Sts.",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0,
+      "iso": "FSM"
+    },
+    {
       "entity": "Gabon",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 15598,
+      "period": "2023",
+      "value": 2.06,
       "iso": "GAB"
     },
     {
       "entity": "Gabon",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 15721,
+      "period": "2024",
+      "value": 2.05,
       "iso": "GAB"
     },
     {
       "entity": "United Kingdom",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 37134,
+      "period": "2023",
+      "value": 4.45,
       "iso": "GBR"
     },
     {
       "entity": "United Kingdom",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 38407,
+      "period": "2024",
+      "value": 4.22,
       "iso": "GBR"
     },
     {
       "entity": "Georgia",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 12995,
+      "period": "2023",
+      "value": 3.65,
       "iso": "GEO"
     },
     {
       "entity": "Georgia",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 14360,
+      "period": "2024",
+      "value": 3.64,
       "iso": "GEO"
     },
     {
       "entity": "Ghana",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 4191,
+      "period": "2023",
+      "value": 0.69,
       "iso": "GHA"
     },
     {
       "entity": "Ghana",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 4242,
+      "period": "2024",
+      "value": 0.7,
       "iso": "GHA"
     },
     {
+      "entity": "Gibraltar",
+      "group": "Europe & Central Asia",
+      "period": "2023",
+      "value": 16.36,
+      "iso": "GIB"
+    },
+    {
+      "entity": "Gibraltar",
+      "group": "Europe & Central Asia",
+      "period": "2024",
+      "value": 16.15,
+      "iso": "GIB"
+    },
+    {
       "entity": "Guinea",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1770,
+      "period": "2023",
+      "value": 0.35,
       "iso": "GIN"
     },
     {
       "entity": "Guinea",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1809,
+      "period": "2024",
+      "value": 0.35,
       "iso": "GIN"
     },
     {
       "entity": "Gambia, The",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1964,
+      "period": "2023",
+      "value": 0.18,
       "iso": "GMB"
     },
     {
       "entity": "Gambia, The",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 2011,
+      "period": "2024",
+      "value": 0.18,
       "iso": "GMB"
     },
     {
       "entity": "Guinea-Bissau",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1594,
+      "period": "2023",
+      "value": 0.15,
       "iso": "GNB"
     },
     {
       "entity": "Guinea-Bissau",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1625,
+      "period": "2024",
+      "value": 0.16,
       "iso": "GNB"
     },
     {
       "entity": "Equatorial Guinea",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 22538,
+      "period": "2023",
+      "value": 2.58,
       "iso": "GNQ"
     },
     {
       "entity": "Equatorial Guinea",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 22707,
+      "period": "2024",
+      "value": 2.55,
       "iso": "GNQ"
     },
     {
       "entity": "Greece",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 23732,
+      "period": "2023",
+      "value": 4.92,
       "iso": "GRC"
     },
     {
       "entity": "Greece",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 25284,
+      "period": "2024",
+      "value": 5.05,
       "iso": "GRC"
     },
     {
+      "entity": "Grenada",
+      "group": "Americas",
+      "period": "2023",
+      "value": 1.45,
+      "iso": "GRD"
+    },
+    {
+      "entity": "Grenada",
+      "group": "Americas",
+      "period": "2024",
+      "value": 1.5,
+      "iso": "GRD"
+    },
+    {
+      "entity": "Greenland",
+      "group": "Europe & Central Asia",
+      "period": "2023",
+      "value": 10.29,
+      "iso": "GRL"
+    },
+    {
+      "entity": "Greenland",
+      "group": "Europe & Central Asia",
+      "period": "2024",
+      "value": 10.45,
+      "iso": "GRL"
+    },
+    {
       "entity": "Guatemala",
       "group": "Americas",
-      "period": "2021",
-      "value": 7765,
+      "period": "2023",
+      "value": 1.11,
       "iso": "GTM"
     },
     {
       "entity": "Guatemala",
       "group": "Americas",
-      "period": "2022",
-      "value": 7969,
+      "period": "2024",
+      "value": 1.11,
       "iso": "GTM"
     },
     {
-      "entity": "Hong Kong SAR",
+      "entity": "Guam",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 50006,
+      "period": "2023",
+      "value": 0,
+      "iso": "GUM"
+    },
+    {
+      "entity": "Guam",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0,
+      "iso": "GUM"
+    },
+    {
+      "entity": "Guyana",
+      "group": "Americas",
+      "period": "2023",
+      "value": 4.53,
+      "iso": "GUY"
+    },
+    {
+      "entity": "Guyana",
+      "group": "Americas",
+      "period": "2024",
+      "value": 4.56,
+      "iso": "GUY"
+    },
+    {
+      "entity": "Hong Kong SAR, China",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 4.53,
       "iso": "HKG"
     },
     {
-      "entity": "Hong Kong SAR",
+      "entity": "Hong Kong SAR, China",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 48289,
+      "period": "2024",
+      "value": 4.6,
       "iso": "HKG"
     },
     {
       "entity": "Honduras",
       "group": "Americas",
-      "period": "2021",
-      "value": 5062,
+      "period": "2023",
+      "value": 1.11,
       "iso": "HND"
     },
     {
       "entity": "Honduras",
       "group": "Americas",
-      "period": "2022",
-      "value": 5187,
+      "period": "2024",
+      "value": 1.14,
       "iso": "HND"
     },
     {
       "entity": "Croatia",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 25060,
+      "period": "2023",
+      "value": 4.84,
       "iso": "HRV"
     },
     {
       "entity": "Croatia",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 26987,
+      "period": "2024",
+      "value": 4.83,
       "iso": "HRV"
     },
     {
       "entity": "Haiti",
       "group": "Americas",
-      "period": "2021",
-      "value": 1592,
+      "period": "2023",
+      "value": 0.29,
       "iso": "HTI"
     },
     {
       "entity": "Haiti",
       "group": "Americas",
-      "period": "2022",
-      "value": 1546,
+      "period": "2024",
+      "value": 0.3,
       "iso": "HTI"
     },
     {
       "entity": "Hungary",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 28086,
+      "period": "2023",
+      "value": 4.48,
       "iso": "HUN"
     },
     {
       "entity": "Hungary",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 29452,
+      "period": "2024",
+      "value": 4.46,
       "iso": "HUN"
     },
     {
       "entity": "Indonesia",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 12234,
+      "period": "2023",
+      "value": 2.75,
       "iso": "IDN"
     },
     {
       "entity": "Indonesia",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 12802,
+      "period": "2024",
+      "value": 2.87,
       "iso": "IDN"
     },
     {
       "entity": "India",
       "group": "South Asia",
-      "period": "2021",
-      "value": 7315,
+      "period": "2023",
+      "value": 2.1,
       "iso": "IND"
     },
     {
       "entity": "India",
       "group": "South Asia",
-      "period": "2022",
-      "value": 7766,
+      "period": "2024",
+      "value": 2.17,
       "iso": "IND"
     },
     {
       "entity": "Ireland",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 57278,
+      "period": "2023",
+      "value": 6.19,
       "iso": "IRL"
     },
     {
       "entity": "Ireland",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 60257,
+      "period": "2024",
+      "value": 6.04,
       "iso": "IRL"
     },
     {
-      "entity": "Iran",
+      "entity": "Iran, Islamic Rep.",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 18052,
+      "period": "2023",
+      "value": 9.01,
       "iso": "IRN"
     },
     {
-      "entity": "Iran",
+      "entity": "Iran, Islamic Rep.",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 18473,
+      "period": "2024",
+      "value": 9.05,
       "iso": "IRN"
     },
     {
       "entity": "Iraq",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 12356,
+      "period": "2023",
+      "value": 5.17,
       "iso": "IRQ"
     },
     {
       "entity": "Iraq",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 13072,
+      "period": "2024",
+      "value": 5.18,
       "iso": "IRQ"
     },
     {
       "entity": "Iceland",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 40413,
+      "period": "2023",
+      "value": 8.35,
       "iso": "ISL"
     },
     {
       "entity": "Iceland",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 42146,
+      "period": "2024",
+      "value": 8.52,
       "iso": "ISL"
     },
     {
       "entity": "Israel",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 34969,
+      "period": "2023",
+      "value": 6.14,
       "iso": "ISR"
     },
     {
       "entity": "Israel",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 36649,
+      "period": "2024",
+      "value": 5.78,
       "iso": "ISR"
     },
     {
       "entity": "Italy",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 34827,
+      "period": "2023",
+      "value": 5.16,
       "iso": "ITA"
     },
     {
       "entity": "Italy",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 36224,
+      "period": "2024",
+      "value": 5.08,
       "iso": "ITA"
     },
     {
       "entity": "Jamaica",
       "group": "Americas",
-      "period": "2021",
-      "value": 7193,
+      "period": "2023",
+      "value": 2.71,
       "iso": "JAM"
     },
     {
       "entity": "Jamaica",
       "group": "Americas",
-      "period": "2022",
-      "value": 7482,
+      "period": "2024",
+      "value": 2.84,
       "iso": "JAM"
     },
     {
       "entity": "Jordan",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 9020,
+      "period": "2023",
+      "value": 2.1,
       "iso": "JOR"
     },
     {
       "entity": "Jordan",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 9151,
+      "period": "2024",
+      "value": 2.09,
       "iso": "JOR"
     },
     {
       "entity": "Japan",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 37678,
+      "period": "2023",
+      "value": 8.05,
       "iso": "JPN"
     },
     {
       "entity": "Japan",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 38269,
+      "period": "2024",
+      "value": 7.84,
       "iso": "JPN"
     },
     {
       "entity": "Kazakhstan",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 25936,
+      "period": "2023",
+      "value": 12.56,
       "iso": "KAZ"
     },
     {
       "entity": "Kazakhstan",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 26492,
+      "period": "2024",
+      "value": 12.57,
       "iso": "KAZ"
     },
     {
       "entity": "Kenya",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 3293,
+      "period": "2023",
+      "value": 0.38,
       "iso": "KEN"
     },
     {
       "entity": "Kenya",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 3404,
+      "period": "2024",
+      "value": 0.38,
       "iso": "KEN"
     },
     {
       "entity": "Kyrgyz Republic",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 5036,
+      "period": "2023",
+      "value": 1.44,
       "iso": "KGZ"
     },
     {
       "entity": "Kyrgyz Republic",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 5305,
+      "period": "2024",
+      "value": 1.49,
       "iso": "KGZ"
     },
     {
       "entity": "Cambodia",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 3796,
+      "period": "2023",
+      "value": 1.09,
       "iso": "KHM"
     },
     {
       "entity": "Cambodia",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 3944,
+      "period": "2024",
+      "value": 1.1,
       "iso": "KHM"
     },
     {
-      "entity": "Korea, Republic of",
+      "entity": "Kiribati",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 40278,
+      "period": "2023",
+      "value": 0.57,
+      "iso": "KIR"
+    },
+    {
+      "entity": "Kiribati",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0.59,
+      "iso": "KIR"
+    },
+    {
+      "entity": "St. Kitts and Nevis",
+      "group": "Americas",
+      "period": "2023",
+      "value": 2.79,
+      "iso": "KNA"
+    },
+    {
+      "entity": "St. Kitts and Nevis",
+      "group": "Americas",
+      "period": "2024",
+      "value": 2.88,
+      "iso": "KNA"
+    },
+    {
+      "entity": "Korea, Rep.",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 11.42,
       "iso": "KOR"
     },
     {
-      "entity": "Korea, Republic of",
+      "entity": "Korea, Rep.",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 41321,
+      "period": "2024",
+      "value": 11.36,
       "iso": "KOR"
     },
     {
       "entity": "Kuwait",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 66418,
+      "period": "2023",
+      "value": 22.7,
       "iso": "KWT"
     },
     {
       "entity": "Kuwait",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 71534,
+      "period": "2024",
+      "value": 23.67,
       "iso": "KWT"
     },
     {
-      "entity": "Lao P.D.R.",
+      "entity": "Lao PDR",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 6961,
+      "period": "2023",
+      "value": 3.36,
       "iso": "LAO"
     },
     {
-      "entity": "Lao P.D.R.",
+      "entity": "Lao PDR",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 7168,
+      "period": "2024",
+      "value": 3.35,
       "iso": "LAO"
     },
     {
       "entity": "Lebanon",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 10574,
+      "period": "2023",
+      "value": 1.87,
       "iso": "LBN"
     },
     {
       "entity": "Lebanon",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 10341,
+      "period": "2024",
+      "value": 1.9,
       "iso": "LBN"
     },
     {
       "entity": "Liberia",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 790,
+      "period": "2023",
+      "value": 0.15,
       "iso": "LBR"
     },
     {
       "entity": "Liberia",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 811,
+      "period": "2024",
+      "value": 0.15,
       "iso": "LBR"
     },
     {
       "entity": "Libya",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 14797,
+      "period": "2023",
+      "value": 8.65,
       "iso": "LBY"
     },
     {
       "entity": "Libya",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 12755,
+      "period": "2024",
+      "value": 8.66,
       "iso": "LBY"
     },
     {
-      "entity": "Saint Lucia",
+      "entity": "St. Lucia",
       "group": "Americas",
-      "period": "2021",
-      "value": 9068,
+      "period": "2023",
+      "value": 1.66,
       "iso": "LCA"
     },
     {
-      "entity": "Saint Lucia",
+      "entity": "St. Lucia",
       "group": "Americas",
-      "period": "2022",
-      "value": 10452,
+      "period": "2024",
+      "value": 1.71,
       "iso": "LCA"
     },
     {
       "entity": "Sri Lanka",
       "group": "South Asia",
-      "period": "2021",
-      "value": 11752,
+      "period": "2023",
+      "value": 0.98,
       "iso": "LKA"
     },
     {
       "entity": "Sri Lanka",
       "group": "South Asia",
-      "period": "2022",
-      "value": 10705,
+      "period": "2024",
+      "value": 1.06,
       "iso": "LKA"
     },
     {
       "entity": "Lesotho",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 2312,
+      "period": "2023",
+      "value": 0.43,
       "iso": "LSO"
     },
     {
       "entity": "Lesotho",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 2313,
+      "period": "2024",
+      "value": 0.43,
       "iso": "LSO"
     },
     {
       "entity": "Lithuania",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 30557,
+      "period": "2023",
+      "value": 4.52,
       "iso": "LTU"
     },
     {
       "entity": "Lithuania",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 30863,
+      "period": "2024",
+      "value": 4.49,
       "iso": "LTU"
     },
     {
       "entity": "Luxembourg",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 55347,
+      "period": "2023",
+      "value": 10.42,
       "iso": "LUX"
     },
     {
       "entity": "Luxembourg",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 55485,
+      "period": "2024",
+      "value": 10.56,
       "iso": "LUX"
     },
     {
       "entity": "Latvia",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 26739,
+      "period": "2023",
+      "value": 3.66,
       "iso": "LVA"
     },
     {
       "entity": "Latvia",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 27220,
+      "period": "2024",
+      "value": 3.65,
       "iso": "LVA"
     },
     {
+      "entity": "Macao SAR, China",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 2.48,
+      "iso": "MAC"
+    },
+    {
+      "entity": "Macao SAR, China",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 2.53,
+      "iso": "MAC"
+    },
+    {
       "entity": "Morocco",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 8391,
+      "period": "2023",
+      "value": 1.86,
       "iso": "MAR"
     },
     {
       "entity": "Morocco",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 8400,
+      "period": "2024",
+      "value": 1.84,
       "iso": "MAR"
     },
     {
       "entity": "Moldova",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 7557,
+      "period": "2023",
+      "value": 3.34,
       "iso": "MDA"
     },
     {
       "entity": "Moldova",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 6675,
+      "period": "2024",
+      "value": 3.42,
       "iso": "MDA"
     },
     {
       "entity": "Madagascar",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1343,
+      "period": "2023",
+      "value": 0.15,
       "iso": "MDG"
     },
     {
       "entity": "Madagascar",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1367,
+      "period": "2024",
+      "value": 0.15,
       "iso": "MDG"
     },
     {
+      "entity": "Maldives",
+      "group": "South Asia",
+      "period": "2023",
+      "value": 3.41,
+      "iso": "MDV"
+    },
+    {
+      "entity": "Maldives",
+      "group": "South Asia",
+      "period": "2024",
+      "value": 3.57,
+      "iso": "MDV"
+    },
+    {
       "entity": "Mexico",
       "group": "Americas",
-      "period": "2021",
-      "value": 15853,
+      "period": "2023",
+      "value": 3.67,
       "iso": "MEX"
     },
     {
       "entity": "Mexico",
       "group": "Americas",
-      "period": "2022",
-      "value": 16235,
+      "period": "2024",
+      "value": 3.64,
       "iso": "MEX"
     },
     {
-      "entity": "North Macedonia ",
+      "entity": "Marshall Islands",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 0,
+      "iso": "MHL"
+    },
+    {
+      "entity": "Marshall Islands",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0,
+      "iso": "MHL"
+    },
+    {
+      "entity": "North Macedonia",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 13692,
+      "period": "2023",
+      "value": 4.39,
       "iso": "MKD"
     },
     {
-      "entity": "North Macedonia ",
+      "entity": "North Macedonia",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 14051,
+      "period": "2024",
+      "value": 4,
       "iso": "MKD"
     },
     {
       "entity": "Mali",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1643,
+      "period": "2023",
+      "value": 0.3,
       "iso": "MLI"
     },
     {
       "entity": "Mali",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1652,
+      "period": "2024",
+      "value": 0.3,
       "iso": "MLI"
     },
     {
       "entity": "Malta",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 33031,
+      "period": "2023",
+      "value": 3.23,
       "iso": "MLT"
     },
     {
       "entity": "Malta",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 34496,
+      "period": "2024",
+      "value": 3.18,
       "iso": "MLT"
     },
     {
       "entity": "Myanmar",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 5113,
+      "period": "2023",
+      "value": 0.58,
       "iso": "MMR"
     },
     {
       "entity": "Myanmar",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 5177,
+      "period": "2024",
+      "value": 0.58,
       "iso": "MMR"
     },
     {
-      "entity": "Montenegro",
-      "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 19657,
-      "iso": "MNE"
-    },
-    {
-      "entity": "Montenegro",
-      "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 20942,
-      "iso": "MNE"
-    },
-    {
       "entity": "Mongolia",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 12992,
+      "period": "2023",
+      "value": 7.8,
       "iso": "MNG"
     },
     {
       "entity": "Mongolia",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 13443,
+      "period": "2024",
+      "value": 7.85,
       "iso": "MNG"
     },
     {
+      "entity": "Northern Mariana Islands",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 0,
+      "iso": "MNP"
+    },
+    {
+      "entity": "Northern Mariana Islands",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0,
+      "iso": "MNP"
+    },
+    {
       "entity": "Mozambique",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1074,
+      "period": "2023",
+      "value": 0.32,
       "iso": "MOZ"
     },
     {
       "entity": "Mozambique",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1088,
+      "period": "2024",
+      "value": 0.29,
       "iso": "MOZ"
     },
     {
       "entity": "Mauritania",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 3527,
+      "period": "2023",
+      "value": 0.96,
       "iso": "MRT"
     },
     {
       "entity": "Mauritania",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 3680,
+      "period": "2024",
+      "value": 0.97,
       "iso": "MRT"
     },
     {
       "entity": "Mauritius",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 19069,
+      "period": "2023",
+      "value": 3.46,
       "iso": "MUS"
     },
     {
       "entity": "Mauritius",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 20643,
+      "period": "2024",
+      "value": 3.54,
       "iso": "MUS"
     },
     {
       "entity": "Malawi",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1211,
+      "period": "2023",
+      "value": 0.22,
       "iso": "MWI"
     },
     {
       "entity": "Malawi",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1190,
+      "period": "2024",
+      "value": 0.22,
       "iso": "MWI"
     },
     {
       "entity": "Malaysia",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 24765,
+      "period": "2023",
+      "value": 8.04,
       "iso": "MYS"
     },
     {
       "entity": "Malaysia",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 26629,
+      "period": "2024",
+      "value": 8.32,
       "iso": "MYS"
     },
     {
       "entity": "Namibia",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 7796,
+      "period": "2023",
+      "value": 1.22,
       "iso": "NAM"
     },
     {
       "entity": "Namibia",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 7979,
+      "period": "2024",
+      "value": 1.2,
       "iso": "NAM"
     },
     {
+      "entity": "New Caledonia",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 16.78,
+      "iso": "NCL"
+    },
+    {
+      "entity": "New Caledonia",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 17.08,
+      "iso": "NCL"
+    },
+    {
       "entity": "Niger",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 941,
+      "period": "2023",
+      "value": 0.12,
       "iso": "NER"
     },
     {
       "entity": "Niger",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1008,
+      "period": "2024",
+      "value": 0.12,
       "iso": "NER"
     },
     {
       "entity": "Nigeria",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 5029,
+      "period": "2023",
+      "value": 0.55,
       "iso": "NGA"
     },
     {
       "entity": "Nigeria",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 5070,
+      "period": "2024",
+      "value": 0.57,
       "iso": "NGA"
     },
     {
       "entity": "Nicaragua",
       "group": "Americas",
-      "period": "2021",
-      "value": 4979,
+      "period": "2023",
+      "value": 0.81,
       "iso": "NIC"
     },
     {
       "entity": "Nicaragua",
       "group": "Americas",
-      "period": "2022",
-      "value": 5093,
+      "period": "2024",
+      "value": 0.83,
       "iso": "NIC"
     },
     {
       "entity": "Netherlands",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 48002,
+      "period": "2023",
+      "value": 6.88,
       "iso": "NLD"
     },
     {
       "entity": "Netherlands",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 49670,
+      "period": "2024",
+      "value": 6.6,
       "iso": "NLD"
     },
     {
       "entity": "Norway",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 86335,
+      "period": "2023",
+      "value": 7.54,
       "iso": "NOR"
     },
     {
       "entity": "Norway",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 88366,
+      "period": "2024",
+      "value": 7.18,
       "iso": "NOR"
     },
     {
       "entity": "Nepal",
       "group": "South Asia",
-      "period": "2021",
-      "value": 2902,
+      "period": "2023",
+      "value": 0.52,
       "iso": "NPL"
     },
     {
       "entity": "Nepal",
       "group": "South Asia",
-      "period": "2022",
-      "value": 3014,
+      "period": "2024",
+      "value": 0.54,
       "iso": "NPL"
     },
     {
+      "entity": "Nauru",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 0,
+      "iso": "NRU"
+    },
+    {
+      "entity": "Nauru",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0,
+      "iso": "NRU"
+    },
+    {
       "entity": "New Zealand",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 37837,
+      "period": "2023",
+      "value": 6.11,
       "iso": "NZL"
     },
     {
       "entity": "New Zealand",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 38250,
+      "period": "2024",
+      "value": 6.02,
       "iso": "NZL"
     },
     {
       "entity": "Oman",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 46574,
+      "period": "2023",
+      "value": 18.96,
       "iso": "OMN"
     },
     {
       "entity": "Oman",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 47989,
+      "period": "2024",
+      "value": 18.65,
       "iso": "OMN"
     },
     {
       "entity": "Pakistan",
       "group": "South Asia",
-      "period": "2021",
-      "value": 5464,
+      "period": "2023",
+      "value": 0.84,
       "iso": "PAK"
     },
     {
       "entity": "Pakistan",
       "group": "South Asia",
-      "period": "2022",
-      "value": 5532,
+      "period": "2024",
+      "value": 0.81,
       "iso": "PAK"
     },
     {
       "entity": "Panama",
       "group": "Americas",
-      "period": "2021",
-      "value": 21539,
+      "period": "2023",
+      "value": 2.86,
       "iso": "PAN"
     },
     {
       "entity": "Panama",
       "group": "Americas",
-      "period": "2022",
-      "value": 23557,
+      "period": "2024",
+      "value": 2.74,
       "iso": "PAN"
     },
     {
       "entity": "Peru",
       "group": "Americas",
-      "period": "2021",
-      "value": 12550,
+      "period": "2023",
+      "value": 1.92,
       "iso": "PER"
     },
     {
       "entity": "Peru",
       "group": "Americas",
-      "period": "2022",
-      "value": 12763,
+      "period": "2024",
+      "value": 2.02,
       "iso": "PER"
     },
     {
       "entity": "Philippines",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 7894,
+      "period": "2023",
+      "value": 1.41,
       "iso": "PHL"
     },
     {
       "entity": "Philippines",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 8371,
+      "period": "2024",
+      "value": 1.5,
       "iso": "PHL"
     },
     {
+      "entity": "Palau",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 78.86,
+      "iso": "PLW"
+    },
+    {
+      "entity": "Palau",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 82.84,
+      "iso": "PLW"
+    },
+    {
+      "entity": "Papua New Guinea",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 0.53,
+      "iso": "PNG"
+    },
+    {
+      "entity": "Papua New Guinea",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0.52,
+      "iso": "PNG"
+    },
+    {
       "entity": "Poland",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 30688,
+      "period": "2023",
+      "value": 7.65,
       "iso": "POL"
     },
     {
       "entity": "Poland",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 32468,
+      "period": "2024",
+      "value": 7.55,
       "iso": "POL"
     },
     {
-      "entity": "Puerto Rico",
+      "entity": "Puerto Rico (US)",
       "group": "Americas",
-      "period": "2021",
-      "value": 34095,
+      "period": "2023",
+      "value": 4.57,
       "iso": "PRI"
     },
     {
-      "entity": "Puerto Rico",
+      "entity": "Puerto Rico (US)",
       "group": "Americas",
-      "period": "2022",
-      "value": 35281,
+      "period": "2024",
+      "value": 4.82,
       "iso": "PRI"
     },
     {
       "entity": "Korea, Dem. People's Rep.",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 1577,
+      "period": "2023",
+      "value": 2.49,
       "iso": "PRK"
     },
     {
       "entity": "Korea, Dem. People's Rep.",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 1569,
+      "period": "2024",
+      "value": 2.5,
       "iso": "PRK"
     },
     {
       "entity": "Portugal",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 27138,
+      "period": "2023",
+      "value": 3.54,
       "iso": "PRT"
     },
     {
       "entity": "Portugal",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 28992,
+      "period": "2024",
+      "value": 3.32,
       "iso": "PRT"
     },
     {
       "entity": "Paraguay",
       "group": "Americas",
-      "period": "2021",
-      "value": 8846,
+      "period": "2023",
+      "value": 1.13,
       "iso": "PRY"
     },
     {
       "entity": "Paraguay",
       "group": "Americas",
-      "period": "2022",
-      "value": 8763,
+      "period": "2024",
+      "value": 1.16,
       "iso": "PRY"
     },
     {
-      "entity": "West Bank and Gaza",
-      "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 4699,
-      "iso": "PSE"
+      "entity": "French Polynesia",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 3.3,
+      "iso": "PYF"
     },
     {
-      "entity": "West Bank and Gaza",
-      "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 4775,
-      "iso": "PSE"
+      "entity": "French Polynesia",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 3.46,
+      "iso": "PYF"
     },
     {
       "entity": "Qatar",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 143469,
+      "period": "2023",
+      "value": 48.64,
       "iso": "QAT"
     },
     {
       "entity": "Qatar",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 149171,
+      "period": "2024",
+      "value": 47.33,
       "iso": "QAT"
     },
     {
       "entity": "Romania",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 26103,
+      "period": "2023",
+      "value": 3.69,
       "iso": "ROU"
     },
     {
       "entity": "Romania",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 26198,
+      "period": "2024",
+      "value": 3.72,
       "iso": "ROU"
     },
     {
       "entity": "Russian Federation",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 26120,
+      "period": "2023",
+      "value": 13.55,
       "iso": "RUS"
     },
     {
       "entity": "Russian Federation",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 25437,
+      "period": "2024",
+      "value": 14,
       "iso": "RUS"
     },
     {
       "entity": "Rwanda",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 2107,
+      "period": "2023",
+      "value": 0.16,
       "iso": "RWA"
     },
     {
       "entity": "Rwanda",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 2198,
+      "period": "2024",
+      "value": 0.16,
       "iso": "RWA"
     },
     {
       "entity": "Saudi Arabia",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 49841,
+      "period": "2023",
+      "value": 18.85,
       "iso": "SAU"
     },
     {
       "entity": "Saudi Arabia",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 53517,
+      "period": "2024",
+      "value": 18.48,
       "iso": "SAU"
     },
     {
       "entity": "Sudan",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 2533,
+      "period": "2023",
+      "value": 0.43,
       "iso": "SDN"
     },
     {
       "entity": "Sudan",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 2405,
+      "period": "2024",
+      "value": 0.43,
       "iso": "SDN"
     },
     {
       "entity": "Senegal",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 2607,
+      "period": "2023",
+      "value": 0.76,
       "iso": "SEN"
     },
     {
       "entity": "Senegal",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 2661,
+      "period": "2024",
+      "value": 0.77,
       "iso": "SEN"
     },
     {
       "entity": "Singapore",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 77945,
+      "period": "2023",
+      "value": 9.48,
       "iso": "SGP"
     },
     {
       "entity": "Singapore",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 80320,
+      "period": "2024",
+      "value": 9.75,
       "iso": "SGP"
     },
     {
+      "entity": "Solomon Islands",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 0.37,
+      "iso": "SLB"
+    },
+    {
+      "entity": "Solomon Islands",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0.38,
+      "iso": "SLB"
+    },
+    {
       "entity": "Sierra Leone",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1665,
+      "period": "2023",
+      "value": 0.17,
       "iso": "SLE"
     },
     {
       "entity": "Sierra Leone",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1690,
+      "period": "2024",
+      "value": 0.17,
       "iso": "SLE"
     },
     {
       "entity": "El Salvador",
       "group": "Americas",
-      "period": "2021",
-      "value": 9017,
+      "period": "2023",
+      "value": 1.46,
       "iso": "SLV"
     },
     {
       "entity": "El Salvador",
       "group": "Americas",
-      "period": "2022",
-      "value": 9219,
+      "period": "2024",
+      "value": 1.51,
       "iso": "SLV"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 16564,
-      "iso": "SRB"
-    },
-    {
-      "entity": "Serbia",
-      "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 17098,
-      "iso": "SRB"
-    },
-    {
-      "entity": "São Tomé and Príncipe",
+      "entity": "Somalia, Fed. Rep.",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 3821,
+      "period": "2023",
+      "value": 0.05,
+      "iso": "SOM"
+    },
+    {
+      "entity": "Somalia, Fed. Rep.",
+      "group": "Sub-Saharan Africa",
+      "period": "2024",
+      "value": 0.05,
+      "iso": "SOM"
+    },
+    {
+      "entity": "Sao Tome and Principe",
+      "group": "Sub-Saharan Africa",
+      "period": "2023",
+      "value": 0.63,
       "iso": "STP"
     },
     {
-      "entity": "São Tomé and Príncipe",
+      "entity": "Sao Tome and Principe",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 3752,
+      "period": "2024",
+      "value": 0.63,
       "iso": "STP"
     },
     {
-      "entity": "Former USSR",
-      "group": "Eastern Europe",
-      "period": "2021",
-      "value": 19871,
-      "iso": "SUN"
+      "entity": "Suriname",
+      "group": "Americas",
+      "period": "2023",
+      "value": 3.97,
+      "iso": "SUR"
     },
     {
-      "entity": "Former USSR",
-      "group": "Eastern Europe",
-      "period": "2022",
-      "value": 19355,
-      "iso": "SUN"
+      "entity": "Suriname",
+      "group": "Americas",
+      "period": "2024",
+      "value": 4.06,
+      "iso": "SUR"
     },
     {
       "entity": "Slovak Republic",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 27366,
+      "period": "2023",
+      "value": 5.74,
       "iso": "SVK"
     },
     {
       "entity": "Slovak Republic",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 27519,
+      "period": "2024",
+      "value": 5.51,
       "iso": "SVK"
     },
     {
       "entity": "Slovenia",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 31020,
+      "period": "2023",
+      "value": 5.95,
       "iso": "SVN"
     },
     {
       "entity": "Slovenia",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 32674,
+      "period": "2024",
+      "value": 6.27,
       "iso": "SVN"
     },
     {
       "entity": "Sweden",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 46227,
+      "period": "2023",
+      "value": 3.48,
       "iso": "SWE"
     },
     {
       "entity": "Sweden",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 47126,
+      "period": "2024",
+      "value": 3.57,
       "iso": "SWE"
     },
     {
       "entity": "Eswatini",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 8726,
+      "period": "2023",
+      "value": 0.88,
       "iso": "SWZ"
     },
     {
       "entity": "Eswatini",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 8522,
+      "period": "2024",
+      "value": 0.88,
       "iso": "SWZ"
     },
     {
       "entity": "Seychelles",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 30126,
+      "period": "2023",
+      "value": 7.01,
       "iso": "SYC"
     },
     {
       "entity": "Seychelles",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 31055,
+      "period": "2024",
+      "value": 7.24,
       "iso": "SYC"
     },
     {
-      "entity": "Syria",
+      "entity": "Syrian Arab Republic",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 2682,
+      "period": "2023",
+      "value": 1.33,
       "iso": "SYR"
     },
     {
-      "entity": "Syria",
+      "entity": "Syrian Arab Republic",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 2495,
+      "period": "2024",
+      "value": 1.27,
       "iso": "SYR"
+    },
+    {
+      "entity": "Turks and Caicos Islands",
+      "group": "Americas",
+      "period": "2023",
+      "value": 4.79,
+      "iso": "TCA"
+    },
+    {
+      "entity": "Turks and Caicos Islands",
+      "group": "Americas",
+      "period": "2024",
+      "value": 4.92,
+      "iso": "TCA"
     },
     {
       "entity": "Chad",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1403,
+      "period": "2023",
+      "value": 0.15,
       "iso": "TCD"
     },
     {
       "entity": "Chad",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1394,
+      "period": "2024",
+      "value": 0.14,
       "iso": "TCD"
     },
     {
       "entity": "Togo",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1535,
+      "period": "2023",
+      "value": 0.27,
       "iso": "TGO"
     },
     {
       "entity": "Togo",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1587,
+      "period": "2024",
+      "value": 0.28,
       "iso": "TGO"
     },
     {
       "entity": "Thailand",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 16020,
+      "period": "2023",
+      "value": 3.84,
       "iso": "THA"
     },
     {
       "entity": "Thailand",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 16421,
+      "period": "2024",
+      "value": 3.96,
       "iso": "THA"
     },
     {
       "entity": "Tajikistan",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 5206,
+      "period": "2023",
+      "value": 0.9,
       "iso": "TJK"
     },
     {
       "entity": "Tajikistan",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 5508,
+      "period": "2024",
+      "value": 0.92,
       "iso": "TJK"
     },
     {
       "entity": "Turkmenistan",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 17169,
+      "period": "2023",
+      "value": 12.86,
       "iso": "TKM"
     },
     {
       "entity": "Turkmenistan",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 17235,
+      "period": "2024",
+      "value": 10.86,
       "iso": "TKM"
     },
     {
+      "entity": "Timor-Leste",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 0.48,
+      "iso": "TLS"
+    },
+    {
+      "entity": "Timor-Leste",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0.5,
+      "iso": "TLS"
+    },
+    {
+      "entity": "Tonga",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 1.55,
+      "iso": "TON"
+    },
+    {
+      "entity": "Tonga",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 1.63,
+      "iso": "TON"
+    },
+    {
       "entity": "Trinidad and Tobago",
       "group": "Americas",
-      "period": "2021",
-      "value": 25238,
+      "period": "2023",
+      "value": 19.71,
       "iso": "TTO"
     },
     {
       "entity": "Trinidad and Tobago",
       "group": "Americas",
-      "period": "2022",
-      "value": 25773,
+      "period": "2024",
+      "value": 19.58,
       "iso": "TTO"
     },
     {
       "entity": "Tunisia",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 10726,
+      "period": "2023",
+      "value": 2.56,
       "iso": "TUN"
     },
     {
       "entity": "Tunisia",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 10914,
+      "period": "2024",
+      "value": 2.62,
       "iso": "TUN"
     },
     {
-      "entity": "Türkiye, Republic of",
+      "entity": "Turkiye",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 26176,
+      "period": "2023",
+      "value": 5.23,
       "iso": "TUR"
     },
     {
-      "entity": "Türkiye, Republic of",
+      "entity": "Turkiye",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 27362,
+      "period": "2024",
+      "value": 5.38,
       "iso": "TUR"
     },
     {
-      "entity": "Taiwan Province of China",
+      "entity": "Tuvalu",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 51944,
-      "iso": "TWN"
+      "period": "2023",
+      "value": 0,
+      "iso": "TUV"
     },
     {
-      "entity": "Taiwan Province of China",
+      "entity": "Tuvalu",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 53143,
-      "iso": "TWN"
+      "period": "2024",
+      "value": 0,
+      "iso": "TUV"
     },
     {
       "entity": "Tanzania",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 3008,
+      "period": "2023",
+      "value": 0.32,
       "iso": "TZA"
     },
     {
       "entity": "Tanzania",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 3057,
+      "period": "2024",
+      "value": 0.31,
       "iso": "TZA"
     },
     {
       "entity": "Uganda",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 2084,
+      "period": "2023",
+      "value": 0.17,
       "iso": "UGA"
     },
     {
       "entity": "Uganda",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 2122,
+      "period": "2024",
+      "value": 0.17,
       "iso": "UGA"
     },
     {
       "entity": "Ukraine",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 10134,
+      "period": "2023",
+      "value": 3.23,
       "iso": "UKR"
     },
     {
       "entity": "Ukraine",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 7749,
+      "period": "2024",
+      "value": 3.13,
       "iso": "UKR"
     },
     {
       "entity": "Uruguay",
       "group": "Americas",
-      "period": "2021",
-      "value": 19222,
+      "period": "2023",
+      "value": 2.42,
       "iso": "URY"
     },
     {
       "entity": "Uruguay",
       "group": "Americas",
-      "period": "2022",
-      "value": 20182,
+      "period": "2024",
+      "value": 2.57,
       "iso": "URY"
     },
     {
       "entity": "United States",
       "group": "Americas",
-      "period": "2021",
-      "value": 57523,
+      "period": "2023",
+      "value": 13.71,
       "iso": "USA"
     },
     {
       "entity": "United States",
       "group": "Americas",
-      "period": "2022",
-      "value": 58487,
+      "period": "2024",
+      "value": 13.62,
       "iso": "USA"
     },
     {
       "entity": "Uzbekistan",
       "group": "Europe & Central Asia",
-      "period": "2021",
-      "value": 12076,
+      "period": "2023",
+      "value": 3.72,
       "iso": "UZB"
     },
     {
       "entity": "Uzbekistan",
       "group": "Europe & Central Asia",
-      "period": "2022",
-      "value": 12559,
+      "period": "2024",
+      "value": 4.09,
       "iso": "UZB"
     },
     {
-      "entity": "Venezuela",
+      "entity": "St. Vincent and the Grenadines",
       "group": "Americas",
-      "period": "2021",
-      "value": 4897,
+      "period": "2023",
+      "value": 1.26,
+      "iso": "VCT"
+    },
+    {
+      "entity": "St. Vincent and the Grenadines",
+      "group": "Americas",
+      "period": "2024",
+      "value": 1.31,
+      "iso": "VCT"
+    },
+    {
+      "entity": "Venezuela, RB",
+      "group": "Americas",
+      "period": "2023",
+      "value": 3.41,
       "iso": "VEN"
     },
     {
-      "entity": "Venezuela",
+      "entity": "Venezuela, RB",
       "group": "Americas",
-      "period": "2022",
-      "value": 5267,
+      "period": "2024",
+      "value": 3.39,
       "iso": "VEN"
     },
     {
-      "entity": "Vietnam",
+      "entity": "British Virgin Islands",
+      "group": "Americas",
+      "period": "2023",
+      "value": 2.28,
+      "iso": "VGB"
+    },
+    {
+      "entity": "British Virgin Islands",
+      "group": "Americas",
+      "period": "2024",
+      "value": 2.33,
+      "iso": "VGB"
+    },
+    {
+      "entity": "Virgin Islands (U.S.)",
+      "group": "Americas",
+      "period": "2023",
+      "value": 0,
+      "iso": "VIR"
+    },
+    {
+      "entity": "Virgin Islands (U.S.)",
+      "group": "Americas",
+      "period": "2024",
+      "value": 0,
+      "iso": "VIR"
+    },
+    {
+      "entity": "Viet Nam",
       "group": "East Asia & Pacific",
-      "period": "2021",
-      "value": 7508,
+      "period": "2023",
+      "value": 3.89,
       "iso": "VNM"
     },
     {
-      "entity": "Vietnam",
+      "entity": "Viet Nam",
       "group": "East Asia & Pacific",
-      "period": "2022",
-      "value": 8050,
+      "period": "2024",
+      "value": 4.27,
       "iso": "VNM"
     },
     {
-      "entity": "Yemen",
+      "entity": "Vanuatu",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 0.85,
+      "iso": "VUT"
+    },
+    {
+      "entity": "Vanuatu",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 0.87,
+      "iso": "VUT"
+    },
+    {
+      "entity": "Samoa",
+      "group": "East Asia & Pacific",
+      "period": "2023",
+      "value": 1.54,
+      "iso": "WSM"
+    },
+    {
+      "entity": "Samoa",
+      "group": "East Asia & Pacific",
+      "period": "2024",
+      "value": 1.6,
+      "iso": "WSM"
+    },
+    {
+      "entity": "Yemen, Rep.",
       "group": "Middle East & North Africa",
-      "period": "2021",
-      "value": 1972,
+      "period": "2023",
+      "value": 0.27,
       "iso": "YEM"
     },
     {
-      "entity": "Yemen",
+      "entity": "Yemen, Rep.",
       "group": "Middle East & North Africa",
-      "period": "2022",
-      "value": 1959,
+      "period": "2024",
+      "value": 0.26,
       "iso": "YEM"
-    },
-    {
-      "entity": "Former Yugoslavia",
-      "group": "Eastern Europe",
-      "period": "2021",
-      "value": 18492,
-      "iso": "YUG"
-    },
-    {
-      "entity": "Former Yugoslavia",
-      "group": "Eastern Europe",
-      "period": "2022",
-      "value": 19352,
-      "iso": "YUG"
     },
     {
       "entity": "South Africa",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 11273,
+      "period": "2023",
+      "value": 6.76,
       "iso": "ZAF"
     },
     {
       "entity": "South Africa",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 11416,
+      "period": "2024",
+      "value": 6.88,
       "iso": "ZAF"
     },
     {
       "entity": "Zambia",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 3322,
+      "period": "2023",
+      "value": 0.55,
       "iso": "ZMB"
     },
     {
       "entity": "Zambia",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 3342,
+      "period": "2024",
+      "value": 0.54,
       "iso": "ZMB"
     },
     {
       "entity": "Zimbabwe",
       "group": "Sub-Saharan Africa",
-      "period": "2021",
-      "value": 1687,
+      "period": "2023",
+      "value": 0.77,
       "iso": "ZWE"
     },
     {
       "entity": "Zimbabwe",
       "group": "Sub-Saharan Africa",
-      "period": "2022",
-      "value": 1704,
+      "period": "2024",
+      "value": 0.77,
       "iso": "ZWE"
     }
   ]
