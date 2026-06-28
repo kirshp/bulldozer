@@ -8,12 +8,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <label>Country<select id="country-sel"><option>Loading…</option></select></label>
   </div>
 
-  <p class="country-desc" id="country-desc"></p>
-
-  <div class="grid cols-2" style="align-items:start; margin-top:8px">
-    <div id="country-items"></div>
-    <div id="country-map"><WorldMap legendId="country-legend" showLegend={false} /></div>
+  <div class="country-card">
+    <div class="cc-info">
+      <h3 id="cc-name">—</h3>
+      <p class="cc-extract" id="cc-extract"></p>
+      <p class="country-desc" id="country-desc"></p>
+    </div>
+    <div class="cc-map" id="country-map"><WorldMap legendId="country-legend" showLegend={false} /></div>
   </div>
+
+  <div id="country-items" style="margin-top:18px"></div>
 </div>
 
 <script type="application/json" id="cp-iso" set:html={JSON.stringify(isoNumeric)}></script>
@@ -24,10 +28,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const descEl = document.getElementById('country-desc');
   const itemsEl = document.getElementById('country-items');
   const mapEl = document.getElementById('country-map');
+  const nameEl = document.getElementById('cc-name');
+  const extractEl = document.getElementById('cc-extract');
   let countries = [];
 
   const fmt = (v, unit) => `${v.toLocaleString('en-US', { maximumFractionDigits: 1 })}${unit && unit.includes('%') ? '%' : ''}`;
   const find = (c, slug) => c.items.find((i) => i.slug === slug);
+
+  // Wikipedia title aliases for names that differ from our datasets.
+  const WIKI = { 'Russian Federation': 'Russia', 'Korea, Rep.': 'South Korea', 'Iran, Islamic Rep.': 'Iran', 'Egypt, Arab Rep.': 'Egypt', 'Venezuela, RB': 'Venezuela', 'Viet Nam': 'Vietnam', 'Türkiye, Republic of': 'Turkey', 'Czechia': 'Czech Republic', 'Slovak Republic': 'Slovakia', 'Lao PDR': 'Laos', 'Syrian Arab Republic': 'Syria' };
 
   function describe(c) {
     const bits = [];
@@ -39,7 +48,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     if (life) bits.push(`life expectancy ${life.value} yrs`);
     if (happy) bits.push(`happiness ${happy.value} (#${happy.rank})`);
     if (dem) bits.push(`liberal-democracy ${dem.value} (#${dem.rank})`);
-    return `${c.name} · ${c.region || 'world'}. ${bits.join(' · ')}.`;
+    return `${c.region || 'World'}. ${bits.join(' · ')}.`;
   }
 
   function renderItems(c) {
@@ -58,16 +67,21 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     mapEl.querySelectorAll('.country').forEach((p) => {
       const on = p.getAttribute('data-num') === num;
       p.setAttribute('fill', on ? 'var(--accent)' : 'var(--bg-elev)');
-      p.style.opacity = on ? '1' : '0.45';
+      p.style.opacity = on ? '1' : '0.4';
     });
   }
 
-  function render() {
-    const c = countries.find((x) => x.iso === sel.value);
-    if (!c) return;
-    descEl.textContent = describe(c);
-    renderItems(c);
-    highlight(c);
+  let wikiSeq = 0;
+  async function loadWiki(name) {
+    const seq = ++wikiSeq;
+    extractEl.textContent = '';
+    const title = WIKI[name] || name;
+    try {
+      const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}?redirect=true`);
+      if (!r.ok) return;
+      const j = await r.json();
+      if (seq === wikiSeq && j.extract && j.type !== 'disambiguation') extractEl.textContent = j.extract;
+    } catch {}
   }
 
   function syncUrl() {
@@ -75,6 +89,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     p.set('c', sel.value);
     history.replaceState(null, '', location.pathname + '?' + p.toString() + location.hash);
   }
+
+  function render() {
+    const c = countries.find((x) => x.iso === sel.value);
+    if (!c) return;
+    nameEl.textContent = c.name;
+    descEl.textContent = describe(c);
+    renderItems(c);
+    highlight(c);
+    loadWiki(c.name);
+  }
+
   fetch(`${base}/data/country-index.json`).then((r) => r.json()).then((data) => {
     countries = data;
     sel.innerHTML = data.map((c) => `<option value="${c.iso}">${c.name}</option>`).join('');

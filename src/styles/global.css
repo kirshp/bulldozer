@@ -254,10 +254,13 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 @media (max-width: 600px) { .rel-row { grid-template-columns: 1fr; gap: 6px; } }
 
 /* Country profile */
-.country-desc { font-size: 16px; color: var(--text); background: var(--bg-elev); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 12px 16px; margin: 14px 0 4px; }
+.country-card { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-top: 14px; }
+.cc-info h3 { font-size: 26px; margin: 0 0 10px; letter-spacing: -0.5px; }
+.cc-extract { font-size: 14px; color: var(--text-dim); line-height: 1.6; margin: 0 0 12px; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+.country-desc { font-size: 14px; color: var(--text); border-left: 3px solid var(--accent); padding-left: 12px; margin: 0; }
+.cc-map { min-width: 0; }
 #country-items table.data td { padding: 7px 8px; }
-#country-map { position: sticky; top: 76px; }
-@media (max-width: 820px) { #country-map { position: static; } }
+@media (max-width: 720px) { .country-card { grid-template-columns: 1fr; } }
 
 /* World map */
 .worldmap { margin-top: 8px; }
