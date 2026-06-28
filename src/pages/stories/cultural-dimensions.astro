@@ -55,8 +55,15 @@ const mostCollectivist = top((p) => -p.y);
         <div class="card"><h3>Most hierarchical</h3><p class="meta">{mostHierarchical.label} — large power gaps are accepted as normal.</p></div>
         <div class="card"><h3>Flattest</h3><p class="meta">{flattest.label} — power is expected to be shared and questioned.</p></div>
       </div>
-      <p class="sub" style="margin-top:24px">
-        Source: <a href="https://geerthofstede.com/" target="_blank" rel="noopener">Hofstede cultural dimensions</a>.
+      <p style="margin-top:24px">
+        <a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none"
+           href={`${base}/explore?bx=hofstede-individualism&by=hofstede-power-distance#bivariate`}>
+          ↔ Explore all 7 cultural dimensions interactively
+        </a>
+      </p>
+      <p class="sub" style="margin-top:14px">
+        Pick any two of the five Hofstede dimensions or the two Inglehart-Welzel axes on the
+        interactive map. Source: <a href="https://geerthofstede.com/" target="_blank" rel="noopener">Hofstede cultural dimensions</a>.
         Compare with the <a href={`${base}/stories/cultural-map`}>Inglehart-Welzel map →</a>
       </p>
     </div>
