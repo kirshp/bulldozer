@@ -186,7 +186,7 @@ export function groupRollups(data: Observation[], mode: ChangeMode = 'pct'): Gro
     // For rates, report the change of the group mean (in points); for volumes,
     // the percent change of the group total. `value` is mean for rates, sum for volumes.
     const value =
-      mode === 'pp' ? Math.round((currVal / members) * 10) / 10 : currVal;
+      mode === 'pp' ? Math.round((currVal / members) * 10) / 10 : Math.round(currVal * 10) / 10;
     const pct =
       mode === 'pp'
         ? Math.round((currVal / members - prevVal / (prevRows.length || 1)) * 10) / 10
