@@ -148,6 +148,12 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Indicator pictogram */
 .ind-ic { display: inline-block; margin-right: 7px; font-size: 0.95em; opacity: 0.9; }
 
+/* Country card — coat of arms & capital marker */
+.cc-coa { float: right; width: 60px; height: 60px; object-fit: contain; margin: 0 0 8px 12px; }
+.cc-cap-dot { fill: #fff; stroke: var(--accent); stroke-width: 1; paint-order: stroke; }
+.cc-cap-halo { fill: var(--accent); opacity: 0.25; }
+.cc-cap-label { fill: var(--text); font-weight: 700; paint-order: stroke; stroke: var(--bg); stroke-width: 2.2; stroke-linejoin: round; }
+
 /* Bivariate map preset quick-picks */
 .biv-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 .biv-preset { margin: 0; font-size: 13px; cursor: pointer; }
