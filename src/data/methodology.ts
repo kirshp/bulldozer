@@ -16,8 +16,8 @@ export function methodologyFor(slug: string): Methodology {
     return { vintage: 'LiTS IV (~2022–2023)', method: 'Country mean of the item; transition region only, single wave.' };
   if (slug.startsWith('hofstede-'))
     return { vintage: 'Dimension matrix (2010)', method: 'Published national scores (0–100); a fixed model, not a time series.' };
-  if (slug === 'wb-account-ownership')
-    return { vintage: 'Global Findex 2021/2022', method: 'World Bank Findex survey; share of adults 15+ with an account; latest available year.' };
+  if (slug === 'wb-account-ownership' || slug === 'wb-debit-card' || slug === 'wb-digital-payments' || slug === 'wb-mobile-money')
+    return { vintage: 'Global Findex 2021/2024', method: 'World Bank Findex survey; share of adults 15+; latest available year per country.' };
   if (slug.startsWith('who-'))
     return { method: 'WHO Global Health Observatory; latest available year per country (varies); both sexes, modelled estimates.' };
   if (slug.startsWith('wgm-'))
