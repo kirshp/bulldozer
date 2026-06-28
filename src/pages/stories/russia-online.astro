@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LineChart from '@components/LineChart.astro';
+import rlms from '@data/rlms.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Comparable RLMS series from 2012 (methodology break before that).
+const trend = rlms.trend.filter((p) => Number(p.year) >= 2012);
+const start = trend[0], end = trend[trend.length - 1];
+const age = rlms.byAge;
+const ageMax = Math.max(...age.map((a) => a.pct));
+const youngOld = age.length ? `${age[0].group} ${age[0].pct}% vs 65+ ${age[age.length - 1].pct}%` : '';
+---
+<BaseLayout title="Russia Online" active="news"
+  description="Internet adoption in Russia from RLMS-HSE microdata: the rise since 2012 and the generation gap.">
+  <section class="story-hero">
+    <div class="container">
+      <a class="meta" href={`${base}/`}>← News</a>
+      <span class="kicker">Data story · RLMS-HSE microdata · {end.year}</span>
+      <h1>Russia went online —<br/>but not <span class="hl">everyone</span>.</h1>
+      <div class="hero-figure">
+        <div class="hero-num">{end.pct}%</div>
+        <div class="hero-cap">used the internet in the last 12 months ({end.year})<br/>up from {start.pct}% in {start.year}</div>
+      </div>
+      <p class="sub" style="max-width:640px">
+        The Russia Longitudinal Monitoring Survey (HSE) follows the same households for years. Weighted to be
+        nationally representative, it shows internet use climbing steadily — yet a sharp divide by age remains.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>The rise of internet use</h2>
+      <p class="sub">Weighted share who used the internet in the last 12 months, {start.year}–{end.year}.</p>
+      <LineChart points={trend.map((p) => ({ x: p.year, y: p.pct }))} yLabel="% used internet" />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>The generation gap</h2>
+      <p class="sub">Internet use by age group, {end.year}. {youngOld}.</p>
+      <div class="bars">
+        {age.map((a) => (
+          <div class="bar-row">
+            <span>{a.group}</span>
+            <span class="bar-track"><span class="bar-fill" style={`width:${(a.pct / 100) * 100}%; background:linear-gradient(90deg,var(--accent-2),var(--accent))`}></span></span>
+            <span class="bar-val">{a.pct}%</span>
+          </div>
+        ))}
+      </div>
+      <p class="sub" style="margin-top:24px">
+        Source: <a href="https://www.hse.ru/en/rlms/" target="_blank" rel="noopener">RLMS-HSE</a>
+        (Russia Longitudinal Monitoring Survey). Self-reported; comparable series from 2012.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

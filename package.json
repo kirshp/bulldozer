@@ -12,6 +12,7 @@
     "parse:surveys": "node scripts/parse_surveys.mjs",
     "parse:tidy": "node scripts/parse_tidy.mjs",
     "parse:lits": "node scripts/parse_lits.mjs",
+    "parse:rlms": "node scripts/parse_rlms.mjs",
     "data:build": "node scripts/parse_macro.mjs && node scripts/parse_surveys.mjs && node scripts/parse_tidy.mjs && node scripts/parse_lits.mjs",
     "digest": "node scripts/telegram_digest.mjs"
   },
