@@ -3,6 +3,7 @@ import WorldMap from '@components/WorldMap.astro';
 import isoNumeric from '@data/iso-numeric.json';
 import isoAlpha2 from '@data/iso-alpha2.json';
 import countryMeta from '@data/country-meta.json';
+import { TOPICS, TOPIC_ORDER } from '@lib/topics';
 import { feature } from 'topojson-client';
 import { geoNaturalEarth1 } from 'd3-geo';
 import { readFileSync } from 'node:fs';
@@ -16,6 +17,7 @@ const topo = JSON.parse(readFileSync(require.resolve('world-atlas/countries-110m
 const fc: any = feature(topo, (topo as any).objects.countries);
 const proj = geoNaturalEarth1().fitSize([960, 480], fc);
 const projParams = { scale: proj.scale(), tx: proj.translate()[0], ty: proj.translate()[1] };
+const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: TOPICS[id].icon }));
 ---
 <div class="country-panel">
   <div class="controls">
@@ -32,13 +34,22 @@ const projParams = { scale: proj.scale(), tx: proj.translate()[0], ty: proj.tran
     <div class="cc-map" id="country-map"><WorldMap legendId="country-legend" showLegend={false} /></div>
   </div>
 
-  <div id="country-items" style="margin-top:18px"></div>
+  <div class="ci-controls">
+    <input id="ci-search" type="search" placeholder="Filter indicators…" autocomplete="off" />
+    <select id="ci-sort">
+      <option value="topic">Group by topic</option>
+      <option value="rank">Sort by rank (best first)</option>
+      <option value="rankw">Sort by rank (worst first)</option>
+    </select>
+    <select id="ci-topic"><option value="">All topics</option></select>
+  </div>
+  <div id="country-items" style="margin-top:8px"></div>
 </div>
 
 <script type="application/json" id="cp-iso" set:html={JSON.stringify(isoNumeric)}></script>
 <script type="application/json" id="cp-a2" set:html={JSON.stringify(isoAlpha2)}></script>
 <script type="application/json" id="cp-meta" set:html={JSON.stringify(countryMeta)}></script>
-<script define:vars={{ base, projParams }}>
+<script define:vars={{ base, projParams, topicMeta }}>
   const isoNumeric = JSON.parse(document.getElementById('cp-iso').textContent);
   const isoAlpha2 = JSON.parse(document.getElementById('cp-a2').textContent);
   const META = JSON.parse(document.getElementById('cp-meta').textContent);
@@ -51,6 +62,14 @@ const projParams = { scale: proj.scale(), tx: proj.translate()[0], ty: proj.tran
   const nameEl = document.getElementById('cc-name');
   const extractEl = document.getElementById('cc-extract');
   const coaEl = document.getElementById('cc-coa');
+  const ciSearch = document.getElementById('ci-search');
+  const ciSort = document.getElementById('ci-sort');
+  const ciTopic = document.getElementById('ci-topic');
+  const TICON = Object.fromEntries(topicMeta.map((t) => [t.id, t.icon]));
+  const TLABEL = Object.fromEntries(topicMeta.map((t) => [t.id, t.label]));
+  const TORDER = topicMeta.map((t) => t.id);
+  const ciState = { q: '', sort: 'topic', topic: '' };
+  let currentC = null;
   let countries = [];
 
   // Project lon/lat → SVG coords with the same Natural Earth 1 fit as WorldMap.
@@ -124,15 +143,38 @@ const projParams = { scale: proj.scale(), tx: proj.translate()[0], ty: proj.tran
     return `${c.region || 'World'}. ${bits.join(' · ')}.`;
   }
 
+  const row = (it) => `<tr><td><span class="ind-ic">${TICON[it.topic] || ''}</span><a href="${base}/dataset/${it.slug}">${it.title}</a></td>` +
+    `<td class="num">${fmt(it.value, it.unit)}</td>` +
+    `<td class="num" style="color:var(--text-dim)">#${it.rank}/${it.total}</td></tr>`;
+
   function renderItems(c) {
-    const groups = { macro: [], survey: [] };
-    for (const it of c.items) (groups[it.kind] || groups.survey).push(it);
-    const block = (label, arr) => arr.length ? `<h3 style="font-size:14px;margin:14px 0 8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">${label}</h3>` +
-      `<table class="data"><tbody>` + arr.map((it) =>
-        `<tr><td><a href="${base}/dataset/${it.slug}">${it.title}</a></td>` +
-        `<td class="num">${fmt(it.value, it.unit)}</td>` +
-        `<td class="num" style="color:var(--text-dim)">#${it.rank}/${it.total}</td></tr>`).join('') + `</tbody></table>` : '';
-    itemsEl.innerHTML = block('Macro', groups.macro) + block('Study', groups.survey);
+    currentC = c;
+    // keep the topic filter in sync with the topics this country actually has
+    const present = TORDER.filter((id) => c.items.some((it) => it.topic === id));
+    if (ciTopic.dataset.iso !== c.iso) {
+      ciTopic.dataset.iso = c.iso;
+      ciTopic.innerHTML = '<option value="">All topics</option>' +
+        present.map((id) => `<option value="${id}">${TICON[id]} ${TLABEL[id]}</option>`).join('');
+      if (![...ciTopic.options].some((o) => o.value === ciState.topic)) ciState.topic = '';
+      ciTopic.value = ciState.topic;
+    }
+    const q = ciState.q.toLowerCase();
+    let items = c.items.filter((it) => (!q || it.title.toLowerCase().includes(q)) && (!ciState.topic || it.topic === ciState.topic));
+    if (!items.length) { itemsEl.innerHTML = '<p class="sub">No indicators match.</p>'; return; }
+
+    if (ciState.sort === 'rank' || ciState.sort === 'rankw') {
+      const dir = ciState.sort === 'rank' ? 1 : -1;        // rank percentile, best first
+      items = [...items].sort((a, b) => dir * (a.rank / a.total - b.rank / b.total));
+      itemsEl.innerHTML = `<table class="data"><tbody>${items.map(row).join('')}</tbody></table>`;
+      return;
+    }
+    // group by topic
+    const block = (id) => {
+      const arr = items.filter((it) => it.topic === id).sort((a, b) => a.title.localeCompare(b.title));
+      return arr.length ? `<h3 style="font-size:13px;margin:14px 0 6px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">${TICON[id]} ${TLABEL[id]}</h3>` +
+        `<table class="data"><tbody>${arr.map(row).join('')}</tbody></table>` : '';
+    };
+    itemsEl.innerHTML = TORDER.map(block).join('');
   }
 
   function highlight(c) {
@@ -184,4 +226,7 @@ const projParams = { scale: proj.scale(), tx: proj.translate()[0], ty: proj.tran
     render();
   });
   sel.addEventListener('change', () => { render(); syncUrl(); });
+  ciSearch.addEventListener('input', () => { ciState.q = ciSearch.value.trim(); if (currentC) renderItems(currentC); });
+  ciSort.addEventListener('change', () => { ciState.sort = ciSort.value; if (currentC) renderItems(currentC); });
+  ciTopic.addEventListener('change', () => { ciState.topic = ciTopic.value; if (currentC) renderItems(currentC); });
 </script>

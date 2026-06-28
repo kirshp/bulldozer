@@ -27,7 +27,7 @@ export const TOPIC_ORDER = [
 export function isOpinionSurvey(slug: string): boolean {
   return slug.startsWith('whr-') || slug.startsWith('lits-') || slug.startsWith('wrp-')
     || slug.startsWith('hofstede-') || slug.startsWith('wvs-') || slug.startsWith('afro-') || slug.startsWith('ess-')
-    || slug.startsWith('sdr2-') || slug.startsWith('cb-') || slug.startsWith('wgm-');
+    || slug.startsWith('sdr2-') || slug.startsWith('cb-') || slug.startsWith('wgm-') || slug.startsWith('rlms-');
 }
 
 /** Assign a topic to a dataset by slug. */

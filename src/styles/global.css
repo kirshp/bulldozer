@@ -148,6 +148,11 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Indicator pictogram */
 .ind-ic { display: inline-block; margin-right: 7px; font-size: 0.95em; opacity: 0.9; }
 
+/* Country profile — indicator filter/sort controls */
+.ci-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.ci-controls input, .ci-controls select { background: var(--bg-elev); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+.ci-controls input { flex: 1; min-width: 160px; }
+
 /* Country card — coat of arms & capital marker */
 .cc-coa { float: right; width: 60px; height: 60px; object-fit: contain; margin: 0 0 8px 12px; }
 .cc-cap-dot { fill: #fff; stroke: var(--accent); stroke-width: 1; paint-order: stroke; }

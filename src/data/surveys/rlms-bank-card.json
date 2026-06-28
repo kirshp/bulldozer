@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "title": "Bank Card Ownership (Russia)",
+    "valueLabel": "Adults who hold a bank card",
+    "unit": "%",
+    "changeMode": "pp",
+    "topic": "economy",
+    "summary": "Share of Russian adults who hold a plastic bank card — annual trend (asked through 2019). RLMS-HSE longitudinal survey.",
+    "source": "RLMS-HSE (HSE University / UNC)",
+    "license": "RLMS-HSE terms — public aggregates",
+    "url": "https://www.hse.ru/en/rlms/",
+    "parsedAt": "2026-06-28",
+    "kind": "survey"
+  },
+  "data": [
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2006",
+      "value": 20.8,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2007",
+      "value": 26.2,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2008",
+      "value": 30.8,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2009",
+      "value": 36.2,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2010",
+      "value": 43.6,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2011",
+      "value": 48.7,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2012",
+      "value": 53.1,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2013",
+      "value": 56.6,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2014",
+      "value": 59.7,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2015",
+      "value": 62.2,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2016",
+      "value": 67.8,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2017",
+      "value": 70.3,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2018",
+      "value": 75.1,
+      "iso": "RUS"
+    },
+    {
+      "entity": "Russia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 79,
+      "iso": "RUS"
+    }
+  ]
+}

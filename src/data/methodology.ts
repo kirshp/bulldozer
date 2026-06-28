@@ -22,6 +22,8 @@ export function methodologyFor(slug: string): Methodology {
     return { method: 'WHO Global Health Observatory; latest available year per country (varies); both sexes, modelled estimates.' };
   if (slug.startsWith('wgm-'))
     return { vintage: 'Wellcome Global Monitor 2018 (Gallup)', method: 'Gallup World Poll; weighted shares (Column N %); share giving the stated response.' };
+  if (slug.startsWith('rlms-'))
+    return { vintage: 'RLMS-HSE annual waves', method: 'RLMS-HSE longitudinal microdata (Russia only); weighted by inwgt; share/median by survey year.' };
   if (slug.startsWith('cb-'))
     return { vintage: 'Caucasus Barometer 2013 (last wave incl. Azerbaijan)', method: 'CRRC; weighted by indwt; South Caucasus only (Armenia, Azerbaijan, Georgia).' };
   if (slug.startsWith('sdr2-'))
