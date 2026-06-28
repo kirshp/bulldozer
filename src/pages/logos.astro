@@ -1,47 +1,62 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const B = (cx: number, cy: number, fs: number) =>
-  `<text x="${cx}" y="${cy}" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="${fs}" font-weight="900" fill="#1a1300">B</text>`;
+const A = '#ffb000';
+const D = '#0e0f11';
+
+// B bowls (shared) — spine sits at x≈22..42, bowls to the right.
+const bowls =
+  `<rect x="38" y="16" width="30" height="40" rx="20" fill="${A}"/><rect x="49" y="26" width="13" height="20" rx="10" fill="${D}"/>` +
+  `<rect x="38" y="54" width="37" height="50" rx="25" fill="${A}"/><rect x="49" y="65" width="16" height="28" rx="13" fill="${D}"/>`;
 
 const concepts = [
   {
-    id: 'plain', name: 'Plain (now)',
-    mark: `<rect width="120" height="120" rx="28" fill="#ffb000"/>${B(60, 84, 72)}`,
+    id: 'track-slots', name: 'Track-B (tread links)', note: 'The vertical bar of the B becomes a caterpillar track.',
+    mark:
+      `<rect x="20" y="16" width="22" height="88" rx="7" fill="${A}"/>` +
+      [24, 36, 48, 60, 72, 84, 94].map((y) => `<rect x="24" y="${y}" width="14" height="4" rx="2" fill="${D}"/>`).join('') +
+      bowls,
   },
   {
-    id: 'tread', name: 'Tread — machinery',
-    mark: `<rect width="120" height="120" rx="28" fill="#ffb000"/>${B(60, 74, 62)}` +
-      [0, 1, 2, 3, 4].map((i) => `<rect x="${17 + i * 18}" y="92" width="13" height="10" rx="3" fill="#1a1300"/>`).join(''),
+    id: 'track-rails', name: 'Track-B (two rails)', note: 'Two rails with rungs — the “2 stripes” track read.',
+    mark:
+      `<rect x="20" y="16" width="6" height="88" rx="3" fill="${A}"/><rect x="36" y="16" width="6" height="88" rx="3" fill="${A}"/>` +
+      [22, 33, 44, 55, 66, 77, 88, 98].map((y) => `<rect x="26" y="${y}" width="10" height="4" rx="2" fill="${A}"/>`).join('') +
+      bowls,
   },
   {
-    id: 'blade', name: 'Blade — pushes data',
-    mark: `<rect width="120" height="120" rx="28" fill="#ffb000"/>${B(66, 78, 62)}` +
-      `<path d="M22 98 L88 98 L88 88 L30 88 Z" fill="#1a1300"/><rect x="14" y="84" width="10" height="22" rx="2" fill="#1a1300"/>`,
+    id: 'dozer', name: 'Bulldozer (machine)', note: 'A literal mini-dozer.',
+    mark:
+      `<path d="M14 52 L25 52 L30 98 L19 98 Z" fill="${A}"/><rect x="26" y="74" width="22" height="7" rx="3" fill="${A}"/>` +
+      `<rect x="30" y="80" width="78" height="18" rx="9" fill="${A}"/>` +
+      `<circle cx="46" cy="89" r="5" fill="${D}"/><circle cx="78" cy="89" r="5" fill="${D}"/><circle cx="100" cy="89" r="5" fill="${D}"/>` +
+      `<rect x="46" y="54" width="50" height="26" rx="4" fill="${A}"/><rect x="56" y="40" width="26" height="16" rx="3" fill="${A}"/>` +
+      `<rect x="60" y="44" width="18" height="9" rx="2" fill="${D}"/><rect x="92" y="42" width="6" height="14" rx="2" fill="${A}"/>`,
   },
   {
-    id: 'twotone', name: 'Two-tone cut',
-    mark: `<defs><clipPath id="cc"><rect width="120" height="120" rx="28"/></clipPath></defs>` +
-      `<g clip-path="url(#cc)"><rect width="120" height="120" fill="#ffb000"/><path d="M120 0 L120 120 L0 120 Z" fill="#ff7a00"/></g>${B(60, 84, 72)}`,
+    id: 'pushbars', name: 'Blade pushes data', note: 'A blade shoving rising bars.',
+    mark:
+      `<rect x="20" y="34" width="15" height="62" rx="3" fill="${A}"/><rect x="46" y="74" width="15" height="22" rx="2" fill="${A}"/>` +
+      `<rect x="66" y="58" width="15" height="38" rx="2" fill="${A}"/><rect x="86" y="42" width="15" height="54" rx="2" fill="${A}"/>`,
   },
 ];
 
-const headerMark = (inner: string) =>
-  `<svg width="34" height="34" viewBox="0 0 120 120" style="border-radius:8px">${inner}</svg>`;
+const headerMark = (inner: string) => `<svg width="36" height="36" viewBox="0 0 120 120">${inner}</svg>`;
 ---
 <BaseLayout title="Logo concepts" description="Pick a BullDozer logo.">
   <section class="section">
     <div class="container" style="max-width:760px">
-      <span class="kicker">Choose a logo</span>
-      <h2>BullDozer mark — 4 ideas</h2>
-      <p class="sub">Tap the one you like and tell me its name. It’ll go into the header, favicon and the installable app icon.</p>
+      <span class="kicker">Choose a logo · v2</span>
+      <h2>The “B” as a bulldozer</h2>
+      <p class="sub">Your idea: turn the vertical stroke of the B into a caterpillar track. Two track styles below, plus a full machine and an abstract blade. No more Binance tile. Tell me which.</p>
 
       <div class="grid cols-2" style="margin-top:8px">
         {concepts.map((c) => (
           <div class="card" style="text-align:center">
             <div set:html={`<svg width="120" height="120" viewBox="0 0 120 120">${c.mark}</svg>`} />
             <h3 style="margin:14px 0 4px">{c.name}</h3>
-            <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:10px; padding-top:12px; border-top:1px solid var(--border)">
+            <p class="meta" style="margin:0 0 12px">{c.note}</p>
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; padding-top:12px; border-top:1px solid var(--border)">
               <span set:html={headerMark(c.mark)} />
               <span style="font-weight:800; font-size:17px; color:var(--text)">Bull<span style="color:var(--accent)">Dozer</span></span>
             </div>
