@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const B = (cx: number, cy: number, fs: number) =>
+  `<text x="${cx}" y="${cy}" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="${fs}" font-weight="900" fill="#1a1300">B</text>`;
+
+const concepts = [
+  {
+    id: 'plain', name: 'Plain (now)',
+    mark: `<rect width="120" height="120" rx="28" fill="#ffb000"/>${B(60, 84, 72)}`,
+  },
+  {
+    id: 'tread', name: 'Tread — machinery',
+    mark: `<rect width="120" height="120" rx="28" fill="#ffb000"/>${B(60, 74, 62)}` +
+      [0, 1, 2, 3, 4].map((i) => `<rect x="${17 + i * 18}" y="92" width="13" height="10" rx="3" fill="#1a1300"/>`).join(''),
+  },
+  {
+    id: 'blade', name: 'Blade — pushes data',
+    mark: `<rect width="120" height="120" rx="28" fill="#ffb000"/>${B(66, 78, 62)}` +
+      `<path d="M22 98 L88 98 L88 88 L30 88 Z" fill="#1a1300"/><rect x="14" y="84" width="10" height="22" rx="2" fill="#1a1300"/>`,
+  },
+  {
+    id: 'twotone', name: 'Two-tone cut',
+    mark: `<defs><clipPath id="cc"><rect width="120" height="120" rx="28"/></clipPath></defs>` +
+      `<g clip-path="url(#cc)"><rect width="120" height="120" fill="#ffb000"/><path d="M120 0 L120 120 L0 120 Z" fill="#ff7a00"/></g>${B(60, 84, 72)}`,
+  },
+];
+
+const headerMark = (inner: string) =>
+  `<svg width="34" height="34" viewBox="0 0 120 120" style="border-radius:8px">${inner}</svg>`;
+---
+<BaseLayout title="Logo concepts" description="Pick a BullDozer logo.">
+  <section class="section">
+    <div class="container" style="max-width:760px">
+      <span class="kicker">Choose a logo</span>
+      <h2>BullDozer mark — 4 ideas</h2>
+      <p class="sub">Tap the one you like and tell me its name. It’ll go into the header, favicon and the installable app icon.</p>
+
+      <div class="grid cols-2" style="margin-top:8px">
+        {concepts.map((c) => (
+          <div class="card" style="text-align:center">
+            <div set:html={`<svg width="120" height="120" viewBox="0 0 120 120">${c.mark}</svg>`} />
+            <h3 style="margin:14px 0 4px">{c.name}</h3>
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:10px; padding-top:12px; border-top:1px solid var(--border)">
+              <span set:html={headerMark(c.mark)} />
+              <span style="font-weight:800; font-size:17px; color:var(--text)">Bull<span style="color:var(--accent)">Dozer</span></span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
