@@ -6,7 +6,7 @@ import BarList from '@components/BarList.astro';
 import MoversTable from '@components/MoversTable.astro';
 import { datasets, getDataset } from '@data/datasets';
 import { groupRollups } from '@lib/analytics';
-import { formatPct, pctClass } from '@lib/format';
+import { formatChange, pctClass } from '@lib/format';
 
 export function getStaticPaths() {
   return datasets.map((d) => ({ params: { slug: d.slug } }));
@@ -15,7 +15,8 @@ export function getStaticPaths() {
 const { slug } = Astro.params;
 const ds = getDataset(slug!)!;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const groups = groupRollups(ds.data);
+const groups = groupRollups(ds.data, ds.changeMode);
+const pctUnit = ds.unit === '%' ? '%' : '';
 const backHref = ds.kind === 'survey' ? `${base}/surveys` : `${base}/macro`;
 const active = ds.kind === 'survey' ? 'surveys' : 'macro';
 ---
@@ -31,7 +32,7 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
 
   <section class="section" style="padding-top:0">
     <div class="container">
-      <KpiRow data={ds.data} unit={ds.unit === '%' ? '%' : ''} />
+      <KpiRow data={ds.data} unit={pctUnit} mode={ds.changeMode} />
     </div>
   </section>
 
@@ -39,7 +40,7 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
     <div class="container">
       <h2>{ds.valueLabel} — leaders</h2>
       <p class="sub">Latest period, top entities.</p>
-      <BarList data={ds.data} n={10} unit={ds.unit === '%' ? '%' : ''} />
+      <BarList data={ds.data} n={10} unit={pctUnit} />
     </div>
   </section>
 
@@ -47,7 +48,7 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
     <div class="container">
       <h2>Movers</h2>
       <p class="sub">Biggest period-over-period changes.</p>
-      <MoversTable data={ds.data} n={5} unit={ds.unit === '%' ? '%' : ''} />
+      <MoversTable data={ds.data} n={5} unit={pctUnit} mode={ds.changeMode} />
     </div>
   </section>
 
@@ -57,14 +58,14 @@ const active = ds.kind === 'survey' ? 'surveys' : 'macro';
         <h2>By group</h2>
         <p class="sub">Rollup across {groups.length} groups.</p>
         <table class="data">
-          <thead><tr><th>Group</th><th class="num">Members</th><th class="num">Total</th><th class="num">Change</th></tr></thead>
+          <thead><tr><th>Group</th><th class="num">Members</th><th class="num">{ds.changeMode === 'pp' ? 'Avg' : 'Total'}</th><th class="num">Change</th></tr></thead>
           <tbody>
             {groups.map((g) => (
               <tr>
                 <td>{g.group}</td>
                 <td class="num">{g.members}</td>
-                <td class="num">{g.value}{ds.unit === '%' ? '' : ''}</td>
-                <td class={`num ${pctClass(g.pct)}`}>{formatPct(g.pct)}</td>
+                <td class="num">{g.value}{pctUnit}</td>
+                <td class={`num ${pctClass(g.pct)}`}>{formatChange(g.pct, ds.changeMode)}</td>
               </tr>
             ))}
           </tbody>

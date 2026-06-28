@@ -1,0 +1,25 @@
+name: Telegram digest
+
+# Posts an analytics digest (top movers per dataset) to Telegram.
+# Requires repo secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID.
+
+on:
+  schedule:
+    - cron: '30 6 * * 1' # Mondays 06:30 UTC, after Update data
+  workflow_dispatch: {}
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Send digest
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node scripts/telegram_digest.mjs

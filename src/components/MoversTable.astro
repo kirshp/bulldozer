@@ -1,12 +1,12 @@
 ---
-import type { Observation } from '@lib/analytics';
+import type { Observation, ChangeMode } from '@lib/analytics';
 import { topGrowth, topDecline } from '@lib/analytics';
-import { formatPct, pctClass } from '@lib/format';
+import { formatChange, pctClass } from '@lib/format';
 
-interface Props { data: Observation[]; n?: number; unit?: string }
-const { data, n = 5, unit = '' } = Astro.props;
-const up = topGrowth(data, n);
-const down = topDecline(data, n);
+interface Props { data: Observation[]; n?: number; unit?: string; mode?: ChangeMode }
+const { data, n = 5, unit = '', mode = 'pct' } = Astro.props;
+const up = topGrowth(data, n, mode);
+const down = topDecline(data, n, mode);
 ---
 <div class="grid cols-2">
   <div>
@@ -18,7 +18,7 @@ const down = topDecline(data, n);
           <tr>
             <td>{r.entity}</td>
             <td class="num">{r.curr}{unit}</td>
-            <td class={`num ${pctClass(r.pct)}`}>{formatPct(r.pct)}</td>
+            <td class={`num ${pctClass(r.pct)}`}>{formatChange(r.pct, mode)}</td>
           </tr>
         ))}
       </tbody>
@@ -33,7 +33,7 @@ const down = topDecline(data, n);
           <tr>
             <td>{r.entity}</td>
             <td class="num">{r.curr}{unit}</td>
-            <td class={`num ${pctClass(r.pct)}`}>{formatPct(r.pct)}</td>
+            <td class={`num ${pctClass(r.pct)}`}>{formatChange(r.pct, mode)}</td>
           </tr>
         ))}
       </tbody>

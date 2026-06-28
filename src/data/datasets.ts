@@ -11,6 +11,8 @@ import imfGdpGrowth from './macro/imf-gdp-growth.json';
 
 export type DatasetKind = 'survey' | 'macro';
 
+export type ChangeMode = 'pct' | 'pp';
+
 export interface DatasetMeta {
   slug: string;
   title: string;
@@ -22,6 +24,9 @@ export interface DatasetMeta {
   parsedAt: string; // ISO date
   unit: string;
   valueLabel: string;
+  /** How period-over-period change is expressed: percentage points for
+   *  rate/percentage data, multiplicative percent for counts/volumes. */
+  changeMode: ChangeMode;
 }
 
 export interface Dataset extends DatasetMeta {
@@ -29,8 +34,14 @@ export interface Dataset extends DatasetMeta {
 }
 
 interface RawDataset {
-  meta: Omit<DatasetMeta, 'slug'>;
+  meta: Omit<DatasetMeta, 'slug' | 'changeMode'>;
   data: Observation[];
+}
+
+/** Percentage / rate units are compared in percentage points; everything
+ *  else (counts, volumes) multiplicatively. */
+function deriveChangeMode(unit: string): ChangeMode {
+  return unit.includes('%') ? 'pp' : 'pct';
 }
 
 const registry: Record<string, RawDataset> = {
@@ -42,6 +53,7 @@ const registry: Record<string, RawDataset> = {
 export const datasets: Dataset[] = Object.entries(registry).map(([slug, d]) => ({
   slug,
   ...d.meta,
+  changeMode: deriveChangeMode(d.meta.unit),
   data: d.data,
 }));
 

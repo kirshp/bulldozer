@@ -5,13 +5,20 @@ import { topByVolume } from '@lib/analytics';
 interface Props { data: Observation[]; n?: number; unit?: string }
 const { data, n = 10, unit = '' } = Astro.props;
 const rows = topByVolume(data, n);
-const max = Math.max(...rows.map((r) => r.curr), 1);
+
+// Anchor the scale at zero (or below, if values go negative) so negative
+// values render as short bars instead of overflowing.
+const values = rows.map((r) => r.curr);
+const base = Math.min(0, ...values);
+const max = Math.max(1, ...values);
+const span = max - base || 1;
+const width = (v: number) => Math.max(0, Math.min(100, ((v - base) / span) * 100));
 ---
 <div class="bars">
   {rows.map((r) => (
     <div class="bar-row">
       <span>{r.entity}</span>
-      <span class="bar-track"><span class="bar-fill" style={`width:${(r.curr / max) * 100}%`}></span></span>
+      <span class="bar-track"><span class="bar-fill" style={`width:${width(r.curr)}%`}></span></span>
       <span class="bar-val">{r.curr}{unit}</span>
     </div>
   ))}

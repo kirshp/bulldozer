@@ -52,11 +52,36 @@ npm run fetch:imf    # refresh IMF macro data (optionally: node scripts/fetch_im
 2. Register it in `src/data/datasets.ts`.
    A dashboard at `/bulldozer/dataset/<slug>` is generated automatically.
 
-## Deploy (Cloudflare Pages)
+## Change semantics (pct vs pp)
 
-- Build command: `npm run build`, output dir: `dist`.
-- Because `astro.config.mjs` sets `base: '/bulldozer'`, the build is already
-  path-prefixed and can be mounted under `shpara.com/bulldozer`
-  (CF Pages project + route, or a path-mounted Worker / `_routes`).
-- For a quick static drop into the existing site, copy `dist/` into
-  `~/shpara1/bulldozer/`.
+Datasets in percentage/rate units (`%`, `% YoY`) are compared in **percentage
+points (pp)** — e.g. trust 58→61 is `+3.0pp`, GDP growth 0.7→−0.2 is `−0.9pp`.
+Count/volume datasets use **multiplicative percent (%)**. The mode is derived
+from the unit in `src/data/datasets.ts` (`deriveChangeMode`) and threaded
+through the analytics layer, dashboards and the Telegram digest.
+
+## Automation & access
+
+GitHub Actions workflows (`.github/workflows/`):
+
+| Workflow | Schedule | Does |
+|---|---|---|
+| `update-data.yml` | Mon 06:00 UTC | runs parsers (`fetch:imf`, …), commits data changes |
+| `telegram-digest.yml` | Mon 06:30 UTC | posts a top-movers digest to Telegram |
+
+Secrets (set in GitHub → Settings → Secrets and variables → Actions; never
+commit values — see `.env.example`):
+
+- `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` — digest delivery (`npm run digest`).
+- Deploy token for the chosen host (`VERCEL_TOKEN` / `CLOUDFLARE_API_TOKEN` …).
+
+## Deploy
+
+Static Astro export (`npm run build` → `dist/`), host-agnostic:
+
+- **Vercel** — connect the repo, build `npm run build`, output `dist`. For a
+  subdomain (`bulldozer.shpara.com`) drop `base` to `'/'` in `astro.config.mjs`.
+- **Cloudflare Pages** — same build/output; add Workers + D1/R2 if a server
+  data layer is needed.
+- The `base: '/bulldozer'` setting path-prefixes the build for mounting under
+  `…/bulldozer`; remove it for a root/subdomain deploy.

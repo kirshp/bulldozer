@@ -1,0 +1,42 @@
+name: Update data
+
+# Parses public sources (IMF, surveys) on a schedule and commits any changes.
+# Mirrors the Madeira Ativa GitHub Actions parser pipeline.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # every Monday 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Fetch IMF macro data
+        run: npm run fetch:imf
+
+      # Add more parsers here as they are built, e.g.:
+      # - run: node scripts/parse_eurobarometer.mjs
+
+      - name: Commit updated datasets
+        run: |
+          git config user.name "bulldozer-bot"
+          git config user.email "bot@bulldozer.shpara.com"
+          if [[ -n "$(git status --porcelain src/data)" ]]; then
+            git add src/data
+            git commit -m "data: refresh from public sources [skip ci]"
+            git push
+          else
+            echo "No data changes."
+          fi

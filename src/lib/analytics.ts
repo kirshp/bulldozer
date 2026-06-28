@@ -34,7 +34,16 @@ export interface Change {
   pct: number;
 }
 
-const STABLE_BAND = 0.005; // ±0.5% counts as "stable"
+export type ChangeMode = 'pct' | 'pp';
+
+const STABLE_BAND = 0.5; // ±0.5 (percent for 'pct', percentage points for 'pp')
+
+/** Period-over-period change of one entity, in the units of `mode`:
+ *  'pct' → multiplicative percent; 'pp' → percentage-point delta. */
+export function changeValue(curr: number, prev: number, mode: ChangeMode): number {
+  if (mode === 'pp') return curr - prev;
+  return prev ? ((curr - prev) / prev) * 100 : 0;
+}
 
 export function periods(data: Observation[]): string[] {
   return [...new Set(data.map((d) => d.period))].sort();
@@ -55,7 +64,7 @@ export function entityTotals(data: Observation[], period: string): Map<string, n
   return totals;
 }
 
-export function computeKpi(data: Observation[]): Kpi {
+export function computeKpi(data: Observation[], mode: ChangeMode = 'pct'): Kpi {
   const [prevPeriod, currPeriod] = lastTwoPeriods(data);
   const curr = entityTotals(data, currPeriod);
   const prev = entityTotals(data, prevPeriod);
@@ -65,22 +74,29 @@ export function computeKpi(data: Observation[]): Kpi {
   let declineCount = 0;
   let stableCount = 0;
   for (const e of entities) {
-    const pv = prev.get(e) ?? 0;
-    if (pv === 0) continue;
-    const pct = ((curr.get(e) ?? 0) - pv) / pv;
-    if (pct > STABLE_BAND) growthCount++;
-    else if (pct < -STABLE_BAND) declineCount++;
+    if (!prev.has(e)) continue; // no baseline → not classifiable
+    const change = changeValue(curr.get(e) ?? 0, prev.get(e) ?? 0, mode);
+    if (change > STABLE_BAND) growthCount++;
+    else if (change < -STABLE_BAND) declineCount++;
     else stableCount++;
   }
 
   const sum = (m: Map<string, number>) => [...m.values()].reduce((a, b) => a + b, 0);
+  const mean = (m: Map<string, number>) => (m.size ? sum(m) / m.size : 0);
   const totalValue = sum(curr);
-  const totalPrev = sum(prev);
-  const totalPct = totalPrev ? Math.round(((totalValue - totalPrev) / totalPrev) * 100) : 0;
+
+  // Headline delta: rates move in points (mean change), volumes in percent.
+  const headlineDelta =
+    mode === 'pp'
+      ? Math.round((mean(curr) - mean(prev)) * 10) / 10
+      : (() => {
+          const totalPrev = sum(prev);
+          return totalPrev ? Math.round(((totalValue - totalPrev) / totalPrev) * 100) : 0;
+        })();
 
   return {
     totalValue,
-    totalPct,
+    totalPct: headlineDelta,
     growthCount,
     declineCount,
     stableCount,
@@ -90,7 +106,8 @@ export function computeKpi(data: Observation[]): Kpi {
   };
 }
 
-export function computeChanges(data: Observation[]): Change[] {
+/** `pct` holds the change in the units of `mode` (percent or percentage points). */
+export function computeChanges(data: Observation[], mode: ChangeMode = 'pct'): Change[] {
   const [prevPeriod, currPeriod] = lastTwoPeriods(data);
   const curr = entityTotals(data, currPeriod);
   const prev = entityTotals(data, prevPeriod);
@@ -100,20 +117,20 @@ export function computeChanges(data: Observation[]): Change[] {
   for (const e of entities) {
     const cv = curr.get(e) ?? 0;
     const pv = prev.get(e) ?? 0;
-    const delta = cv - pv;
-    records.push({ entity: e, curr: cv, prev: pv, delta, pct: pv ? (delta / pv) * 100 : 0 });
+    if (mode === 'pct' && pv === 0) continue; // undefined percent change
+    records.push({ entity: e, curr: cv, prev: pv, delta: cv - pv, pct: changeValue(cv, pv, mode) });
   }
   return records.sort((a, b) => b.pct - a.pct);
 }
 
-export function topGrowth(data: Observation[], n = 10): Change[] {
-  return computeChanges(data)
+export function topGrowth(data: Observation[], n = 10, mode: ChangeMode = 'pct'): Change[] {
+  return computeChanges(data, mode)
     .filter((c) => c.pct > 0)
     .slice(0, n);
 }
 
-export function topDecline(data: Observation[], n = 10): Change[] {
-  return computeChanges(data)
+export function topDecline(data: Observation[], n = 10, mode: ChangeMode = 'pct'): Change[] {
+  return computeChanges(data, mode)
     .filter((c) => c.pct < 0)
     .sort((a, b) => a.pct - b.pct)
     .slice(0, n);
@@ -140,7 +157,7 @@ export interface GroupRollup {
   pct: number;
 }
 
-export function groupRollups(data: Observation[]): GroupRollup[] {
+export function groupRollups(data: Observation[], mode: ChangeMode = 'pct'): GroupRollup[] {
   const [prevPeriod, currPeriod] = lastTwoPeriods(data);
   const groups = new Map<string, Observation[]>();
   for (const d of data) {
@@ -152,12 +169,22 @@ export function groupRollups(data: Observation[]): GroupRollup[] {
 
   const result: GroupRollup[] = [];
   for (const [group, rows] of groups) {
-    const currVal = rows.filter((r) => r.period === currPeriod).reduce((a, b) => a + b.value, 0);
-    const prevVal = rows.filter((r) => r.period === prevPeriod).reduce((a, b) => a + b.value, 0);
-    if (currVal <= 0) continue;
-    const members = new Set(rows.filter((r) => r.period === currPeriod).map((r) => r.entity)).size;
-    const pct = prevVal ? ((currVal - prevVal) / prevVal) * 100 : 0;
-    result.push({ group, members, value: currVal, pct: Math.round(pct * 10) / 10 });
+    const currRows = rows.filter((r) => r.period === currPeriod);
+    const prevRows = rows.filter((r) => r.period === prevPeriod);
+    const currVal = currRows.reduce((a, b) => a + b.value, 0);
+    const prevVal = prevRows.reduce((a, b) => a + b.value, 0);
+    const members = new Set(currRows.map((r) => r.entity)).size;
+    if (members === 0) continue;
+
+    // For rates, report the change of the group mean (in points); for volumes,
+    // the percent change of the group total. `value` is mean for rates, sum for volumes.
+    const value =
+      mode === 'pp' ? Math.round((currVal / members) * 10) / 10 : currVal;
+    const pct =
+      mode === 'pp'
+        ? Math.round((currVal / members - prevVal / (prevRows.length || 1)) * 10) / 10
+        : Math.round((prevVal ? ((currVal - prevVal) / prevVal) * 100 : 0) * 10) / 10;
+    result.push({ group, members, value, pct });
   }
   return result.sort((a, b) => b.value - a.value);
 }

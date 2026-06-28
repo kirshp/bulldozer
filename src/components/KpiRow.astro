@@ -1,18 +1,19 @@
 ---
-import type { Observation } from '@lib/analytics';
+import type { Observation, ChangeMode } from '@lib/analytics';
 import { computeKpi } from '@lib/analytics';
-import { formatPct, pctClass } from '@lib/format';
+import { formatChange, pctClass } from '@lib/format';
 
-interface Props { data: Observation[]; unit?: string }
-const { data, unit = '' } = Astro.props;
-const k = computeKpi(data);
+interface Props { data: Observation[]; unit?: string; mode?: ChangeMode }
+const { data, unit = '', mode = 'pct' } = Astro.props;
+const k = computeKpi(data, mode);
 const avg = k.totalEntities ? k.totalValue / k.totalEntities : 0;
+const band = mode === 'pp' ? '±0.5pp band' : '±0.5% band';
 ---
 <div class="kpi-row">
   <div class="kpi">
     <div class="label">Avg ({k.currPeriod})</div>
     <div class="value">{avg.toFixed(1)}{unit}</div>
-    <div class={`delta ${pctClass(k.totalPct)}`}>{formatPct(k.totalPct)} vs {k.prevPeriod}</div>
+    <div class={`delta ${pctClass(k.totalPct)}`}>{formatChange(k.totalPct, mode)} vs {k.prevPeriod}</div>
   </div>
   <div class="kpi">
     <div class="label">Improving</div>
@@ -27,6 +28,6 @@ const avg = k.totalEntities ? k.totalValue / k.totalEntities : 0;
   <div class="kpi">
     <div class="label">Stable</div>
     <div class="value flat">{k.stableCount}</div>
-    <div class="delta">±0.5% band</div>
+    <div class="delta">{band}</div>
   </div>
 </div>
