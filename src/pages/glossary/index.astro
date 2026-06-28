@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { glossary } from '@data/glossary';
+---
+<BaseLayout title="Glossary" active="glossary" description="Plain-language explanations of every metric and method used in BullDozer.">
+  <section class="section">
+    <div class="container">
+      <span class="kicker">Descriptive material</span>
+      <h2>Metrics glossary</h2>
+      <p class="sub">What each number means and how it is computed. {glossary.length} entries.</p>
+      <div style="max-width:720px">
+        {glossary.map((t) => (
+          <div class="gloss-term" id={t.term.toLowerCase().replace(/[^a-z]+/g, '-')}>
+            <h3>{t.term}</h3>
+            <p><em>{t.short}</em></p>
+            <p>{t.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

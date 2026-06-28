@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "title": "Real GDP Growth",
+    "summary": "Annual percentage change of real gross domestic product. Pulled from the IMF DataMapper public API (indicator NGDP_RPCH).",
+    "unit": "% YoY",
+    "valueLabel": "Real GDP growth",
+    "kind": "macro",
+    "source": "IMF World Economic Outlook (DataMapper API)",
+    "license": "IMF terms — public data",
+    "url": "https://www.imf.org/external/datamapper/NGDP_RPCH",
+    "parsedAt": "2026-06-28"
+  },
+  "data": [
+    {
+      "entity": "Portugal",
+      "group": "Advanced economies",
+      "period": "2023",
+      "value": 3.1
+    },
+    {
+      "entity": "Portugal",
+      "group": "Advanced economies",
+      "period": "2024",
+      "value": 2.2
+    },
+    {
+      "entity": "Germany",
+      "group": "Advanced economies",
+      "period": "2023",
+      "value": -0.9
+    },
+    {
+      "entity": "Germany",
+      "group": "Advanced economies",
+      "period": "2024",
+      "value": -0.5
+    },
+    {
+      "entity": "United States",
+      "group": "Advanced economies",
+      "period": "2023",
+      "value": 2.9
+    },
+    {
+      "entity": "United States",
+      "group": "Advanced economies",
+      "period": "2024",
+      "value": 2.8
+    },
+    {
+      "entity": "Japan",
+      "group": "Advanced economies",
+      "period": "2023",
+      "value": 0.7
+    },
+    {
+      "entity": "Japan",
+      "group": "Advanced economies",
+      "period": "2024",
+      "value": -0.2
+    },
+    {
+      "entity": "China",
+      "group": "Emerging markets",
+      "period": "2023",
+      "value": 5.4
+    },
+    {
+      "entity": "China",
+      "group": "Emerging markets",
+      "period": "2024",
+      "value": 5
+    },
+    {
+      "entity": "India",
+      "group": "Emerging markets",
+      "period": "2023",
+      "value": 7.2
+    },
+    {
+      "entity": "India",
+      "group": "Emerging markets",
+      "period": "2024",
+      "value": 7.1
+    },
+    {
+      "entity": "Brazil",
+      "group": "Emerging markets",
+      "period": "2023",
+      "value": 3.2
+    },
+    {
+      "entity": "Brazil",
+      "group": "Emerging markets",
+      "period": "2024",
+      "value": 3.4
+    },
+    {
+      "entity": "Nigeria",
+      "group": "Emerging markets",
+      "period": "2023",
+      "value": 3.3
+    },
+    {
+      "entity": "Nigeria",
+      "group": "Emerging markets",
+      "period": "2024",
+      "value": 4.1
+    }
+  ]
+}

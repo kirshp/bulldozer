@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { datasetsByKind } from '@data/datasets';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const items = datasetsByKind('macro');
+---
+<BaseLayout title="Macro" active="macro" description="IMF and World Bank macro indicators from open APIs.">
+  <section class="section">
+    <div class="container">
+      <span class="kicker">Macro indicators</span>
+      <h2>Macro datasets</h2>
+      <p class="sub">Economic indicators pulled from open APIs (IMF DataMapper, World Bank). {items.length} datasets. Regenerate with <code>npm run fetch:imf</code>.</p>
+      <div class="grid cols-2">
+        {items.map((d) => (
+          <a class="card link" href={`${base}/dataset/${d.slug}`}>
+            <h3>{d.title}</h3>
+            <p class="meta">{d.summary}</p>
+            <div class="prov">
+              <span class="pill">{d.source}</span>
+              <span class="pill">{d.unit}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

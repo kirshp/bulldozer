@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { datasets, datasetsByKind } from '@data/datasets';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const surveys = datasetsByKind('survey');
+const macro = datasetsByKind('macro');
+const sections = [
+  { id: 'surveys', title: 'Surveys', href: `${base}/surveys`, count: surveys.length, desc: 'Parsed public opinion & market surveys — trust, sentiment, optimism — with movers and group rollups.' },
+  { id: 'macro', title: 'Macro', href: `${base}/macro`, count: macro.length, desc: 'IMF & World Bank indicators: GDP growth, inflation and more, pulled from open APIs.' },
+  { id: 'glossary', title: 'Glossary', href: `${base}/glossary`, count: null, desc: 'Plain-language explanations of every metric and methodology used across the platform.' },
+];
+---
+<BaseLayout active="home" description="Marketing analytics & research built on Madeira Ativa — public parsed surveys, IMF macro data, and a metrics glossary.">
+  <section class="hero">
+    <div class="container">
+      <span class="kicker">Marketing Analytics &amp; Research</span>
+      <h1>Move data like <span class="hl">heavy machinery.</span></h1>
+      <p>BullDozer turns public, parsed survey and macro data into clean dashboards — built on the Madeira Ativa analytics engine. Every number is sourced, every metric is explained.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid cols-3">
+        {sections.map((s) => (
+          <a class="card link" href={s.href}>
+            <h3>{s.title} {s.count !== null && <span class="meta">· {s.count}</span>}</h3>
+            <p class="meta">{s.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>All datasets</h2>
+      <p class="sub">{datasets.length} public datasets, each with cited provenance.</p>
+      <div class="grid cols-2">
+        {datasets.map((d) => (
+          <a class="card link" href={`${base}/dataset/${d.slug}`}>
+            <h3>{d.title}</h3>
+            <p class="meta">{d.summary}</p>
+            <div class="prov">
+              <span class="pill"><b>{d.kind}</b></span>
+              <span class="pill">{d.source}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

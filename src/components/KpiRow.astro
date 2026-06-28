@@ -1,0 +1,32 @@
+---
+import type { Observation } from '@lib/analytics';
+import { computeKpi } from '@lib/analytics';
+import { formatPct, pctClass } from '@lib/format';
+
+interface Props { data: Observation[]; unit?: string }
+const { data, unit = '' } = Astro.props;
+const k = computeKpi(data);
+const avg = k.totalEntities ? k.totalValue / k.totalEntities : 0;
+---
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="label">Avg ({k.currPeriod})</div>
+    <div class="value">{avg.toFixed(1)}{unit}</div>
+    <div class={`delta ${pctClass(k.totalPct)}`}>{formatPct(k.totalPct)} vs {k.prevPeriod}</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Improving</div>
+    <div class="value up">{k.growthCount}</div>
+    <div class="delta">of {k.totalEntities} tracked</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Declining</div>
+    <div class="value down">{k.declineCount}</div>
+    <div class="delta">period over period</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Stable</div>
+    <div class="value flat">{k.stableCount}</div>
+    <div class="delta">±0.5% band</div>
+  </div>
+</div>

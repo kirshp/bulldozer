@@ -1,0 +1,12 @@
+---
+import type { DatasetMeta } from '@data/datasets';
+interface Props { meta: DatasetMeta }
+const { meta } = Astro.props;
+---
+<div class="prov">
+  <span class="pill">Source: <b>{meta.source}</b></span>
+  <span class="pill">Licence: <b>{meta.license}</b></span>
+  <span class="pill">Unit: <b>{meta.unit}</b></span>
+  <span class="pill">Parsed: <b>{meta.parsedAt}</b></span>
+  <span class="pill"><a href={meta.url} target="_blank" rel="noopener">Open source ↗</a></span>
+</div>

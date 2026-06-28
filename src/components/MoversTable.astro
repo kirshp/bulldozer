@@ -1,0 +1,42 @@
+---
+import type { Observation } from '@lib/analytics';
+import { topGrowth, topDecline } from '@lib/analytics';
+import { formatPct, pctClass } from '@lib/format';
+
+interface Props { data: Observation[]; n?: number; unit?: string }
+const { data, n = 5, unit = '' } = Astro.props;
+const up = topGrowth(data, n);
+const down = topDecline(data, n);
+---
+<div class="grid cols-2">
+  <div>
+    <h3>Top risers</h3>
+    <table class="data">
+      <thead><tr><th>Entity</th><th class="num">Now</th><th class="num">Change</th></tr></thead>
+      <tbody>
+        {up.map((r) => (
+          <tr>
+            <td>{r.entity}</td>
+            <td class="num">{r.curr}{unit}</td>
+            <td class={`num ${pctClass(r.pct)}`}>{formatPct(r.pct)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h3>Top fallers</h3>
+    <table class="data">
+      <thead><tr><th>Entity</th><th class="num">Now</th><th class="num">Change</th></tr></thead>
+      <tbody>
+        {down.map((r) => (
+          <tr>
+            <td>{r.entity}</td>
+            <td class="num">{r.curr}{unit}</td>
+            <td class={`num ${pctClass(r.pct)}`}>{formatPct(r.pct)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
