@@ -13,7 +13,8 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
   <rect width="1200" height="630" fill="#0e0f11"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
   <g transform="translate(90,120)">
-    <rect width="84" height="84" rx="20" fill="url(#b)"/>
+    <clipPath id="mk"><rect width="84" height="84" rx="20"/></clipPath>
+    <g clip-path="url(#mk)"><rect width="84" height="84" fill="#ffb000"/><path d="M84 0 L84 84 L0 84 Z" fill="#ff7a00"/></g>
     <text x="42" y="60" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="58" font-weight="900" fill="#1a1300">B</text>
     <text x="110" y="60" font-family="Inter,Arial,sans-serif" font-size="46" font-weight="800" fill="#e7e9ec">Bull<tspan fill="#ffb000">Dozer</tspan></text>
   </g>
