@@ -1,0 +1,36 @@
+---
+// Server-renders a world choropleth base: one SVG <path> per country, tagged
+// with its numeric ISO id. The client (explore page) colours paths by the
+// selected indicator/period. Geometry from world-atlas (built offline).
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { feature } from 'topojson-client';
+import { geoNaturalEarth1, geoPath } from 'd3-geo';
+
+const require = createRequire(import.meta.url);
+const topo = JSON.parse(readFileSync(require.resolve('world-atlas/countries-110m.json'), 'utf8'));
+const fc: any = feature(topo, (topo as any).objects.countries);
+
+const W = 960;
+const H = 480;
+const projection = geoNaturalEarth1().fitSize([W, H], fc);
+const pathGen = geoPath(projection);
+
+const countries = fc.features.map((f: any) => ({ num: String(f.id), name: f.properties.name, d: pathGen(f) }));
+---
+<div class="worldmap">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="World choropleth" preserveAspectRatio="xMidYMid meet">
+    <rect x="0" y="0" width={W} height={H} fill="transparent" />
+    {countries.map((c: any) => (
+      <path
+        class="country"
+        data-num={c.num}
+        d={c.d}
+        fill="var(--bg-elev)"
+        stroke="var(--bg)"
+        stroke-width="0.4"
+      ><title>{c.name}</title></path>
+    ))}
+  </svg>
+  <div class="map-legend" id="map-legend"></div>
+</div>

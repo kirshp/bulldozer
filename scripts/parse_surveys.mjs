@@ -54,6 +54,7 @@ async function loadGeoMap() {
     map.set(row.country, {
       name: row.name || row.country,
       region: REGION_4[row.world_4region] || 'Other',
+      iso: (row.iso3166_1_alpha3 || '').toUpperCase(),
     });
   }
   return map;
@@ -94,7 +95,7 @@ async function parseGapminder(geoMap) {
       const g = geoMap.get(geo);
       for (const period of [prev, curr]) {
         if (rec[period] == null) continue;
-        data.push({ entity: g.name, group: g.region, period, value: round(rec[period], cfg.dp) });
+        data.push({ entity: g.name, group: g.region, period, value: round(rec[period], cfg.dp), iso: g.iso });
       }
     }
     await writeDataset('survey', cfg.slug, {
@@ -108,7 +109,25 @@ async function parseGapminder(geoMap) {
   }
 }
 
-async function parseWHR() {
+// WHR country name → ISO alpha-3, via Gapminder names plus a few aliases.
+function buildName2Iso(geoMap) {
+  const m = new Map();
+  for (const g of geoMap.values()) if (g.iso) m.set(g.name.toLowerCase(), g.iso);
+  const alias = {
+    'united states': 'USA', 'south korea': 'KOR', 'republic of korea': 'KOR', 'russia': 'RUS',
+    'russian federation': 'RUS', 'czechia': 'CZE', 'turkiye': 'TUR', 'türkiye': 'TUR', 'turkey': 'TUR',
+    'taiwan province of china': 'TWN', 'hong kong s.a.r. of china': 'HKG', 'hong kong sar of china': 'HKG',
+    'congo (brazzaville)': 'COG', 'congo': 'COG', 'congo (kinshasa)': 'COD', 'dr congo': 'COD',
+    'ivory coast': 'CIV', 'côte d’ivoire': 'CIV', "cote d'ivoire": 'CIV', 'state of palestine': 'PSE',
+    'palestinian territories': 'PSE', 'eswatini': 'SWZ', 'laos': 'LAO', 'lao pdr': 'LAO',
+    'vietnam': 'VNM', 'viet nam': 'VNM', 'united arab emirates': 'ARE', 'united kingdom': 'GBR',
+    'slovakia': 'SVK', 'kyrgyzstan': 'KGZ', 'republic of moldova': 'MDA', 'moldova': 'MDA', 'kosovo': 'XKX',
+  };
+  for (const [k, v] of Object.entries(alias)) m.set(k, v);
+  return m;
+}
+
+async function parseWHR(geoMap) {
   let text;
   try {
     text = await readFile(WHR_CSV, 'utf8');
@@ -116,6 +135,7 @@ async function parseWHR() {
     console.log('  – whr-happiness: source missing, skipped');
     return;
   }
+  const name2iso = buildName2Iso(geoMap);
   const byCountry = new Map();
   const years = new Set();
   for (const row of parseCsvObjects(text)) {
@@ -136,7 +156,7 @@ async function parseWHR() {
   for (const [country, rec] of byCountry) {
     for (const period of [prev, curr]) {
       if (rec.byYear[period] == null) continue;
-      data.push({ entity: country, group: rec.region, period, value: round(rec.byYear[period], 3) });
+      data.push({ entity: country, group: rec.region, period, value: round(rec.byYear[period], 3), iso: name2iso.get(country.toLowerCase()) || '' });
     }
   }
   await writeDataset('survey', 'whr-happiness', {
@@ -162,7 +182,7 @@ async function main() {
     geoMap = new Map();
   }
   if (geoMap.size) await parseGapminder(geoMap);
-  await parseWHR();
+  await parseWHR(geoMap);
 }
 
 main().catch((err) => {

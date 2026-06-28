@@ -1,0 +1,214 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WorldMap from '@components/WorldMap.astro';
+import { datasets } from '@data/datasets';
+import isoNumeric from '@data/iso-numeric.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Compact index for the client; full data is fetched per dataset on demand.
+const index = {
+  base,
+  datasets: datasets.map((d) => ({
+    slug: d.slug,
+    title: d.title,
+    kind: d.kind,
+    unit: d.unit,
+    valueLabel: d.valueLabel,
+    changeMode: d.changeMode,
+    periods: [...new Set(d.data.map((o) => o.period))].sort(),
+  })),
+};
+---
+<BaseLayout title="Explore" active="explore" description="Interactive explorer: pick an indicator, period and countries; view as bars, table or world map.">
+  <section class="section">
+    <div class="container">
+      <span class="kicker">Interactive explorer</span>
+      <h2>Explore the data</h2>
+      <p class="sub">Pick an indicator, period and countries. Switch between bars, table and world map.</p>
+
+      <div class="controls">
+        <label>Indicator
+          <select id="sel-indicator"></select>
+        </label>
+        <label>Period
+          <select id="sel-period"></select>
+        </label>
+        <label>Search country
+          <input id="sel-query" type="search" placeholder="filter…" autocomplete="off" />
+        </label>
+        <div class="view-toggle" id="view-toggle" role="tablist">
+          <button data-view="bar" class="active">Bars</button>
+          <button data-view="table">Table</button>
+          <button data-view="map">Map</button>
+        </div>
+      </div>
+
+      <p class="sub" id="ex-summary"></p>
+
+      <div id="view-bar" class="view"><div class="bars" id="bar-target"></div></div>
+      <div id="view-table" class="view" hidden>
+        <table class="data" id="table-target"></table>
+      </div>
+      <div id="view-map" class="view" hidden>
+        <WorldMap />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/json" id="bd-index" set:html={JSON.stringify(index)}></script>
+  <script type="application/json" id="bd-iso" set:html={JSON.stringify(isoNumeric)}></script>
+
+  <script>
+    const index = JSON.parse(document.getElementById('bd-index').textContent);
+    const isoNumeric = JSON.parse(document.getElementById('bd-iso').textContent); // numeric -> alpha3
+    const numByIso = Object.fromEntries(Object.entries(isoNumeric).map(([n, a]) => [a, n]));
+    const BASE = index.base;
+
+    const el = (id) => document.getElementById(id);
+    const selI = el('sel-indicator'), selP = el('sel-period'), selQ = el('sel-query');
+    const state = { slug: index.datasets[0]?.slug, period: null, view: 'bar', query: '' };
+    const cache = new Map();
+
+    function meta() { return index.datasets.find((d) => d.slug === state.slug); }
+
+    // ---- populate indicator select (grouped) ----
+    for (const kind of ['macro', 'survey']) {
+      const group = document.createElement('optgroup');
+      group.label = kind === 'macro' ? 'Macro' : 'Surveys';
+      for (const d of index.datasets.filter((x) => x.kind === kind)) {
+        const o = document.createElement('option');
+        o.value = d.slug; o.textContent = d.title;
+        group.appendChild(o);
+      }
+      selI.appendChild(group);
+    }
+
+    function fillPeriods() {
+      const m = meta();
+      selP.innerHTML = '';
+      for (const p of m.periods) {
+        const o = document.createElement('option');
+        o.value = p; o.textContent = p;
+        selP.appendChild(o);
+      }
+      state.period = m.periods[m.periods.length - 1];
+      selP.value = state.period;
+    }
+
+    async function load(slug) {
+      if (cache.has(slug)) return cache.get(slug);
+      const res = await fetch(`${BASE}/data/${slug}.json`);
+      const ds = await res.json();
+      cache.set(slug, ds);
+      return ds;
+    }
+
+    // ---- helpers ----
+    function changeVal(cv, pv, mode) { return mode === 'pp' ? cv - pv : (pv ? (cv - pv) / pv * 100 : 0); }
+    function fmtChange(v, mode) { return (v > 0 ? '+' : '') + v.toFixed(1) + (mode === 'pp' ? 'pp' : '%'); }
+    function moveClass(v) { return v > 0.5 ? 'up' : v < -0.5 ? 'down' : 'flat'; }
+
+    function rowsFor(ds) {
+      const m = meta();
+      const idx = m.periods.indexOf(state.period);
+      const prevP = idx > 0 ? m.periods[idx - 1] : null;
+      const byEnt = new Map();
+      for (const o of ds.data) {
+        let r = byEnt.get(o.entity);
+        if (!r) byEnt.set(o.entity, r = { entity: o.entity, group: o.group, iso: o.iso });
+        if (o.period === state.period) r.value = o.value;
+        if (o.period === prevP) r.prev = o.value;
+      }
+      let rows = [...byEnt.values()].filter((r) => r.value != null);
+      rows.forEach((r) => { r.change = r.prev != null ? changeVal(r.value, r.prev, m.changeMode) : null; });
+      if (state.query) {
+        const q = state.query.toLowerCase();
+        rows = rows.filter((r) => r.entity.toLowerCase().includes(q) || (r.group || '').toLowerCase().includes(q));
+      }
+      return rows.sort((a, b) => b.value - a.value);
+    }
+
+    function renderBars(ds, rows) {
+      const m = meta();
+      const unit = m.unit.includes('%') ? '%' : '';
+      const top = rows.slice(0, 25);
+      const vals = top.map((r) => r.value);
+      const base = Math.min(0, ...vals), max = Math.max(1, ...vals), span = (max - base) || 1;
+      el('bar-target').innerHTML = top.map((r) => {
+        const w = Math.max(0, Math.min(100, (r.value - base) / span * 100));
+        const cls = r.change == null ? 'flat' : moveClass(r.change);
+        const chg = r.change == null ? '' : `<em class="${cls}">${fmtChange(r.change, m.changeMode)}</em>`;
+        return `<div class="bar-row"><span>${r.entity}</span>`
+          + `<span class="bar-track"><span class="bar-fill move-${cls}" style="width:${w}%"></span></span>`
+          + `<span class="bar-val">${r.value}${unit}${chg}</span></div>`;
+      }).join('');
+    }
+
+    function renderTable(ds, rows) {
+      const m = meta();
+      const unit = m.unit.includes('%') ? '%' : '';
+      const head = `<thead><tr><th>Country</th><th>Group</th><th class="num">${m.valueLabel}</th><th class="num">Change</th></tr></thead>`;
+      const body = rows.map((r) => {
+        const cls = r.change == null ? 'flat' : moveClass(r.change);
+        const chg = r.change == null ? '—' : `<span class="${cls}">${fmtChange(r.change, m.changeMode)}</span>`;
+        return `<tr><td>${r.entity}</td><td>${r.group || ''}</td><td class="num">${r.value}${unit}</td><td class="num">${chg}</td></tr>`;
+      }).join('');
+      el('table-target').innerHTML = head + '<tbody>' + body + '</tbody>';
+    }
+
+    function lerpColor(t) {
+      const a = [28, 31, 35], b = [255, 176, 0];
+      const c = a.map((x, i) => Math.round(x + (b[i] - x) * Math.max(0, Math.min(1, t))));
+      return `rgb(${c[0]},${c[1]},${c[2]})`;
+    }
+
+    function renderMap(ds, rows) {
+      const m = meta();
+      const unit = m.unit.includes('%') ? '%' : '';
+      const byIso = new Map();
+      for (const r of rows) if (r.iso) byIso.set(r.iso, r.value);
+      // also map non-filtered for full picture? use filtered rows so search highlights subset
+      const vals = [...byIso.values()];
+      const min = Math.min(...vals), max = Math.max(...vals), span = (max - min) || 1;
+      document.querySelectorAll('#view-map .country').forEach((p) => {
+        const iso = isoNumeric[p.getAttribute('data-num')];
+        const v = iso != null ? byIso.get(iso) : undefined;
+        if (v == null) { p.setAttribute('fill', 'var(--bg-elev)'); p.style.opacity = '0.5'; }
+        else { p.setAttribute('fill', lerpColor((v - min) / span)); p.style.opacity = '1'; }
+      });
+      el('map-legend').innerHTML =
+        `<span>${isFinite(min) ? min : '—'}${unit}</span>`
+        + `<span class="legend-bar"></span>`
+        + `<span>${isFinite(max) ? max : '—'}${unit}</span>`
+        + `<span class="legend-label">${m.valueLabel} · ${state.period}</span>`;
+    }
+
+    async function render() {
+      const ds = await load(state.slug);
+      const m = meta();
+      const rows = rowsFor(ds);
+      el('ex-summary').textContent = `${m.title} · ${state.period} · ${rows.length} countries · unit ${m.unit}`;
+      for (const v of ['bar', 'table', 'map']) el('view-' + v).hidden = state.view !== v;
+      if (state.view === 'bar') renderBars(ds, rows);
+      else if (state.view === 'table') renderTable(ds, rows);
+      else renderMap(ds, rows);
+    }
+
+    // ---- wire events ----
+    selI.addEventListener('change', () => { state.slug = selI.value; fillPeriods(); render(); });
+    selP.addEventListener('change', () => { state.period = selP.value; render(); });
+    selQ.addEventListener('input', () => { state.query = selQ.value.trim(); render(); });
+    el('view-toggle').addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      state.view = b.dataset.view;
+      [...el('view-toggle').children].forEach((x) => x.classList.toggle('active', x === b));
+      render();
+    });
+
+    // ---- init ----
+    selI.value = state.slug;
+    fillPeriods();
+    render();
+  </script>
+</BaseLayout>

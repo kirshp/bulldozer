@@ -61,7 +61,7 @@ async function main() {
     const map = collected[code];
     let rec = map.get(row.country);
     if (!rec) {
-      rec = { region: enRegion(row.region), byYear: {} };
+      rec = { region: enRegion(row.region), iso: (row.iso3 || '').toUpperCase(), byYear: {} };
       map.set(row.country, rec);
     }
     rec.byYear[row.year] = value;
@@ -83,7 +83,7 @@ async function main() {
       for (const period of [prev, curr]) {
         const v = rec.byYear[period];
         if (v == null) continue;
-        data.push({ entity: country, group: rec.region, period, value: round(v, cfg.dp) });
+        data.push({ entity: country, group: rec.region, period, value: round(v, cfg.dp), iso: rec.iso });
       }
     }
 

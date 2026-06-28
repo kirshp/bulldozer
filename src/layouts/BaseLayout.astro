@@ -4,11 +4,12 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
-  active?: 'home' | 'surveys' | 'macro' | 'glossary';
+  active?: 'home' | 'explore' | 'surveys' | 'macro' | 'glossary';
 }
 const { title, description, active } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
+  { id: 'explore', label: 'Explore', href: `${base}/explore` },
   { id: 'surveys', label: 'Surveys', href: `${base}/surveys` },
   { id: 'macro', label: 'Macro', href: `${base}/macro` },
   { id: 'glossary', label: 'Glossary', href: `${base}/glossary` },

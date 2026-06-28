@@ -13,6 +13,7 @@ export interface Observation {
   period: string; // ISO-ish: "2025-04", "2025-W15", "2025"
   value: number;
   group?: string; // optional rollup dimension (region, category…)
+  iso?: string; // ISO 3166-1 alpha-3, for map rendering
 }
 
 export interface Kpi {
