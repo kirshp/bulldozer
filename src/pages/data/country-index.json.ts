@@ -15,7 +15,7 @@ export const GET: APIRoute = () => {
       const iso = o.iso!;
       if (!byIso[iso]) byIso[iso] = { iso, name: o.entity, region: o.group ?? '', items: [] };
       byIso[iso].items.push({
-        slug: ds.slug, title: ds.title, kind: ds.kind, unit: ds.unit,
+        slug: ds.slug, title: ds.title, kind: ds.kind, topic: ds.topic, unit: ds.unit,
         value: o.value, period, rank: i + 1, total,
       });
     });
