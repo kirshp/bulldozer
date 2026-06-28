@@ -197,6 +197,18 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .view-toggle button + button { border-left: 1px solid var(--border); }
 .view-toggle button.active { background: var(--accent); color: #1a1300; font-weight: 600; }
 
+/* Bar controls: add-country + show-all */
+.bar-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.inline-add { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+.inline-add select { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; font-size: 14px; font-family: var(--font); min-width: 160px; }
+.inline-add select:focus { outline: none; border-color: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 999px; padding: 4px 6px 4px 11px; font-size: 13px; }
+.chip button { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 15px; line-height: 1; padding: 0 2px; }
+.chip button:hover { color: var(--down); }
+.ghost-btn { margin-left: auto; background: var(--bg-card); color: var(--text-dim); border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px; font-size: 13px; font-family: var(--font); cursor: pointer; }
+.ghost-btn:hover { color: var(--text); border-color: var(--accent); }
+
 /* Dataset list with topics + search */
 .dlist-search { width: 100%; background: var(--bg-card); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 15px; font-family: var(--font); margin-bottom: 18px; }
 .dlist-search:focus { outline: none; border-color: var(--accent); }

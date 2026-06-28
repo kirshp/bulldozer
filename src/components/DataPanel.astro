@@ -31,7 +31,16 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
 
   <p class="sub" id="ex-summary"></p>
 
-  <div id="view-bar" class="view"><div class="bars" id="bar-target"></div></div>
+  <div id="view-bar" class="view">
+    <div class="bar-controls" id="bar-controls">
+      <label class="inline-add">Add country
+        <select id="add-country"><option value="">＋ add…</option></select>
+      </label>
+      <span id="pinned-chips" class="chips"></span>
+      <button type="button" id="show-all" class="ghost-btn">Show all</button>
+    </div>
+    <div class="bars" id="bar-target"></div>
+  </div>
   <div id="view-table" class="view" hidden><table class="data" id="table-target"></table></div>
   <div id="view-map" class="view" hidden><WorldMap /></div>
 </div>
@@ -45,7 +54,8 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
   const BASE = cfg.base;
   const el = (id) => document.getElementById(id);
   const selI = el('sel-indicator'), selP = el('sel-period'), selQ = el('sel-query');
-  const state = { slug: cfg.pinnedSlug || cfg.datasets[0]?.slug, period: null, view: 'bar', query: '' };
+  const TOP_N = 7;
+  const state = { slug: cfg.pinnedSlug || cfg.datasets[0]?.slug, period: null, view: 'bar', query: '', pinned: new Set(), showAll: false };
   const cache = new Map();
   const meta = () => cfg.datasets.find((d) => d.slug === state.slug);
 
@@ -59,7 +69,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
       selI.appendChild(g);
     }
     selI.value = state.slug;
-    selI.addEventListener('change', () => { state.slug = selI.value; fillPeriods(); render(); });
+    selI.addEventListener('change', () => { state.slug = selI.value; state.pinned.clear(); state.showAll = false; fillPeriods(); render(); });
   }
 
   function fillPeriods() {
@@ -95,9 +105,32 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
     return rows.sort((a, b) => b.value - a.value);
   }
 
+  function visibleRows(rows) {
+    if (state.query) return rows;            // search overrides the limit
+    if (state.showAll) return rows;
+    const top = rows.slice(0, TOP_N);
+    const names = new Set(top.map((r) => r.entity));
+    const extra = rows.filter((r) => state.pinned.has(r.entity) && !names.has(r.entity));
+    return [...top, ...extra].sort((a, b) => b.value - a.value);
+  }
+
+  function renderBarControls(rows) {
+    const sel = el('add-country');
+    const shown = new Set(rows.slice(0, TOP_N).map((r) => r.entity));
+    sel.innerHTML = '<option value="">＋ add country…</option>' +
+      [...rows].sort((a, b) => a.entity.localeCompare(b.entity))
+        .filter((r) => !shown.has(r.entity) && !state.pinned.has(r.entity))
+        .map((r) => `<option value="${r.entity}">${r.entity}</option>`).join('');
+    el('pinned-chips').innerHTML = [...state.pinned].map((n) =>
+      `<span class="chip">${n}<button data-rm="${n}" aria-label="remove">×</button></span>`).join('');
+    el('show-all').textContent = state.showAll ? 'Show top 7' : `Show all ${rows.length}`;
+    el('bar-controls').style.display = state.query ? 'none' : 'flex';
+  }
+
   function renderBars(rows) {
     const m = meta(); const unit = m.unit.includes('%') ? '%' : '';
-    const top = rows.slice(0, 60); const vals = top.map((r) => r.value);
+    renderBarControls(rows);
+    const top = visibleRows(rows); const vals = top.map((r) => r.value);
     const base = Math.min(0, ...vals), max = Math.max(1, ...vals), span = (max - base) || 1;
     el('bar-target').innerHTML = top.map((r) => {
       const w = Math.max(0, Math.min(100, (r.value - base) / span * 100));
@@ -141,6 +174,9 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
 
   selP.addEventListener('change', () => { state.period = selP.value; render(); });
   selQ.addEventListener('input', () => { state.query = selQ.value.trim(); render(); });
+  el('add-country').addEventListener('change', (e) => { if (e.target.value) { state.pinned.add(e.target.value); render(); } });
+  el('pinned-chips').addEventListener('click', (e) => { const n = e.target.getAttribute('data-rm'); if (n) { state.pinned.delete(n); render(); } });
+  el('show-all').addEventListener('click', () => { state.showAll = !state.showAll; render(); });
   el('view-toggle').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
     state.view = b.dataset.view;
