@@ -5,10 +5,10 @@ import DatasetList from '@components/DatasetList.astro';
 import { datasetsByKind } from '@data/datasets';
 const items = datasetsByKind('survey');
 ---
-<BaseLayout title="Study" active="surveys" description="Opinion and perception studies — happiness, attitudes and values, risk perception.">
+<BaseLayout title="Studies" active="surveys" description="Opinion and perception studies — happiness, attitudes and values, risk perception.">
   <section class="section">
     <div class="container">
-      <span class="kicker">Study</span>
+      <span class="kicker">Studies</span>
       <h2>Opinion &amp; perception studies</h2>
       <p class="sub">What people say — {items.length} survey datasets on wellbeing, attitudes and risk perception. Search or browse by topic.</p>
       <DatasetList items={items} />

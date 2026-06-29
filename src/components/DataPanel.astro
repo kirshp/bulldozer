@@ -82,7 +82,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
       const items = cfg.datasets.filter((x) => x.kind === kind);
       if (!items.length) continue;
       const g = document.createElement('optgroup');
-      g.label = kind === 'macro' ? 'Macro' : 'Study';
+      g.label = kind === 'macro' ? 'Macro' : 'Studies';
       for (const d of items) { const o = document.createElement('option'); o.value = d.slug; o.textContent = d.title; g.appendChild(o); }
       selI.appendChild(g);
     }

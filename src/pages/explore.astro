@@ -6,6 +6,7 @@ import CompareCountries from '@components/CompareCountries.astro';
 import BivariateExplore from '@components/BivariateExplore.astro';
 import { datasets, getDataset } from '@data/datasets';
 import companies from '@data/companies.json';
+import brands from '@data/brands.json';
 import { flagFor } from '@lib/flags';
 
 const indicators = datasets.map((d) => ({
@@ -73,8 +74,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <section class="section" style="padding-top:0" id="markets">
     <div class="container">
-      <span class="kicker">Markets & companies</span>
-      <h2>Markets &amp; companies</h2>
+      <span class="kicker">Companies & brands</span>
+      <h2>Companies &amp; brand data</h2>
       <p class="sub" style="max-width:680px">
         The open, country-comparable view of company life — stock-market depth, listed
         companies and how widely people use financial services (explore any of them in the
@@ -106,6 +107,21 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         ))}
       </div>
 
+      <h3 style="margin-top:28px">Most valuable brands</h3>
+      <p class="sub">Top {brands.length} global brands by estimated value (Kantar BrandZ) — logo, country of origin and one-line profile.</p>
+      <div class="company-grid">
+        {brands.map((b) => (
+          <a class="company-card" href={b.wiki} target="_blank" rel="noopener">
+            <span class="co-logo">{b.logo ? <img src={`${b.logo}?width=80`} alt="" loading="lazy" /> : <span class="co-mono">{b.name.slice(0, 1)}</span>}</span>
+            <span class="co-info">
+              <strong>{flagFor(b.iso)} {b.name}</strong>
+              <span class="co-ind">${b.valueBn >= 1000 ? (b.valueBn / 1000).toFixed(2) + ' tn' : b.valueBn + ' bn'} brand value</span>
+              {b.desc && <span class="co-desc">{b.desc}</span>}
+            </span>
+          </a>
+        ))}
+      </div>
+
       <h3 style="margin-top:28px">Brand &amp; company rankings (external)</h3>
       <p class="sub">Published by commercial research firms; brand-value figures are proprietary, so we link out.</p>
       <div class="grid cols-2">
@@ -118,4 +134,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
     </div>
   </section>
+
+  <script>
+    // Re-align to the URL hash after the async panels settle (they shift the page
+    // after the browser's initial anchor jump); stop once the user scrolls.
+    (function () {
+      var userScrolled = false;
+      var mark = function () { userScrolled = true; };
+      window.addEventListener('wheel', mark, { passive: true });
+      window.addEventListener('touchmove', mark, { passive: true });
+      function align() {
+        var id = location.hash ? location.hash.slice(1) : '';
+        var el = id ? document.getElementById(id) : null;
+        if (el && !userScrolled) el.scrollIntoView();
+      }
+      window.addEventListener('hashchange', function () { userScrolled = false; align(); });
+      if (location.hash) [0, 300, 800, 1600, 2600].forEach(function (t) { setTimeout(align, t); });
+    })();
+  </script>
 </BaseLayout>
