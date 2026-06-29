@@ -1,0 +1,159 @@
+---
+// Gapminder-style animated bubble chart: merges three indicators on the
+// iso+year key — X, Y and bubble size — coloured by region, animated over time.
+export interface IndexItem { slug: string; title: string; unit: string; kind: string }
+interface Props { indicators: IndexItem[] }
+const { indicators } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const has = (s: string) => indicators.some((d) => d.slug === s);
+const config = {
+  base,
+  indicators: indicators.map((d) => ({ slug: d.slug, title: d.title, unit: d.unit })),
+  defX: has('imf-gdp-per-capita-ppp') ? 'imf-gdp-per-capita-ppp' : indicators[0]?.slug,
+  defY: has('whr-happiness') ? 'whr-happiness' : indicators[1]?.slug,
+  defS: has('imf-population') ? 'imf-population' : indicators[0]?.slug,
+};
+---
+<div class="bubble">
+  <div class="controls">
+    <label>X (→)<select id="bub-x"></select></label>
+    <label>Y (↑)<select id="bub-y"></select></label>
+    <label>Bubble size<select id="bub-size"></select></label>
+    <label class="bub-log"><input type="checkbox" id="bub-logx" checked /> log X</label>
+  </div>
+  <div class="bub-player">
+    <button type="button" id="bub-play" class="ghost-btn" style="margin:0">▶ Play</button>
+    <input type="range" id="bub-year" class="bub-range" />
+    <span id="bub-yearlabel" class="bub-yearlabel"></span>
+  </div>
+  <div class="bub-stage">
+    <svg id="bub-svg" viewBox="0 0 900 480" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bubble chart"></svg>
+    <div id="bub-tip" class="bub-tip" hidden></div>
+  </div>
+  <div class="legend-regions" id="bub-legend"></div>
+  <p class="sub" id="bub-note" style="margin-top:8px"></p>
+</div>
+
+<script type="application/json" id="bub-config" set:html={JSON.stringify(config)}></script>
+<script>
+  const cfg = JSON.parse(document.getElementById('bub-config').textContent);
+  const BASE = cfg.base, NS = 'http://www.w3.org/2000/svg';
+  const REGION = { Africa: '#fbbf24', Americas: '#e0567b', Asia: '#34d399', Europe: '#508ce6', Other: '#9ca3af' };
+  const el = (id) => document.getElementById(id);
+  const svg = el('bub-svg'), tip = el('bub-tip');
+  const W = 900, H = 480, M = { l: 64, r: 24, t: 18, b: 44 };
+  const PW = W - M.l - M.r, PH = H - M.t - M.b;
+  const cache = new Map();
+  const state = { x: cfg.defX, y: cfg.defY, size: cfg.defS, logx: true, year: null, years: [], dom: null, playing: false, timer: null };
+
+  function fill(sel, val) {
+    sel.innerHTML = cfg.indicators.map((d) => `<option value="${d.slug}">${d.title}</option>`).join('');
+    sel.value = val;
+  }
+  const titleOf = (s) => (cfg.indicators.find((d) => d.slug === s) || {}).title || s;
+  const unitOf = (s) => (cfg.indicators.find((d) => d.slug === s) || {}).unit || '';
+
+  // dataset → Map(period -> Map(iso -> {v, entity, group}))
+  async function load(slug) {
+    if (cache.has(slug)) return cache.get(slug);
+    const ds = await (await fetch(`${BASE}/data/${slug}.json`)).json();
+    const byYear = new Map();
+    for (const o of ds.data) {
+      if (!o.iso || o.value == null) continue;
+      let m = byYear.get(o.period); if (!m) byYear.set(o.period, m = new Map());
+      m.set(o.iso, { v: o.value, entity: o.entity, group: o.group || 'Other' });
+    }
+    cache.set(slug, byYear); return byYear;
+  }
+
+  const fmt = (n) => Math.abs(n) >= 1000 ? n.toLocaleString('en-US', { maximumFractionDigits: 0 }) : n.toLocaleString('en-US', { maximumFractionDigits: 1 });
+
+  async function rebuild() {
+    const [X, Y, S] = await Promise.all([load(state.x), load(state.y), load(state.size)]);
+    const years = [...X.keys()].filter((p) => Y.has(p) && S.has(p)).sort();
+    state.years = years;
+    if (!years.length) { svg.innerHTML = ''; el('bub-note').textContent = 'These indicators have no overlapping years.'; return; }
+    // fixed domains across all years for a stable animation frame
+    let xs = [], ys = [], ss = [];
+    for (const p of years) for (const [iso, xo] of X.get(p)) {
+      const yo = Y.get(p).get(iso), so = S.get(p).get(iso);
+      if (yo && so) { xs.push(xo.v); ys.push(yo.v); ss.push(so.v); }
+    }
+    const ext = (a) => [Math.min(...a), Math.max(...a)];
+    state.dom = { x: ext(xs), y: ext(ys), s: ext(ss), X, Y, S };
+    const slider = el('bub-year');
+    slider.min = 0; slider.max = years.length - 1; slider.step = 1;
+    state.year = (state.year != null && years.includes(state.year)) ? state.year : years[years.length - 1];
+    slider.value = years.indexOf(state.year);
+    el('bub-legend').innerHTML = Object.entries(REGION).map(([r, c]) => `<span class="lr"><span class="lr-dot" style="background:${c}"></span>${r}</span>`).join('');
+    render();
+  }
+
+  function sx(v) {
+    const [a, b] = state.dom.x;
+    if (state.logx && a > 0) { const la = Math.log10(a), lb = Math.log10(b); return M.l + (Math.log10(Math.max(v, a)) - la) / (lb - la) * PW; }
+    return M.l + (v - a) / ((b - a) || 1) * PW;
+  }
+  const sy = (v) => { const [a, b] = state.dom.y; return M.t + PH - (v - a) / ((b - a) || 1) * PH; };
+  const sr = (v) => { const [, b] = state.dom.s; return 4 + Math.sqrt(Math.max(v, 0) / (b || 1)) * 42; };
+
+  function axisTicks() {
+    let g = '';
+    const [ax, bx] = state.dom.x, [ay, by] = state.dom.y;
+    const xt = state.logx && ax > 0
+      ? [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000].filter((t) => t >= ax * 0.7 && t <= bx * 1.3)
+      : Array.from({ length: 5 }, (_, i) => ax + (bx - ax) * i / 4);
+    for (const t of xt) { const x = sx(t); g += `<line x1="${x}" y1="${M.t}" x2="${x}" y2="${M.t + PH}" class="bub-grid"/><text x="${x}" y="${H - 16}" class="bub-axt" text-anchor="middle">${fmt(t)}</text>`; }
+    for (let i = 0; i <= 4; i++) { const t = ay + (by - ay) * i / 4, y = sy(t); g += `<line x1="${M.l}" y1="${y}" x2="${M.l + PW}" y2="${y}" class="bub-grid"/><text x="${M.l - 8}" y="${y + 4}" class="bub-axt" text-anchor="end">${fmt(t)}</text>`; }
+    g += `<text x="${M.l + PW / 2}" y="${H - 2}" class="bub-axlbl" text-anchor="middle">${titleOf(state.x)} →</text>`;
+    g += `<text transform="translate(14 ${M.t + PH / 2}) rotate(-90)" class="bub-axlbl" text-anchor="middle">${titleOf(state.y)} →</text>`;
+    return g;
+  }
+
+  function render() {
+    const { X, Y, S } = state.dom, p = state.year;
+    const pts = [];
+    for (const [iso, xo] of X.get(p)) {
+      const yo = Y.get(p).get(iso), so = S.get(p).get(iso);
+      if (yo && so) pts.push({ iso, name: xo.entity, x: xo.v, y: yo.v, s: so.v, region: xo.group });
+    }
+    pts.sort((a, b) => b.s - a.s); // big bubbles behind
+    const circles = pts.map((d) => `<circle cx="${sx(d.x).toFixed(1)}" cy="${sy(d.y).toFixed(1)}" r="${sr(d.s).toFixed(1)}" fill="${REGION[d.region] || REGION.Other}" fill-opacity="0.72" stroke="#0e0f11" stroke-width="0.6" data-i="${d.iso}"><title>${d.name}</title></circle>`).join('');
+    const labels = pts.slice(0, 6).map((d) => `<text x="${sx(d.x).toFixed(1)}" y="${(sy(d.y) + 4).toFixed(1)}" class="bub-lbl" text-anchor="middle">${d.name}</text>`).join('');
+    svg.innerHTML = axisTicks() + `<text x="${M.l + PW - 6}" y="${M.t + PH - 10}" class="bub-watermark" text-anchor="end">${p}</text>` + circles + labels;
+    el('bub-yearlabel').textContent = p;
+    el('bub-year').value = state.years.indexOf(p);
+    el('bub-note').textContent = `${pts.length} countries · ${p} · size = ${titleOf(state.size)} · x = ${titleOf(state.x)} (${unitOf(state.x)}) · y = ${titleOf(state.y)} (${unitOf(state.y)})`;
+    // store for tooltip
+    svg._pts = pts;
+  }
+
+  function play() {
+    if (state.playing) { stop(); return; }
+    state.playing = true; el('bub-play').textContent = '❚❚ Pause';
+    state.timer = setInterval(() => {
+      let i = state.years.indexOf(state.year) + 1;
+      if (i >= state.years.length) i = 0;
+      state.year = state.years[i]; render();
+    }, 1100);
+  }
+  function stop() { state.playing = false; el('bub-play').textContent = '▶ Play'; clearInterval(state.timer); }
+
+  fill(el('bub-x'), state.x); fill(el('bub-y'), state.y); fill(el('bub-size'), state.size);
+  el('bub-x').addEventListener('change', (e) => { state.x = e.target.value; rebuild(); });
+  el('bub-y').addEventListener('change', (e) => { state.y = e.target.value; rebuild(); });
+  el('bub-size').addEventListener('change', (e) => { state.size = e.target.value; rebuild(); });
+  el('bub-logx').addEventListener('change', (e) => { state.logx = e.target.checked; render(); });
+  el('bub-year').addEventListener('input', (e) => { stop(); state.year = state.years[+e.target.value]; render(); });
+  el('bub-play').addEventListener('click', play);
+  svg.addEventListener('mousemove', (e) => {
+    const t = e.target;
+    if (t.tagName === 'circle' && svg._pts) {
+      const d = svg._pts.find((p) => p.iso === t.getAttribute('data-i'));
+      if (d) { tip.hidden = false; tip.innerHTML = `<b>${d.name}</b><br>${titleOf(state.x)}: ${fmt(d.x)}<br>${titleOf(state.y)}: ${fmt(d.y)}<br>${titleOf(state.size)}: ${fmt(d.s)}`;
+        const r = svg.getBoundingClientRect(); tip.style.left = (e.clientX - r.left + 12) + 'px'; tip.style.top = (e.clientY - r.top + 12) + 'px'; }
+    } else tip.hidden = true;
+  });
+  svg.addEventListener('mouseleave', () => { tip.hidden = true; });
+  rebuild();
+</script>

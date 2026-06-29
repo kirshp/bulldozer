@@ -184,8 +184,25 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Explore section navigation */
 .explore-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; position: sticky; top: 60px; z-index: 20; background: var(--bg); padding: 10px 0; }
 .explore-nav .ghost-btn { margin: 0; text-decoration: none; }
-#explorer, #bivariate, #country, #compare,
+#explorer, #bivariate, #bubble, #country, #compare,
 #stories, #dashboards, #releases, #browse { scroll-margin-top: 124px; }
+
+/* Bubble chart */
+.bubble .controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+.bub-log { flex-direction: row; align-items: center; gap: 6px; font-size: 13px; color: var(--text-dim); }
+.bub-player { display: flex; align-items: center; gap: 12px; margin: 14px 0 6px; }
+.bub-range { flex: 1; accent-color: var(--accent); }
+.bub-yearlabel { font-weight: 800; font-size: 20px; min-width: 56px; color: var(--accent); }
+.bub-stage { position: relative; }
+.bub-stage svg { width: 100%; height: auto; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px; }
+.bub-grid { stroke: var(--border); stroke-width: 0.5; }
+.bub-axt { fill: var(--text-dim); font-size: 11px; }
+.bub-axlbl { fill: var(--text); font-size: 13px; font-weight: 600; }
+.bub-lbl { fill: var(--text); font-size: 11px; font-weight: 600; paint-order: stroke; stroke: var(--bg-elev); stroke-width: 2.5; }
+.bub-watermark { fill: var(--text); font-size: 84px; font-weight: 800; opacity: 0.07; }
+.bub-stage circle { transition: cx 0.6s ease, cy 0.6s ease, r 0.6s ease; cursor: pointer; }
+.bub-tip { position: absolute; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12px; pointer-events: none; z-index: 5; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+.bub-tip b { color: var(--accent); }
 
 /* Country profile — indicator filter/sort controls */
 .ci-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }

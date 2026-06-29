@@ -4,6 +4,7 @@ import DataPanel from '@components/DataPanel.astro';
 import CountryPanel from '@components/CountryPanel.astro';
 import CompareCountries from '@components/CompareCountries.astro';
 import BivariateExplore from '@components/BivariateExplore.astro';
+import BubbleChart from '@components/BubbleChart.astro';
 import { datasets } from '@data/datasets';
 
 const indicators = datasets.map((d) => ({
@@ -17,6 +18,7 @@ const indicators = datasets.map((d) => ({
       <nav class="explore-nav">
         <a class="ghost-btn" href="#explorer">🔍 Explorer</a>
         <a class="ghost-btn" href="#bivariate">🗺️ Bivariate map</a>
+        <a class="ghost-btn" href="#bubble">🫧 Bubble chart</a>
         <a class="ghost-btn" href="#country">🌍 Country profile</a>
         <a class="ghost-btn" href="#compare">⚖️ Compare countries</a>
       </nav>
@@ -33,6 +35,15 @@ const indicators = datasets.map((d) => ({
       <h2>Two indicators, one map</h2>
       <p class="sub">See how two measures combine across the world — colour mixes amber (X) and blue (Y).</p>
       <BivariateExplore indicators={indicators} />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="bubble">
+    <div class="container">
+      <span class="kicker">Bubble chart</span>
+      <h2>Three indicators, moving through time</h2>
+      <p class="sub">Gapminder-style — X, Y and bubble size are three different datasets merged on country & year; press play to watch the world move.</p>
+      <BubbleChart indicators={indicators} />
     </div>
   </section>
 
