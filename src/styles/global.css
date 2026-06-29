@@ -148,6 +148,10 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Indicator pictogram */
 .ind-ic { display: inline-block; margin-right: 7px; font-size: 0.95em; opacity: 0.9; }
 
+/* Company / brand value bars */
+.co-bar { background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+.br-bar { background: linear-gradient(90deg, #508ce6, var(--accent)); }
+
 /* Company directory cards */
 .company-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
 .company-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; }

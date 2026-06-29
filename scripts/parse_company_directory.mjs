@@ -31,7 +31,9 @@ async function main() {
     const title0 = block.match(/\[\[([^\]]+)\]\]/);
     if (!title0) continue;
     const [title, disp] = title0[1].split('|');
-    rows.push({ title: title.trim(), name: (disp || title).trim() });
+    // Revenue cell is uniquely marked with a {{profit}}/{{loss}} trend arrow.
+    const rev = block.match(/([\d,]+(?:\.\d+)?)\s*\{\{(?:profit|loss|nochange|increase|decrease)\}\}/i);
+    rows.push({ title: title.trim(), name: (disp || title).trim(), revenueBn: rev ? Number(rev[1].replace(/,/g, '')) : null });
   }
 
   // Resolve Wikidata QIDs for the article titles (batched)
@@ -66,7 +68,7 @@ async function main() {
 
   const out = rows.map((r, i) => {
     const m = meta[titleToQid[r.title]] || {};
-    return { rank: i + 1, name: r.name, industry: m.industry || null, iso: m.iso || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
+    return { rank: i + 1, name: r.name, revenueBn: r.revenueBn, industry: m.industry || null, iso: m.iso || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
   });
   await writeFile(OUT, JSON.stringify(out));
   console.log(`✓ companies.json: ${out.length} (${out.filter((c) => c.logo).length} logos, ${out.filter((c) => c.iso).length} countries)`);
