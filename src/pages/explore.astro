@@ -6,6 +6,7 @@ import CompareCountries from '@components/CompareCountries.astro';
 import BivariateExplore from '@components/BivariateExplore.astro';
 import BubbleChart from '@components/BubbleChart.astro';
 import CorrelationMatrix from '@components/CorrelationMatrix.astro';
+import SingleIndicatorViz from '@components/SingleIndicatorViz.astro';
 import { datasets } from '@data/datasets';
 
 const indicators = datasets.map((d) => ({
@@ -21,6 +22,7 @@ const indicators = datasets.map((d) => ({
         <a class="ghost-btn" href="#bivariate">🗺️ Bivariate map</a>
         <a class="ghost-btn" href="#bubble">🫧 Bubble chart</a>
         <a class="ghost-btn" href="#correlation">🔥 Correlations</a>
+        <a class="ghost-btn" href="#distribution">📊 Distribution</a>
         <a class="ghost-btn" href="#country">🌍 Country profile</a>
         <a class="ghost-btn" href="#compare">⚖️ Compare countries</a>
       </nav>
@@ -55,6 +57,15 @@ const indicators = datasets.map((d) => ({
       <h2>What moves together</h2>
       <p class="sub">Pearson correlation between key indicators across countries — green = move together, red = move apart.</p>
       <CorrelationMatrix />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="distribution">
+    <div class="container">
+      <span class="kicker">Distribution &amp; movement</span>
+      <h2>The whole field at once</h2>
+      <p class="sub">One indicator, three ways — every country as a dot (beeswarm), the change between years (slope), or an animated ranking (bar race).</p>
+      <SingleIndicatorViz indicators={indicators} />
     </div>
   </section>
 
