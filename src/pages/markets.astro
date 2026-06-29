@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DataPanel from '@components/DataPanel.astro';
+import { getDataset } from '@data/datasets';
+import companies from '@data/companies.json';
+import brands from '@data/brands.json';
+import { flagFor } from '@lib/flags';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const MARKET = ['forbes-global-2000', 'brandz-value', 'brandz-count', 'wb-market-cap', 'wb-stocks-traded', 'wb-listed-companies'];
+const FINANCE = ['wb-account-ownership', 'wb-digital-payments', 'wb-mobile-money', 'wb-debit-card', 'wb-bank-branches'];
+const slugs = [...MARKET, ...FINANCE].filter((s) => getDataset(s));
+const panelIndicators = slugs.map((s) => {
+  const d = getDataset(s)!;
+  return { slug: d.slug, title: d.title, kind: d.kind, unit: d.unit, valueLabel: d.valueLabel, changeMode: d.changeMode, periods: [...new Set(d.data.map((o) => o.period))].sort() };
+});
+const card = (s: string) => { const d = getDataset(s)!; return { slug: d.slug, title: d.title, source: d.source, summary: d.summary }; };
+const RANKINGS = [
+  { name: 'Interbrand — Best Global Brands', url: 'https://interbrand.com/best-global-brands/', note: 'Top-100 brands by estimated brand value.' },
+  { name: 'Kantar BrandZ — Most Valuable Brands', url: 'https://www.kantar.com/campaigns/brandz', note: 'Annual most-valuable-brands ranking.' },
+  { name: 'Brand Finance — Global 500', url: 'https://brandfinance.com/insights/global-500-2024', note: 'Brand value across 500 companies.' },
+  { name: 'Fortune — Global 500', url: 'https://fortune.com/ranking/global500/', note: 'Largest companies by revenue.' },
+  { name: 'Forbes — Global 2000', url: 'https://www.forbes.com/lists/global2000/', note: 'Largest public companies.' },
+];
+---
+<BaseLayout title="Companies & brand data" active="markets" description="Open, country-level data on stock markets, listed companies, financial services, plus directories of the world's largest companies and most valuable brands.">
+  <section class="section">
+    <div class="container">
+      <span class="kicker">Companies & brands</span>
+      <h2>Companies &amp; brand data</h2>
+      <p class="sub" style="max-width:700px">
+        The open, country-comparable view of company life — stock-market depth, listed
+        companies and how widely people use financial services — plus directories of the
+        world’s largest companies and most valuable brands. Proprietary brand-value
+        rankings are linked, not redistributed.
+      </p>
+      <DataPanel indicators={panelIndicators} />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>Stock markets &amp; companies by country</h2>
+      <p class="sub">Market depth, listings and the count of a country’s biggest companies & brands.</p>
+      <div class="grid cols-3">
+        {MARKET.filter((s) => getDataset(s)).map((s) => { const d = card(s); return (
+          <a class="card link" href={`${base}/dataset/${d.slug}`}>
+            <h3 style="font-size:15px">{d.title}</h3>
+            <p class="meta">{d.summary}</p>
+            <span class="pill">{d.source}</span>
+          </a>
+        ); })}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>Financial services &amp; fintech</h2>
+      <p class="sub">Who uses accounts, cards, digital and mobile money.</p>
+      <div class="grid cols-3">
+        {FINANCE.filter((s) => getDataset(s)).map((s) => { const d = card(s); return (
+          <a class="card link" href={`${base}/dataset/${d.slug}`}>
+            <h3 style="font-size:15px">{d.title}</h3>
+            <p class="meta">{d.summary}</p>
+            <span class="pill">{d.source}</span>
+          </a>
+        ); })}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>Largest companies in the world</h2>
+      <p class="sub">Top {companies.length} by revenue — logo, country, industry and a one-line profile. Source: Wikipedia / Wikidata.</p>
+      <div class="company-grid">
+        {companies.map((c) => (
+          <a class="company-card" href={c.wiki} target="_blank" rel="noopener">
+            <span class="co-logo">{c.logo ? <img src={`${c.logo}?width=80`} alt="" loading="lazy" /> : <span class="co-mono">{c.name.slice(0, 1)}</span>}</span>
+            <span class="co-info">
+              <strong>{flagFor(c.iso)} {c.name}</strong>
+              {c.industry && <span class="co-ind">{c.industry}</span>}
+              {c.desc && <span class="co-desc">{c.desc}</span>}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>Most valuable brands</h2>
+      <p class="sub">Top {brands.length} global brands by estimated value (Kantar BrandZ) — logo, country of origin and one-line profile.</p>
+      <div class="company-grid">
+        {brands.map((b) => (
+          <a class="company-card" href={b.wiki} target="_blank" rel="noopener">
+            <span class="co-logo">{b.logo ? <img src={`${b.logo}?width=80`} alt="" loading="lazy" /> : <span class="co-mono">{b.name.slice(0, 1)}</span>}</span>
+            <span class="co-info">
+              <strong>{flagFor(b.iso)} {b.name}</strong>
+              <span class="co-ind">${b.valueBn >= 1000 ? (b.valueBn / 1000).toFixed(2) + ' tn' : b.valueBn + ' bn'} brand value</span>
+              {b.desc && <span class="co-desc">{b.desc}</span>}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2>Brand &amp; company rankings (external)</h2>
+      <p class="sub">Published by commercial research firms; brand-value figures are proprietary, so we link out.</p>
+      <div class="grid cols-2">
+        {RANKINGS.map((r) => (
+          <a class="card link" href={r.url} target="_blank" rel="noopener">
+            <h3 style="font-size:15px">{r.name} ↗</h3>
+            <p class="meta">{r.note}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

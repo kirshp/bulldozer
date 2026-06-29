@@ -4,29 +4,12 @@ import DataPanel from '@components/DataPanel.astro';
 import CountryPanel from '@components/CountryPanel.astro';
 import CompareCountries from '@components/CompareCountries.astro';
 import BivariateExplore from '@components/BivariateExplore.astro';
-import { datasets, getDataset } from '@data/datasets';
-import companies from '@data/companies.json';
-import brands from '@data/brands.json';
-import { flagFor } from '@lib/flags';
+import { datasets } from '@data/datasets';
 
 const indicators = datasets.map((d) => ({
   slug: d.slug, title: d.title, kind: d.kind, unit: d.unit, valueLabel: d.valueLabel, topic: d.topic,
   changeMode: d.changeMode, periods: [...new Set(d.data.map((o) => o.period))].sort(),
 }));
-
-// Markets & companies — curated open, country-level market/financial indicators.
-const MARKET = ['forbes-global-2000', 'brandz-value', 'brandz-count', 'wb-market-cap', 'wb-stocks-traded', 'wb-listed-companies'];
-const FINANCE = ['wb-account-ownership', 'wb-digital-payments', 'wb-mobile-money', 'wb-debit-card', 'wb-bank-branches'];
-const marketSlugs = [...MARKET, ...FINANCE].filter((s) => getDataset(s));
-const card = (s: string) => { const d = getDataset(s)!; return { slug: d.slug, title: d.title, source: d.source, summary: d.summary }; };
-const RANKINGS = [
-  { name: 'Interbrand — Best Global Brands', url: 'https://interbrand.com/best-global-brands/', note: 'Top-100 brands by estimated brand value.' },
-  { name: 'Kantar BrandZ — Most Valuable Brands', url: 'https://www.kantar.com/campaigns/brandz', note: 'Annual most-valuable-brands ranking.' },
-  { name: 'Brand Finance — Global 500', url: 'https://brandfinance.com/insights/global-500-2024', note: 'Brand value across 500 companies.' },
-  { name: 'Fortune — Global 500', url: 'https://fortune.com/ranking/global500/', note: 'Largest companies by revenue.' },
-  { name: 'Forbes — Global 2000', url: 'https://www.forbes.com/lists/global2000/', note: 'Largest public companies.' },
-];
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <BaseLayout title="Explore" active="explore" description="Interactive explorer: pick an indicator, period and countries; view as bars, table or world map.">
   <section class="section" id="explorer">
@@ -36,7 +19,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <a class="ghost-btn" href="#bivariate">🗺️ Bivariate map</a>
         <a class="ghost-btn" href="#country">🌍 Country profile</a>
         <a class="ghost-btn" href="#compare">⚖️ Compare countries</a>
-        <a class="ghost-btn" href="#markets">💹 Markets</a>
       </nav>
       <span class="kicker">Interactive explorer</span>
       <h2>Explore the data</h2>
@@ -71,102 +53,4 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <CompareCountries />
     </div>
   </section>
-
-  <section class="section" style="padding-top:0" id="markets">
-    <div class="container">
-      <span class="kicker">Companies & brands</span>
-      <h2>Companies &amp; brand data</h2>
-      <p class="sub" style="max-width:680px">
-        The open, country-comparable view of company life — stock-market depth, listed
-        companies and how widely people use financial services (explore any of them in the
-        interactive panel above). Brand- and company-value rankings are proprietary, so
-        they’re linked rather than redistributed.
-      </p>
-      <h3 style="margin-top:4px">Stock markets &amp; financial services</h3>
-      <div class="grid cols-3">
-        {marketSlugs.map((s) => { const d = card(s); return (
-          <a class="card link" href={`${base}/dataset/${d.slug}`}>
-            <h3 style="font-size:15px">{d.title}</h3>
-            <p class="meta">{d.summary}</p>
-            <span class="pill">{d.source}</span>
-          </a>
-        ); })}
-      </div>
-      <h3 style="margin-top:28px">Largest companies in the world</h3>
-      <p class="sub">Top {companies.length} by revenue — logo, country, industry and a one-line profile. Source: Wikipedia / Wikidata.</p>
-      <div class="company-grid">
-        {companies.map((c) => (
-          <a class="company-card" href={c.wiki} target="_blank" rel="noopener">
-            <span class="co-logo">{c.logo ? <img src={`${c.logo}?width=80`} alt="" loading="lazy" /> : <span class="co-mono">{c.name.slice(0, 1)}</span>}</span>
-            <span class="co-info">
-              <strong>{flagFor(c.iso)} {c.name}</strong>
-              {c.industry && <span class="co-ind">{c.industry}</span>}
-              {c.desc && <span class="co-desc">{c.desc}</span>}
-            </span>
-          </a>
-        ))}
-      </div>
-
-      <h3 style="margin-top:28px">Most valuable brands</h3>
-      <p class="sub">Top {brands.length} global brands by estimated value (Kantar BrandZ) — logo, country of origin and one-line profile.</p>
-      <div class="company-grid">
-        {brands.map((b) => (
-          <a class="company-card" href={b.wiki} target="_blank" rel="noopener">
-            <span class="co-logo">{b.logo ? <img src={`${b.logo}?width=80`} alt="" loading="lazy" /> : <span class="co-mono">{b.name.slice(0, 1)}</span>}</span>
-            <span class="co-info">
-              <strong>{flagFor(b.iso)} {b.name}</strong>
-              <span class="co-ind">${b.valueBn >= 1000 ? (b.valueBn / 1000).toFixed(2) + ' tn' : b.valueBn + ' bn'} brand value</span>
-              {b.desc && <span class="co-desc">{b.desc}</span>}
-            </span>
-          </a>
-        ))}
-      </div>
-
-      <h3 style="margin-top:28px">Brand &amp; company rankings (external)</h3>
-      <p class="sub">Published by commercial research firms; brand-value figures are proprietary, so we link out.</p>
-      <div class="grid cols-2">
-        {RANKINGS.map((r) => (
-          <a class="card link" href={r.url} target="_blank" rel="noopener">
-            <h3 style="font-size:15px">{r.name} ↗</h3>
-            <p class="meta">{r.note}</p>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <script>
-    // The panels above #markets (map, country profile, compare) keep growing
-    // asynchronously, pushing the anchor down after the browser's initial jump.
-    // Re-align on every layout change until the user scrolls, so deep links like
-    // /explore#markets always land on the right section.
-    (function () {
-      var userScrolled = false;
-      var mark = function () { userScrolled = true; };
-      window.addEventListener('wheel', mark, { passive: true });
-      window.addEventListener('touchmove', mark, { passive: true });
-      window.addEventListener('keydown', function (e) {
-        if (e.key && e.key.indexOf('Arrow') === 0 || e.key === 'PageDown' || e.key === 'PageUp' || e.key === ' ') userScrolled = true;
-      });
-      function align() {
-        var id = location.hash ? location.hash.slice(1) : '';
-        var el = id ? document.getElementById(id) : null;
-        if (el && !userScrolled) el.scrollIntoView();
-      }
-      window.addEventListener('hashchange', function () { userScrolled = false; align(); });
-      function track() {
-        if (!location.hash) return;
-        align();
-        if (typeof ResizeObserver === 'function') {
-          var ro = new ResizeObserver(align);
-          ro.observe(document.body);
-          setTimeout(function () { ro.disconnect(); }, 8000);
-        } else {
-          [100, 400, 900, 1800, 3000, 5000].forEach(function (t) { setTimeout(align, t); });
-        }
-      }
-      if (document.readyState === 'complete') track();
-      else window.addEventListener('load', track);
-    })();
-  </script>
 </BaseLayout>
