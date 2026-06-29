@@ -136,20 +136,37 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </section>
 
   <script>
-    // Re-align to the URL hash after the async panels settle (they shift the page
-    // after the browser's initial anchor jump); stop once the user scrolls.
+    // The panels above #markets (map, country profile, compare) keep growing
+    // asynchronously, pushing the anchor down after the browser's initial jump.
+    // Re-align on every layout change until the user scrolls, so deep links like
+    // /explore#markets always land on the right section.
     (function () {
       var userScrolled = false;
       var mark = function () { userScrolled = true; };
       window.addEventListener('wheel', mark, { passive: true });
       window.addEventListener('touchmove', mark, { passive: true });
+      window.addEventListener('keydown', function (e) {
+        if (e.key && e.key.indexOf('Arrow') === 0 || e.key === 'PageDown' || e.key === 'PageUp' || e.key === ' ') userScrolled = true;
+      });
       function align() {
         var id = location.hash ? location.hash.slice(1) : '';
         var el = id ? document.getElementById(id) : null;
         if (el && !userScrolled) el.scrollIntoView();
       }
       window.addEventListener('hashchange', function () { userScrolled = false; align(); });
-      if (location.hash) [0, 300, 800, 1600, 2600].forEach(function (t) { setTimeout(align, t); });
+      function track() {
+        if (!location.hash) return;
+        align();
+        if (typeof ResizeObserver === 'function') {
+          var ro = new ResizeObserver(align);
+          ro.observe(document.body);
+          setTimeout(function () { ro.disconnect(); }, 8000);
+        } else {
+          [100, 400, 900, 1800, 3000, 5000].forEach(function (t) { setTimeout(align, t); });
+        }
+      }
+      if (document.readyState === 'complete') track();
+      else window.addEventListener('load', track);
     })();
   </script>
 </BaseLayout>
