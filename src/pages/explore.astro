@@ -5,6 +5,7 @@ import CountryPanel from '@components/CountryPanel.astro';
 import CompareCountries from '@components/CompareCountries.astro';
 import BivariateExplore from '@components/BivariateExplore.astro';
 import BubbleChart from '@components/BubbleChart.astro';
+import CorrelationMatrix from '@components/CorrelationMatrix.astro';
 import { datasets } from '@data/datasets';
 
 const indicators = datasets.map((d) => ({
@@ -19,6 +20,7 @@ const indicators = datasets.map((d) => ({
         <a class="ghost-btn" href="#explorer">🔍 Explorer</a>
         <a class="ghost-btn" href="#bivariate">🗺️ Bivariate map</a>
         <a class="ghost-btn" href="#bubble">🫧 Bubble chart</a>
+        <a class="ghost-btn" href="#correlation">🔥 Correlations</a>
         <a class="ghost-btn" href="#country">🌍 Country profile</a>
         <a class="ghost-btn" href="#compare">⚖️ Compare countries</a>
       </nav>
@@ -44,6 +46,15 @@ const indicators = datasets.map((d) => ({
       <h2>Three indicators, moving through time</h2>
       <p class="sub">Gapminder-style — X, Y and bubble size are three different datasets merged on country & year; press play to watch the world move.</p>
       <BubbleChart indicators={indicators} />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="correlation">
+    <div class="container">
+      <span class="kicker">Correlations</span>
+      <h2>What moves together</h2>
+      <p class="sub">Pearson correlation between key indicators across countries — green = move together, red = move apart.</p>
+      <CorrelationMatrix />
     </div>
   </section>
 

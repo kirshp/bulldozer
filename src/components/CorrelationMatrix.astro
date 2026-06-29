@@ -1,0 +1,87 @@
+---
+// Correlation matrix — pairwise Pearson r between indicators across countries
+// (each indicator's latest period, joined on iso). Pure analysis over existing data.
+import { getDataset } from '@data/datasets';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const CURATED: [string, string][] = [
+  ['imf-gdp-per-capita-ppp', 'GDP per capita'],
+  ['imf-gdp-growth', 'GDP growth'],
+  ['imf-inflation', 'Inflation'],
+  ['imf-unemployment', 'Unemployment'],
+  ['imf-govt-debt', 'Govt debt'],
+  ['gapminder-gini', 'Inequality (Gini)'],
+  ['whr-happiness', 'Happiness'],
+  ['gapminder-internet', 'Internet use'],
+  ['wb-account-ownership', 'Bank account'],
+  ['v-dem-v2x-libdem', 'Lib. democracy'],
+  ['qog-ti-cpi', 'Clean govt (CPI)'],
+  ['who-uhc', 'Health coverage'],
+  ['who-alcohol', 'Alcohol'],
+  ['who-tobacco', 'Tobacco'],
+  ['who-obesity', 'Obesity'],
+];
+const inds = CURATED.filter(([s]) => getDataset(s)).map(([slug, short]) => ({ slug, short }));
+const config = { base, inds };
+---
+<div class="corr">
+  <div class="corr-scroll">
+    <table class="corr-table" id="corr-table"></table>
+  </div>
+  <p class="sub" id="corr-note" style="margin-top:10px"></p>
+</div>
+<script type="application/json" id="corr-config" set:html={JSON.stringify(config)}></script>
+<script>
+  const cfg = JSON.parse(document.getElementById('corr-config').textContent);
+  const BASE = cfg.base, inds = cfg.inds;
+
+  async function latestByIso(slug) {
+    const ds = await (await fetch(`${BASE}/data/${slug}.json`)).json();
+    const years = [...new Set(ds.data.map((o) => o.period))].sort();
+    const last = years[years.length - 1];
+    const m = new Map();
+    for (const o of ds.data) if (o.period === last && o.iso && o.value != null) m.set(o.iso, o.value);
+    return m;
+  }
+  function pearson(a, b) {
+    const isos = [...a.keys()].filter((k) => b.has(k));
+    const n = isos.length; if (n < 5) return null;
+    const xs = isos.map((k) => a.get(k)), ys = isos.map((k) => b.get(k));
+    const mx = xs.reduce((s, v) => s + v, 0) / n, my = ys.reduce((s, v) => s + v, 0) / n;
+    let sxy = 0, sxx = 0, syy = 0;
+    for (let i = 0; i < n; i++) { const dx = xs[i] - mx, dy = ys[i] - my; sxy += dx * dy; sxx += dx * dx; syy += dy * dy; }
+    const d = Math.sqrt(sxx * syy); return d ? sxy / d : null;
+  }
+  // r → diverging colour (green = positive, red = negative)
+  const mix = (a, b, t) => a.map((x, i) => Math.round(x + (b[i] - x) * t));
+  const GREY = [38, 41, 46], GREEN = [52, 211, 153], RED = [248, 113, 113];
+  function colour(r) {
+    if (r == null) return 'var(--bg)';
+    const c = r >= 0 ? mix(GREY, GREEN, r) : mix(GREY, RED, -r);
+    return `rgb(${c[0]},${c[1]},${c[2]})`;
+  }
+
+  (async () => {
+    const maps = await Promise.all(inds.map((d) => latestByIso(d.slug)));
+    const n = inds.length;
+    const R = Array.from({ length: n }, () => Array(n).fill(null));
+    for (let i = 0; i < n; i++) for (let j = i; j < n; j++) {
+      const r = i === j ? 1 : pearson(maps[i], maps[j]); R[i][j] = R[j][i] = r;
+    }
+    let html = '<thead><tr><th></th>' + inds.map((d) => `<th class="corr-col"><span>${d.short}</span></th>`).join('') + '</tr></thead><tbody>';
+    for (let i = 0; i < n; i++) {
+      html += `<tr><th class="corr-row">${inds[i].short}</th>`;
+      for (let j = 0; j < n; j++) {
+        const r = R[i][j];
+        const txt = r == null ? '·' : (i === j ? '1' : r.toFixed(2));
+        const light = r != null && Math.abs(r) > 0.45;
+        html += `<td class="corr-cell" style="background:${colour(r)};color:${light ? '#0e0f11' : 'var(--text-dim)'}" title="${inds[i].short} × ${inds[j].short}: ${r == null ? 'n/a' : r.toFixed(2)}">${txt}</td>`;
+      }
+      html += '</tr>';
+    }
+    document.getElementById('corr-table').innerHTML = html + '</tbody>';
+    // strongest off-diagonal pair
+    let best = { r: 0, i: 0, j: 1 };
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) if (R[i][j] != null && Math.abs(R[i][j]) > Math.abs(best.r)) best = { r: R[i][j], i, j };
+    document.getElementById('corr-note').textContent = `Pearson correlation across countries (latest year each). Green = move together, red = move apart. Strongest link: ${inds[best.i].short} × ${inds[best.j].short} (r = ${best.r.toFixed(2)}).`;
+  })();
+</script>

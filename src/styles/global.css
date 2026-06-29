@@ -184,8 +184,17 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Explore section navigation */
 .explore-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; position: sticky; top: 60px; z-index: 20; background: var(--bg); padding: 10px 0; }
 .explore-nav .ghost-btn { margin: 0; text-decoration: none; }
-#explorer, #bivariate, #bubble, #country, #compare,
+#explorer, #bivariate, #bubble, #correlation, #country, #compare,
 #stories, #dashboards, #releases, #browse { scroll-margin-top: 124px; }
+
+/* Correlation matrix */
+.corr-scroll { overflow-x: auto; }
+.corr-table { border-collapse: collapse; font-size: 12px; }
+.corr-table th { font-weight: 600; color: var(--text-dim); padding: 4px; }
+.corr-row { text-align: right; white-space: nowrap; padding-right: 8px !important; color: var(--text) !important; }
+.corr-col { height: 96px; vertical-align: bottom; }
+.corr-col span { display: inline-block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; color: var(--text); }
+.corr-cell { width: 40px; height: 32px; text-align: center; border: 1px solid var(--bg); font-variant-numeric: tabular-nums; }
 
 /* Bubble chart */
 .bubble .controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
