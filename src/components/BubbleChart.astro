@@ -9,8 +9,8 @@ const has = (s: string) => indicators.some((d) => d.slug === s);
 const config = {
   base,
   indicators: indicators.map((d) => ({ slug: d.slug, title: d.title, unit: d.unit })),
-  defX: has('imf-gdp-per-capita-ppp') ? 'imf-gdp-per-capita-ppp' : indicators[0]?.slug,
-  defY: has('whr-happiness') ? 'whr-happiness' : indicators[1]?.slug,
+  defX: has('gapminder-income') ? 'gapminder-income' : (has('imf-gdp-per-capita-ppp') ? 'imf-gdp-per-capita-ppp' : indicators[0]?.slug),
+  defY: has('gapminder-life-expectancy') ? 'gapminder-life-expectancy' : (has('whr-happiness') ? 'whr-happiness' : indicators[1]?.slug),
   defS: has('imf-population') ? 'imf-population' : indicators[0]?.slug,
 };
 ---
@@ -70,17 +70,18 @@ const config = {
 
   async function rebuild() {
     const [X, Y, S] = await Promise.all([load(state.x), load(state.y), load(state.size)]);
-    const years = [...X.keys()].filter((p) => Y.has(p) && S.has(p)).sort();
+    // years where X and Y overlap (size is optional — falls back to a median bubble)
+    const years = [...X.keys()].filter((p) => Y.has(p)).sort();
     state.years = years;
     if (!years.length) { svg.innerHTML = ''; el('bub-note').textContent = 'These indicators have no overlapping years.'; return; }
-    // fixed domains across all years for a stable animation frame
     let xs = [], ys = [], ss = [];
-    for (const p of years) for (const [iso, xo] of X.get(p)) {
-      const yo = Y.get(p).get(iso), so = S.get(p).get(iso);
-      if (yo && so) { xs.push(xo.v); ys.push(yo.v); ss.push(so.v); }
+    for (const p of years) { const ym = Y.get(p), sm = S.get(p);
+      for (const [iso, xo] of X.get(p)) { const yo = ym.get(iso); if (!yo) continue; xs.push(xo.v); ys.push(yo.v); const so = sm && sm.get(iso); if (so) ss.push(so.v); }
     }
     const ext = (a) => [Math.min(...a), Math.max(...a)];
-    state.dom = { x: ext(xs), y: ext(ys), s: ext(ss), X, Y, S };
+    ss.sort((a, b) => a - b);
+    state.medSize = ss.length ? ss[Math.floor(ss.length / 2)] : 1;
+    state.dom = { x: ext(xs), y: ext(ys), s: ext(ss.length ? ss : [1]), X, Y, S };
     const slider = el('bub-year');
     slider.min = 0; slider.max = years.length - 1; slider.step = 1;
     state.year = (state.year != null && years.includes(state.year)) ? state.year : years[years.length - 1];
@@ -112,10 +113,12 @@ const config = {
 
   function render() {
     const { X, Y, S } = state.dom, p = state.year;
+    const ym = Y.get(p), sm = S.get(p);
     const pts = [];
     for (const [iso, xo] of X.get(p)) {
-      const yo = Y.get(p).get(iso), so = S.get(p).get(iso);
-      if (yo && so) pts.push({ iso, name: xo.entity, x: xo.v, y: yo.v, s: so.v, region: xo.group });
+      const yo = ym.get(iso); if (!yo) continue;
+      const so = (sm && sm.get(iso)) || null;
+      pts.push({ iso, name: xo.entity, x: xo.v, y: yo.v, s: so ? so.v : state.medSize, region: xo.group });
     }
     pts.sort((a, b) => b.s - a.s); // big bubbles behind
     const circles = pts.map((d) => `<circle cx="${sx(d.x).toFixed(1)}" cy="${sy(d.y).toFixed(1)}" r="${sr(d.s).toFixed(1)}" fill="${REGION[d.region] || REGION.Other}" fill-opacity="0.72" stroke="#0e0f11" stroke-width="0.6" data-i="${d.iso}"><title>${d.name}</title></circle>`).join('');
@@ -131,11 +134,12 @@ const config = {
   function play() {
     if (state.playing) { stop(); return; }
     state.playing = true; el('bub-play').textContent = '❚❚ Pause';
+    const n = state.years.length, step = Math.max(1, Math.ceil(n / 50)), iv = n > 50 ? 220 : 1100;
     state.timer = setInterval(() => {
-      let i = state.years.indexOf(state.year) + 1;
-      if (i >= state.years.length) i = 0;
+      let i = state.years.indexOf(state.year) + step;
+      if (i >= n) i = 0;
       state.year = state.years[i]; render();
-    }, 1100);
+    }, iv);
   }
   function stop() { state.playing = false; el('bub-play').textContent = '▶ Play'; clearInterval(state.timer); }
 

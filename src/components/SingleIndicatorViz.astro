@@ -106,7 +106,8 @@ const config = {
   function playRace() {
     if (state.playing) { stopRace(); return; }
     const ps = periodsOf(state.ds); state.playing = true; el('siv-play').textContent = '❚❚ Pause';
-    state.timer = setInterval(() => { let i = ps.indexOf(state.raceYear) + 1; if (i >= ps.length) i = 0; state.raceYear = ps[i]; raceFrame(state.raceYear); }, 1100);
+    const step = Math.max(1, Math.ceil(ps.length / 50)), iv = ps.length > 50 ? 220 : 1100;
+    state.timer = setInterval(() => { let i = ps.indexOf(state.raceYear) + step; if (i >= ps.length) i = 0; state.raceYear = ps[i]; raceFrame(state.raceYear); }, iv);
   }
 
   function render() {
