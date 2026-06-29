@@ -217,6 +217,8 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .cheat-corner { text-align: left; color: var(--text-dim); padding: 4px 8px; }
 .cheat-name { text-align: right; white-space: nowrap; padding: 2px 8px; color: var(--text) !important; position: sticky; left: 0; background: var(--bg); }
 .cheat-cell { min-width: 56px; height: 28px; text-align: center; border: 1px solid var(--bg); font-variant-numeric: tabular-nums; white-space: nowrap; padding: 0 4px; }
+.cheat-colhead { cursor: pointer; }
+.cheat-colhead:hover span { color: var(--accent); }
 
 /* Bubble chart */
 .bubble .controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }

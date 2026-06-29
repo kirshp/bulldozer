@@ -11,7 +11,17 @@ const config = { base, topicMeta };
   <div class="ci-controls">
     <label>Topic<select id="cheat-topic"></select></label>
     <label>Region<select id="cheat-region"><option value="">All regions</option></select></label>
+    <label>Sort<select id="cheat-sort">
+      <option value="mean">Best overall</option>
+      <option value="meanAsc">Worst overall</option>
+      <option value="name">Name A–Z</option>
+    </select></label>
     <input id="cheat-search" class="dir-search" type="search" placeholder="Filter countries…" autocomplete="off" />
+    <span class="view-toggle" id="cheat-views">
+      <button type="button" data-n="10" class="active">Top 10</button>
+      <button type="button" data-n="25">Top 25</button>
+      <button type="button" data-n="0">All</button>
+    </span>
   </div>
   <div class="corr-scroll" style="margin-top:10px"><table class="cheat-table" id="cheat-table"></table></div>
   <p class="sub" id="cheat-note" style="margin-top:10px">Each cell is coloured by the country’s global percentile on that indicator — green = top of the world, red = bottom.</p>
@@ -26,8 +36,9 @@ const config = { base, topicMeta };
   const mix = (a, b, t) => a.map((x, i) => Math.round(x + (b[i] - x) * t));
   const GREY = [38, 41, 46], GREEN = [52, 211, 153], RED = [248, 113, 113];
   const fmt = (n) => Math.abs(n) >= 1000 ? n.toLocaleString('en-US', { maximumFractionDigits: 0 }) : n.toLocaleString('en-US', { maximumFractionDigits: 1 });
-  const state = { topic: 'economy', region: '', q: '' };
+  const state = { topic: 'economy', region: '', q: '', sort: 'mean', limit: 10 };
   let countries = [];
+  const perc = (it) => it.total > 1 ? (it.total - it.rank) / (it.total - 1) : 0.5;
 
   el('cheat-topic').innerHTML = cfg.topicMeta.map((t) => `<option value="${t.id}">${t.icon} ${t.label}</option>`).join('');
   el('cheat-topic').value = state.topic;
@@ -39,12 +50,18 @@ const config = { base, topicMeta };
     const colList = [...cols.entries()].sort((a, b) => a[1].localeCompare(b[1]));
     let rows = countries.filter((c) => (!state.region || c.region === state.region) && c.items.some((it) => it.topic === state.topic));
     if (state.q) rows = rows.filter((c) => c.name.toLowerCase().includes(state.q));
-    // sort rows by mean percentile in this topic (best first)
-    const perc = (it) => it.total > 1 ? (it.total - it.rank) / (it.total - 1) : 0.5;
     const meanP = (c) => { const xs = c.items.filter((it) => it.topic === state.topic).map(perc); return xs.reduce((s, v) => s + v, 0) / (xs.length || 1); };
-    rows.sort((a, b) => meanP(b) - meanP(a));
+    const bySlug = (c, slug) => { const it = c.items.find((x) => x.slug === slug); return it ? perc(it) : -1; };
+    if (state.sort === 'name') rows.sort((a, b) => a.name.localeCompare(b.name));
+    else if (state.sort === 'meanAsc') rows.sort((a, b) => meanP(a) - meanP(b));
+    else if (state.sort.startsWith('col:')) { const s = state.sort.slice(4); rows.sort((a, b) => bySlug(b, s) - bySlug(a, s)); }
+    else rows.sort((a, b) => meanP(b) - meanP(a));
+    const total = rows.length;
+    if (state.q || state.sort === 'name') { /* show all when searching/alphabetical */ }
+    else if (state.limit > 0) rows = rows.slice(0, state.limit);
 
-    let html = '<thead><tr><th class="cheat-corner">Country</th>' + colList.map(([, t]) => `<th class="corr-col"><span>${t}</span></th>`).join('') + '</tr></thead><tbody>';
+    const sortedSlug = state.sort.startsWith('col:') ? state.sort.slice(4) : '';
+    let html = '<thead><tr><th class="cheat-corner">Country</th>' + colList.map(([slug, t]) => `<th class="corr-col cheat-colhead" data-slug="${slug}" title="Sort by ${t}"><span>${slug === sortedSlug ? '▾ ' : ''}${t}</span></th>`).join('') + '</tr></thead><tbody>';
     for (const c of rows) {
       html += `<tr><th class="cheat-name">${flag(c.iso)}${c.name}</th>`;
       const byslug = new Map(c.items.map((it) => [it.slug, it]));
@@ -59,12 +76,15 @@ const config = { base, topicMeta };
       html += '</tr>';
     }
     el('cheat-table').innerHTML = html + '</tbody>';
-    el('cheat-note').textContent = `${rows.length} countries × ${colList.length} indicators · coloured by global percentile (green = top, red = bottom).`;
+    el('cheat-note').textContent = `Showing ${rows.length} of ${total} countries × ${colList.length} indicators · coloured by global percentile (green = top, red = bottom). Click a column header to sort by it.`;
   }
 
-  el('cheat-topic').addEventListener('change', (e) => { state.topic = e.target.value; render(); });
+  el('cheat-topic').addEventListener('change', (e) => { state.topic = e.target.value; state.sort = 'mean'; el('cheat-sort').value = 'mean'; render(); });
   el('cheat-region').addEventListener('change', (e) => { state.region = e.target.value; render(); });
   el('cheat-search').addEventListener('input', (e) => { state.q = e.target.value.trim().toLowerCase(); render(); });
+  el('cheat-sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); });
+  el('cheat-views').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; state.limit = +b.dataset.n; Array.prototype.forEach.call(el('cheat-views').children, (x) => x.classList.toggle('active', x === b)); render(); });
+  el('cheat-table').addEventListener('click', (e) => { const th = e.target.closest('.cheat-colhead'); if (!th) return; const s = 'col:' + th.dataset.slug; state.sort = state.sort === s ? 'mean' : s; el('cheat-sort').value = 'mean'; render(); });
 
   fetch(`${cfg.base}/data/country-index.json`).then((r) => r.json()).then((d) => {
     countries = d;
