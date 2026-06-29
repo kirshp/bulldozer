@@ -17,10 +17,10 @@ const points = (emo?.data || [])
   .filter((o) => o.iso && secByIso.has(o.iso))
   .map((o) => ({ x: o.value, y: secByIso.get(o.iso)!.value, label: o.entity, group: o.group, highlight: HIGHLIGHT.has(o.entity) }));
 ---
-<BaseLayout title="Studies" active="surveys" description="Opinion and perception studies — happiness, attitudes and values, risk perception.">
+<BaseLayout title="Polls" active="surveys" description="Opinion and perception studies — happiness, attitudes and values, risk perception.">
   <section class="section">
     <div class="container">
-      <span class="kicker">Studies</span>
+      <span class="kicker">Polls</span>
       <h2>Opinion &amp; perception studies</h2>
       <p class="sub">What people say — {items.length} survey datasets on wellbeing, attitudes and risk perception. Search or browse by topic.</p>
       {points.length > 0 && (
