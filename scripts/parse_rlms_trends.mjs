@@ -48,11 +48,26 @@ async function main() {
     summary: 'Share of Russian adults who consumed alcohol in the past 30 days — annual trend. RLMS-HSE longitudinal survey.', ...COMMON,
   }, series('alcohol'));
 
+  await writeDataset('survey', 'rlms-life-satisfaction', {
+    title: 'Life Satisfaction (Russia)', valueLabel: 'Adults satisfied with their life', unit: '%', changeMode: 'pp', topic: 'wellbeing',
+    summary: 'Share of Russian adults who are fully or rather satisfied with their life — annual trend. RLMS-HSE longitudinal survey.', ...COMMON,
+  }, series('life_sat'));
+
+  await writeDataset('survey', 'rlms-higher-education', {
+    title: 'Higher Education (Russia)', valueLabel: 'Adults with completed higher education', unit: '%', changeMode: 'pp', topic: 'education',
+    summary: 'Share of Russian adults who have completed higher education — annual trend. RLMS-HSE longitudinal survey.', ...COMMON,
+  }, series('higher_ed'));
+
+  await writeDataset('survey', 'rlms-married', {
+    title: 'Married (Russia)', valueLabel: 'Adults in a registered marriage', unit: '%', changeMode: 'pp', topic: 'demographics',
+    summary: 'Share of Russian adults in a registered marriage — annual trend. RLMS-HSE longitudinal survey.', ...COMMON,
+  }, series('married'));
+
   await writeDataset('survey', 'rlms-income', {
     title: 'Median Monthly Income (Russia)', valueLabel: 'Median personal income, last 30 days (₽)', unit: '₽/month', changeMode: 'pct', topic: 'economy',
     summary: 'Weighted median of personal income over the last 30 days, in rubles — annual trend. RLMS-HSE longitudinal survey.', ...COMMON,
   }, series('income'));
 
-  console.log('✓ RLMS: 5 Russia trend datasets written');
+  console.log('✓ RLMS: 8 Russia trend datasets written');
 }
 main();

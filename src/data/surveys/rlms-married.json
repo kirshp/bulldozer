@@ -1,11 +1,11 @@
 {
   "meta": {
-    "title": "Median Monthly Income (Russia)",
-    "valueLabel": "Median personal income, last 30 days (₽)",
-    "unit": "₽/month",
-    "changeMode": "pct",
-    "topic": "economy",
-    "summary": "Weighted median of personal income over the last 30 days, in rubles — annual trend. RLMS-HSE longitudinal survey.",
+    "title": "Married (Russia)",
+    "valueLabel": "Adults in a registered marriage",
+    "unit": "%",
+    "changeMode": "pp",
+    "topic": "demographics",
+    "summary": "Share of Russian adults in a registered marriage — annual trend. RLMS-HSE longitudinal survey.",
     "source": "RLMS-HSE (HSE University / UNC)",
     "license": "RLMS-HSE terms — public aggregates",
     "url": "https://www.hse.ru/en/rlms/",
@@ -17,189 +17,189 @@
       "entity": "Russia",
       "group": "Europe",
       "period": "1994",
-      "value": 140000,
+      "value": 65.9,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "1995",
-      "value": 280000,
+      "value": 63,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "1996",
-      "value": 400000,
+      "value": 62.3,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "1998",
-      "value": 460,
+      "value": 55.4,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2000",
-      "value": 971,
+      "value": 52.8,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2001",
-      "value": 1500,
+      "value": 51.1,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2002",
-      "value": 2000,
+      "value": 49,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2003",
-      "value": 2300,
+      "value": 48.5,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2004",
-      "value": 2984,
+      "value": 48.1,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2005",
-      "value": 3870,
+      "value": 47.9,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2006",
-      "value": 4700,
+      "value": 47.4,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2007",
-      "value": 5800,
+      "value": 47.2,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2008",
-      "value": 8000,
+      "value": 47.4,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2009",
-      "value": 8540,
+      "value": 46.8,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2010",
-      "value": 10020,
+      "value": 48.7,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2011",
-      "value": 11700,
+      "value": 49.4,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2012",
-      "value": 13100,
+      "value": 49.2,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2013",
-      "value": 15000,
+      "value": 48.9,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2014",
-      "value": 15704,
+      "value": 48.4,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2015",
-      "value": 16800,
+      "value": 48.2,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2016",
-      "value": 17960,
+      "value": 48.5,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2017",
-      "value": 19000,
+      "value": 47.3,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2018",
-      "value": 20000,
+      "value": 47,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2019",
-      "value": 21000,
+      "value": 45.7,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2020",
-      "value": 22000,
+      "value": 44.9,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2021",
-      "value": 26000,
+      "value": 47.5,
       "iso": "RUS"
     },
     {
       "entity": "Russia",
       "group": "Europe",
       "period": "2022",
-      "value": 27600,
+      "value": 47.3,
       "iso": "RUS"
     }
   ]
