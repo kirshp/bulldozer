@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CountryPanel from '@components/CountryPanel.astro';
+import CompareCountries from '@components/CompareCountries.astro';
+---
+<BaseLayout title="Geo" active="geo" description="Country profiles and side-by-side country comparison across every indicator.">
+  <section class="section" id="country">
+    <div class="container">
+      <nav class="explore-nav">
+        <a class="ghost-btn" href="#country">🌍 Country profile</a>
+        <a class="ghost-btn" href="#compare">⚖️ Compare countries</a>
+      </nav>
+      <span class="kicker">Geo</span>
+      <h2>One country, every indicator</h2>
+      <p class="sub">Pick a country to see all its statistics and where it ranks — highlighted on the map, with a downloadable CSV.</p>
+      <CountryPanel />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="compare">
+    <div class="container">
+      <span class="kicker">Compare</span>
+      <h2>Country vs country</h2>
+      <p class="sub">Put a few countries side by side across every indicator. Highest in each row is highlighted.</p>
+      <CompareCountries />
+    </div>
+  </section>
+</BaseLayout>

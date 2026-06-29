@@ -4,7 +4,7 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
-  active?: 'home' | 'news' | 'explore' | 'sources' | 'surveys' | 'macro' | 'markets' | 'glossary';
+  active?: 'home' | 'news' | 'explore' | 'sources' | 'surveys' | 'macro' | 'markets' | 'geo' | 'glossary';
 }
 const { title, description, active } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -14,6 +14,7 @@ const nav = [
   { id: 'macro', label: 'Macro', href: `${base}/macro` },
   { id: 'markets', label: 'Markets', href: `${base}/markets` },
   { id: 'surveys', label: 'Studies', href: `${base}/surveys` },
+  { id: 'geo', label: 'Geo', href: `${base}/geo` },
 ];
 const fullTitle = title ? `${title} · BullDozer` : 'BullDozer — Marketing Analytics & Research';
 const desc = description ?? 'Marketing analytics & research — public, parsed survey and macro data, visual stories and a world map.';

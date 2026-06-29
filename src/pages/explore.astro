@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DataPanel from '@components/DataPanel.astro';
-import CountryPanel from '@components/CountryPanel.astro';
-import CompareCountries from '@components/CompareCountries.astro';
 import BivariateExplore from '@components/BivariateExplore.astro';
 import BubbleChart from '@components/BubbleChart.astro';
 import CorrelationMatrix from '@components/CorrelationMatrix.astro';
@@ -11,6 +9,7 @@ import CountryHeatmap from '@components/CountryHeatmap.astro';
 import ConnectedScatter from '@components/ConnectedScatter.astro';
 import { datasets } from '@data/datasets';
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const indicators = datasets.map((d) => ({
   slug: d.slug, title: d.title, kind: d.kind, unit: d.unit, valueLabel: d.valueLabel, topic: d.topic,
   changeMode: d.changeMode, periods: [...new Set(d.data.map((o) => o.period))].sort(),
@@ -27,8 +26,7 @@ const indicators = datasets.map((d) => ({
         <a class="ghost-btn" href="#distribution">📊 Distribution</a>
         <a class="ghost-btn" href="#heatmap">🌡️ Heatmap</a>
         <a class="ghost-btn" href="#path">🛰️ Trajectories</a>
-        <a class="ghost-btn" href="#country">🌍 Country profile</a>
-        <a class="ghost-btn" href="#compare">⚖️ Compare countries</a>
+        <a class="ghost-btn" href={`${base}/geo`}>🌍 Geo →</a>
       </nav>
       <span class="kicker">Interactive explorer</span>
       <h2>Explore the data</h2>
@@ -91,21 +89,9 @@ const indicators = datasets.map((d) => ({
     </div>
   </section>
 
-  <section class="section" style="padding-top:0" id="country">
+  <section class="section" style="padding-top:0">
     <div class="container">
-      <span class="kicker">Country profile</span>
-      <h2>One country, every indicator</h2>
-      <p class="sub">Pick a country to see all its statistics and where it ranks — highlighted on the map.</p>
-      <CountryPanel />
-    </div>
-  </section>
-
-  <section class="section" style="padding-top:0" id="compare">
-    <div class="container">
-      <span class="kicker">Compare</span>
-      <h2>Country vs country</h2>
-      <p class="sub">Put a few countries side by side across every indicator. Highest in each row is highlighted.</p>
-      <CompareCountries />
+      <p class="sub" style="margin:0">Looking for one country in depth or a side-by-side comparison? Those moved to <a href={`${base}/geo`}>Geo →</a></p>
     </div>
   </section>
 </BaseLayout>
