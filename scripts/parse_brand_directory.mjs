@@ -62,7 +62,7 @@ async function main() {
 
   const out = rows.map((r, i) => {
     const m = meta[titleToQid[r.title]] || {};
-    return { rank: i + 1, name: r.name, valueBn: r.valueBn, iso: m.iso || ALIAS[r.country] || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
+    return { rank: i + 1, name: r.name, valueBn: r.valueBn, year: 2026, iso: m.iso || ALIAS[r.country] || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
   });
   await writeFile(OUT, JSON.stringify(out));
   console.log(`✓ brands.json: ${out.length} (${out.filter((c) => c.logo).length} logos)`);

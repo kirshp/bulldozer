@@ -29,9 +29,9 @@ const panelIndicators = slugs.map((s) => {
 });
 const card = (s: string) => { const d = getDataset(s)!; return { slug: d.slug, title: d.title, source: d.source, summary: d.summary }; };
 
-// Bar-chart inputs (top 12 by the headline metric)
-const coBars = companies.filter((c) => c.revenueBn).slice(0, 12);
-const coMax = Math.max(1, ...coBars.map((c) => c.revenueBn as number));
+// Bar-chart inputs — companies by current market cap, brands by value (top 12)
+const coBars = companies.filter((c) => c.capBn).sort((a, b) => (b.capBn as number) - (a.capBn as number)).slice(0, 12);
+const coMax = Math.max(1, ...coBars.map((c) => c.capBn as number));
 const brBars = brands.filter((b) => b.valueBn).slice(0, 12);
 const brMax = Math.max(1, ...brBars.map((b) => b.valueBn));
 const usd = (bn: number) => (bn >= 1000 ? '$' + (bn / 1000).toFixed(2) + ' tn' : '$' + bn + ' bn');
@@ -72,8 +72,8 @@ const RANKINGS = [
 
   <section class="section" style="padding-top:0" id="companies">
     <div class="container">
-      <h2>Largest companies</h2>
-      <p class="sub">Top {coBars.length} by revenue (US$). Source: Wikipedia / Wikidata.</p>
+      <h2>Most valuable companies</h2>
+      <p class="sub">Top {coBars.length} by market capitalisation · {coBars[0]?.capYear} (US$). Source: Wikipedia / companiesmarketcap.com.</p>
       <div class="bars">
         {coBars.map((c) => (
           <div class="bar-row">
@@ -81,8 +81,8 @@ const RANKINGS = [
               <span class="bar-logo">{c.logo ? <img src={`${c.logo}?width=48`} alt="" loading="lazy" /> : <span class="co-mono">{c.name.slice(0, 1)}</span>}</span>
               {flagFor(c.iso)} {c.name}
             </span>
-            <span class="bar-track"><span class="bar-fill co-bar" style={`width:${Math.round(((c.revenueBn as number) / coMax) * 100)}%`}></span></span>
-            <span class="bar-val">{usd(c.revenueBn as number)}</span>
+            <span class="bar-track"><span class="bar-fill co-bar" style={`width:${Math.round(((c.capBn as number) / coMax) * 100)}%`}></span></span>
+            <span class="bar-val">{usd(c.capBn as number)}</span>
           </div>
         ))}
       </div>
@@ -112,6 +112,10 @@ const RANKINGS = [
             <span class="co-logo">{c.logo ? <img src={`${c.logo}?width=80`} alt="" loading="lazy" /> : <span class="co-mono">{c.name.slice(0, 1)}</span>}</span>
             <span class="co-info">
               <strong>{flagFor(c.iso)} {c.name}</strong>
+              <span class="co-val">
+                {c.capBn && <b>{usd(c.capBn)} cap · {c.capYear}</b>}
+                {c.revenueBn && <span>{usd(c.revenueBn)} revenue · {c.revYear}</span>}
+              </span>
               {c.industry && <span class="co-ind">{c.industry}</span>}
               {c.desc && <span class="co-desc">{c.desc}</span>}
             </span>
@@ -124,7 +128,7 @@ const RANKINGS = [
   <section class="section" style="padding-top:0" id="brands">
     <div class="container">
       <h2>Most valuable brands</h2>
-      <p class="sub">Top {brBars.length} by estimated value (Kantar BrandZ).</p>
+      <p class="sub">Top {brBars.length} by estimated value · Kantar BrandZ {brBars[0]?.year}.</p>
       <div class="bars">
         {brBars.map((b) => (
           <div class="bar-row">
@@ -163,7 +167,7 @@ const RANKINGS = [
             <span class="co-logo">{b.logo ? <img src={`${b.logo}?width=80`} alt="" loading="lazy" /> : <span class="co-mono">{b.name.slice(0, 1)}</span>}</span>
             <span class="co-info">
               <strong>{flagFor(b.iso)} {b.name}</strong>
-              <span class="co-ind">{usd(b.valueBn)} brand value</span>
+              <span class="co-ind">{usd(b.valueBn)} brand value · {b.year}</span>
               {b.desc && <span class="co-desc">{b.desc}</span>}
             </span>
           </a>

@@ -19,6 +19,25 @@ async function wiki(params) {
   return (await fetch('https://en.wikipedia.org/w/api.php?format=json&' + new URLSearchParams(params), { headers: UA })).json();
 }
 
+const REV_YEAR = 2024;   // "List of largest companies by revenue" reports FY2024
+const CAP_YEAR = 2026;   // market-cap snapshot section
+
+/** Current market capitalisation (US$ mn) per company from the 2026 table. */
+async function marketCaps() {
+  const secs = (await wiki({ action: 'parse', page: 'List_of_public_corporations_by_market_capitalization', prop: 'sections' })).parse.sections;
+  const idx = secs.find((s) => s.line === String(CAP_YEAR))?.index;
+  if (!idx) return new Map();
+  const wt = (await wiki({ action: 'parse', page: 'List_of_public_corporations_by_market_capitalization', prop: 'wikitext', section: idx })).parse.wikitext['*'];
+  const table = wt.slice(wt.indexOf('{|'), wt.indexOf('|}'));
+  const m = new Map();
+  for (const block of table.split(/\n\|-/)) {
+    const t = block.match(/\[\[([^\]|]+)/);
+    const v = block.match(/([\d,]{4,})/);
+    if (t && v) m.set(t[1].trim(), { name: (block.match(/\[\[[^\]|]+\|([^\]]+)\]\]/)?.[1] || t[1]).trim(), capBn: Math.round(Number(v[1].replace(/,/g, '')) / 1000) });
+  }
+  return m;
+}
+
 async function main() {
   const wt = (await wiki({ action: 'parse', page: 'List_of_largest_companies_by_revenue', prop: 'wikitext', section: 1 })).parse.wikitext['*'];
   const table = wt.slice(wt.indexOf('{|'), wt.indexOf('|}'));
@@ -26,6 +45,7 @@ async function main() {
   // Only the rank + linked company name are reliable from the table (rowspans in
   // the HQ column shift the other cells); everything else comes from Wikidata.
   const rows = [];
+  const seen = new Set();
   for (const block of table.split(/\n\|-/)) {
     if (!/scope="row"/.test(block)) continue;
     const title0 = block.match(/\[\[([^\]]+)\]\]/);
@@ -33,8 +53,13 @@ async function main() {
     const [title, disp] = title0[1].split('|');
     // Revenue cell is uniquely marked with a {{profit}}/{{loss}} trend arrow.
     const rev = block.match(/([\d,]+(?:\.\d+)?)\s*\{\{(?:profit|loss|nochange|increase|decrease)\}\}/i);
-    rows.push({ title: title.trim(), name: (disp || title).trim(), revenueBn: rev ? Number(rev[1].replace(/,/g, '')) : null });
+    rows.push({ title: title.trim(), name: (disp || title).trim(), revenueBn: rev ? Number(rev[1].replace(/,/g, '')) : null, capBn: null });
+    seen.add(title.trim());
   }
+  // merge in market caps (and append any market-cap leaders missing from the revenue list)
+  const caps = await marketCaps();
+  for (const r of rows) { const c = caps.get(r.title); if (c) r.capBn = c.capBn; }
+  for (const [title, c] of caps) if (!seen.has(title)) rows.push({ title, name: c.name, revenueBn: null, capBn: c.capBn });
 
   // Resolve Wikidata QIDs for the article titles (batched)
   const titleToQid = {};
@@ -66,12 +91,14 @@ async function main() {
     if (b.desc && !m.desc) m.desc = b.desc.value;
   } else { console.warn('  Wikidata enrich failed', wd.status); }
 
-  const out = rows.map((r, i) => {
+  const out = rows.map((r) => {
     const m = meta[titleToQid[r.title]] || {};
-    return { rank: i + 1, name: r.name, revenueBn: r.revenueBn, industry: m.industry || null, iso: m.iso || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
+    return { name: r.name, revenueBn: r.revenueBn, revYear: r.revenueBn ? REV_YEAR : null, capBn: r.capBn, capYear: r.capBn ? CAP_YEAR : null, industry: m.industry || null, iso: m.iso || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
   });
+  // Most valuable first: market-cap leaders, then by revenue.
+  out.sort((a, b) => (b.capBn || 0) - (a.capBn || 0) || (b.revenueBn || 0) - (a.revenueBn || 0));
   await writeFile(OUT, JSON.stringify(out));
-  console.log(`✓ companies.json: ${out.length} (${out.filter((c) => c.logo).length} logos, ${out.filter((c) => c.iso).length} countries)`);
-  console.log('  top:', out.slice(0, 4).map((c) => `${c.name} $${c.revenueBn}bn`).join(' · '));
+  console.log(`✓ companies.json: ${out.length} (${out.filter((c) => c.capBn).length} with market cap, ${out.filter((c) => c.logo).length} logos)`);
+  console.log('  top cap:', out.filter((c) => c.capBn).sort((a, b) => b.capBn - a.capBn).slice(0, 4).map((c) => `${c.name} $${(c.capBn / 1000).toFixed(2)}tn`).join(' · '));
 }
 main();
