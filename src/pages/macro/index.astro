@@ -14,6 +14,7 @@ const netPeriods = net ? new Set(net.data.map((o) => o.period)).size : 0;
     <div class="container">
       <span class="kicker">Macro</span>
       <h2>Macro &amp; country statistics</h2>
+      <p class="page-tagline">The right dose of insight.</p>
       <p class="sub">Objective indicators across {datasetsByKind('macro').length} datasets — economy, demographics, health, education, environment, governance and risk. Search or browse by topic.</p>
       {net && netPeriods > 2 && (
         <div class="macro-spark">
