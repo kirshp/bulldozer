@@ -9,7 +9,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const net = getDataset('gapminder-internet');
 const netPeriods = net ? new Set(net.data.map((o) => o.period)).size : 0;
 ---
-<BaseLayout title="Macro" active="macro" description="Macro & country statistics — economy, demographics, health, education, environment, governance and risk.">
+<BaseLayout title="Macro" active="macro">
   <section class="section">
     <div class="container">
       <span class="kicker">Macro</span>

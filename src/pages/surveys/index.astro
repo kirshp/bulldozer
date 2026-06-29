@@ -17,7 +17,7 @@ const points = (emo?.data || [])
   .filter((o) => o.iso && secByIso.has(o.iso))
   .map((o) => ({ x: o.value, y: secByIso.get(o.iso)!.value, label: o.entity, group: o.group, highlight: HIGHLIGHT.has(o.entity) }));
 ---
-<BaseLayout title="Polls" active="surveys" description="Opinion and perception studies — happiness, attitudes and values, risk perception.">
+<BaseLayout title="Polls" active="surveys">
   <section class="section">
     <div class="container">
       <span class="kicker">Polls</span>
