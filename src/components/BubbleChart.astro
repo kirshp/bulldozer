@@ -11,7 +11,7 @@ const config = {
   indicators: indicators.map((d) => ({ slug: d.slug, title: d.title, unit: d.unit })),
   defX: has('gapminder-income') ? 'gapminder-income' : (has('imf-gdp-per-capita-ppp') ? 'imf-gdp-per-capita-ppp' : indicators[0]?.slug),
   defY: has('gapminder-life-expectancy') ? 'gapminder-life-expectancy' : (has('whr-happiness') ? 'whr-happiness' : indicators[1]?.slug),
-  defS: has('imf-population') ? 'imf-population' : indicators[0]?.slug,
+  defS: has('gapminder-population') ? 'gapminder-population' : (has('imf-population') ? 'imf-population' : indicators[0]?.slug),
 };
 ---
 <div class="bubble">
