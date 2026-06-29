@@ -2,8 +2,20 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SourceCatalog from '@components/SourceCatalog.astro';
 import DatasetList from '@components/DatasetList.astro';
-import { datasetsByKind } from '@data/datasets';
+import Scatter from '@components/Scatter.astro';
+import { datasetsByKind, getDataset } from '@data/datasets';
+import { colorFor, regionList } from '@lib/palette';
 const items = datasetsByKind('survey');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Inglehart-Welzel cultural map — the headline 2-D values picture.
+const sec = getDataset('wvs-secular');
+const emo = getDataset('wvs-emancipative');
+const secByIso = sec ? new Map(sec.data.map((o) => [o.iso, o])) : new Map();
+const HIGHLIGHT = new Set(['Germany', 'United States', 'Japan', 'China', 'Russia', 'Sweden', 'Egypt', 'Brazil', 'Nigeria', 'India', 'Iran', 'South Korea']);
+const points = (emo?.data || [])
+  .filter((o) => o.iso && secByIso.has(o.iso))
+  .map((o) => ({ x: o.value, y: secByIso.get(o.iso)!.value, label: o.entity, group: o.group, highlight: HIGHLIGHT.has(o.entity) }));
 ---
 <BaseLayout title="Studies" active="surveys" description="Opinion and perception studies — happiness, attitudes and values, risk perception.">
   <section class="section">
@@ -11,6 +23,17 @@ const items = datasetsByKind('survey');
       <span class="kicker">Studies</span>
       <h2>Opinion &amp; perception studies</h2>
       <p class="sub">What people say — {items.length} survey datasets on wellbeing, attitudes and risk perception. Search or browse by topic.</p>
+      {points.length > 0 && (
+        <div class="study-map">
+          <h3 style="margin:6px 0 2px">The cultural map of the world</h3>
+          <p class="sub">Every country on two value dimensions — survival ↔ self-expression and traditional ↔ secular (World Values Survey, Wave 7).</p>
+          <Scatter points={points} xLabel="Survival → Self-expression values" yLabel="Traditional → Secular values" labelTop={0} />
+          <div class="legend-regions">
+            {regionList.map((r) => (<span class="lr"><span class="lr-dot" style={`background:${colorFor(r)}`}></span>{r}</span>))}
+          </div>
+          <p style="margin:8px 0 28px"><a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/stories/cultural-map`}>Open the full cultural map →</a></p>
+        </div>
+      )}
       <DatasetList items={items} />
     </div>
   </section>

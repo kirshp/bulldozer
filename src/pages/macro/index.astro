@@ -2,8 +2,12 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SourceCatalog from '@components/SourceCatalog.astro';
 import DatasetList from '@components/DatasetList.astro';
-import { datasetsByKind } from '@data/datasets';
+import TrendChart from '@components/TrendChart.astro';
+import { datasetsByKind, getDataset } from '@data/datasets';
 const items = datasetsByKind('macro');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const net = getDataset('gapminder-internet');
+const netPeriods = net ? new Set(net.data.map((o) => o.period)).size : 0;
 ---
 <BaseLayout title="Macro" active="macro" description="Macro & country statistics — economy, demographics, health, education, environment, governance and risk.">
   <section class="section">
@@ -11,6 +15,14 @@ const items = datasetsByKind('macro');
       <span class="kicker">Macro</span>
       <h2>Macro &amp; country statistics</h2>
       <p class="sub">Objective indicators across {datasetsByKind('macro').length} datasets — economy, demographics, health, education, environment, governance and risk. Search or browse by topic.</p>
+      {net && netPeriods > 2 && (
+        <div class="macro-spark">
+          <h3 style="margin:6px 0 2px">The world is getting online</h3>
+          <p class="sub">Share of people using the internet — regional average over time (Gapminder).</p>
+          <TrendChart data={net.data} unit="%" />
+          <p style="margin:8px 0 28px"><a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/dataset/gapminder-internet`}>Open Internet Users →</a></p>
+        </div>
+      )}
       <DatasetList items={items} />
     </div>
   </section>

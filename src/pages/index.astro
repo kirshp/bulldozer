@@ -2,7 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { datasets, datasetsByKind, getDataset } from '@data/datasets';
 import { upcoming } from '@data/releases';
+import { flagFor } from '@lib/flags';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Mini preview chart for the featured story — the happiest countries.
+const happy = getDataset('whr-happiness');
+const happyLatest = happy ? [...new Set(happy.data.map((o) => o.period))].sort().at(-1) : null;
+const happyTop = happy ? happy.data.filter((o) => o.period === happyLatest).sort((a, b) => b.value - a.value).slice(0, 8) : [];
+const happyMax = Math.max(1, ...happyTop.map((o) => o.value));
 const month = new Date().getMonth() + 1;
 const calendar = upcoming(month).slice(0, 6);
 
@@ -44,7 +51,18 @@ const browse = [
         <span class="tag">{feature.tag}</span>
         <h3>{feature.title}</h3>
         <p class="meta">{feature.dek}</p>
-        <p class="meta" style="color:var(--accent)">Read the story →</p>
+        {happyTop.length > 0 && (
+          <div class="bars feature-bars" style="margin:14px 0 6px">
+            {happyTop.map((o) => (
+              <div class="bar-row">
+                <span>{flagFor(o.iso)} {o.entity}</span>
+                <span class="bar-track"><span class="bar-fill move-up" style={`width:${Math.round((o.value / happyMax) * 100)}%`}></span></span>
+                <span class="bar-val">{o.value.toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <p class="meta" style="color:var(--accent)">Read the story · happiest countries {happyLatest} →</p>
       </a>
 
       <div class="grid cols-2" style="margin-top:16px">
