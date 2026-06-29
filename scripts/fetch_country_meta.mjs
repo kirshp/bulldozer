@@ -30,7 +30,7 @@ for (const r of rows) {
   const rec = out[iso] || (out[iso] = {});
   // prefer a row that carries coordinates; keep first capital/coa seen
   if (m && rec.lat === undefined) { rec.capital = r.capitalLabel?.value; rec.lon = +m[1]; rec.lat = +m[2]; }
-  if (r.coa?.value && !rec.coa) rec.coa = r.coa.value;
+  if (r.coa?.value && !rec.coa) rec.coa = r.coa.value.replace(/^http:/, 'https:'); // avoid mixed-content blocking on https
   if (rec.capital === undefined && r.capitalLabel?.value) rec.capital = r.capitalLabel.value;
 }
 // drop entries with neither coordinates nor coat of arms

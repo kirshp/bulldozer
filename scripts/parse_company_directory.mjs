@@ -58,7 +58,7 @@ async function main() {
   const meta = {};
   if (wd.ok) for (const b of (await wd.json()).results.bindings) {
     const m = meta[b.c.value.split('/').pop()] ||= {};
-    if (b.logo && !m.logo) m.logo = b.logo.value;
+    if (b.logo && !m.logo) m.logo = b.logo.value.replace(/^http:/, 'https:'); // avoid mixed-content blocking on https
     if (b.iso && !m.iso) m.iso = b.iso.value.toUpperCase();
     if (b.industryLabel && !m.industry) m.industry = b.industryLabel.value;
     if (b.desc && !m.desc) m.desc = b.desc.value;
