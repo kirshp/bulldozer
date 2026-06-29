@@ -24,57 +24,29 @@ const RANKINGS = [
   { name: 'Forbes — Global 2000', url: 'https://www.forbes.com/lists/global2000/', note: 'Largest public companies.' },
 ];
 ---
-<BaseLayout title="Companies & brand data" active="markets" description="Open, country-level data on stock markets, listed companies, financial services, plus directories of the world's largest companies and most valuable brands.">
-  <section class="section">
+<BaseLayout title="Companies & brand data" active="markets" description="Directories of the world's largest companies and most valuable brands, plus open country-level data on stock markets and financial services.">
+  <section class="section" id="top">
     <div class="container">
+      <nav class="explore-nav">
+        <a class="ghost-btn" href="#companies">🏢 Companies ({companies.length})</a>
+        <a class="ghost-btn" href="#brands">™️ Brands ({brands.length})</a>
+        <a class="ghost-btn" href="#data">📊 By country</a>
+        <a class="ghost-btn" href="#rankings">🔗 Rankings</a>
+      </nav>
       <span class="kicker">Companies & brands</span>
       <h2>Companies &amp; brand data</h2>
       <p class="sub" style="max-width:700px">
-        The open, country-comparable view of company life — stock-market depth, listed
-        companies and how widely people use financial services — plus directories of the
-        world’s largest companies and most valuable brands. Proprietary brand-value
-        rankings are linked, not redistributed.
+        Directories of the world’s largest companies and most valuable brands — each with
+        logo, country and a one-line profile — plus the open, country-level view of stock
+        markets and financial services. Proprietary brand-value rankings are linked below.
       </p>
-      <DataPanel indicators={panelIndicators} />
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <h2>Stock markets &amp; companies by country</h2>
-      <p class="sub">Market depth, listings and the count of a country’s biggest companies & brands.</p>
-      <div class="grid cols-3">
-        {MARKET.filter((s) => getDataset(s)).map((s) => { const d = card(s); return (
-          <a class="card link" href={`${base}/dataset/${d.slug}`}>
-            <h3 style="font-size:15px">{d.title}</h3>
-            <p class="meta">{d.summary}</p>
-            <span class="pill">{d.source}</span>
-          </a>
-        ); })}
-      </div>
-    </div>
-  </section>
-
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <h2>Financial services &amp; fintech</h2>
-      <p class="sub">Who uses accounts, cards, digital and mobile money.</p>
-      <div class="grid cols-3">
-        {FINANCE.filter((s) => getDataset(s)).map((s) => { const d = card(s); return (
-          <a class="card link" href={`${base}/dataset/${d.slug}`}>
-            <h3 style="font-size:15px">{d.title}</h3>
-            <p class="meta">{d.summary}</p>
-            <span class="pill">{d.source}</span>
-          </a>
-        ); })}
-      </div>
-    </div>
-  </section>
-
-  <section class="section" style="padding-top:0">
+  <section class="section" style="padding-top:0" id="companies">
     <div class="container">
       <h2>Largest companies in the world</h2>
-      <p class="sub">Top {companies.length} by revenue — logo, country, industry and a one-line profile. Source: Wikipedia / Wikidata.</p>
+      <p class="sub">Top {companies.length} by revenue — name, logo, country, industry and a one-line profile. Source: Wikipedia / Wikidata.</p>
       <div class="company-grid">
         {companies.map((c) => (
           <a class="company-card" href={c.wiki} target="_blank" rel="noopener">
@@ -90,10 +62,10 @@ const RANKINGS = [
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
+  <section class="section" style="padding-top:0" id="brands">
     <div class="container">
       <h2>Most valuable brands</h2>
-      <p class="sub">Top {brands.length} global brands by estimated value (Kantar BrandZ) — logo, country of origin and one-line profile.</p>
+      <p class="sub">Top {brands.length} global brands by estimated value (Kantar BrandZ) — name, logo, country of origin and one-line profile.</p>
       <div class="company-grid">
         {brands.map((b) => (
           <a class="company-card" href={b.wiki} target="_blank" rel="noopener">
@@ -109,7 +81,24 @@ const RANKINGS = [
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
+  <section class="section" style="padding-top:0" id="data">
+    <div class="container">
+      <h2>Markets &amp; companies by country</h2>
+      <p class="sub">Stock-market depth, listings, biggest-company & brand counts and financial-service usage — explore any indicator by country.</p>
+      <DataPanel indicators={panelIndicators} />
+      <div class="grid cols-3" style="margin-top:24px">
+        {slugs.map((s) => { const d = card(s); return (
+          <a class="card link" href={`${base}/dataset/${d.slug}`}>
+            <h3 style="font-size:15px">{d.title}</h3>
+            <p class="meta">{d.summary}</p>
+            <span class="pill">{d.source}</span>
+          </a>
+        ); })}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="rankings">
     <div class="container">
       <h2>Brand &amp; company rankings (external)</h2>
       <p class="sub">Published by commercial research firms; brand-value figures are proprietary, so we link out.</p>
