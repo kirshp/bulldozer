@@ -148,6 +148,11 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Indicator pictogram */
 .ind-ic { display: inline-block; margin-right: 7px; font-size: 0.95em; opacity: 0.9; }
 
+/* Explore section navigation */
+.explore-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; position: sticky; top: 60px; z-index: 20; background: var(--bg); padding: 10px 0; }
+.explore-nav .ghost-btn { margin: 0; text-decoration: none; }
+#explorer, #bivariate, #country, #compare { scroll-margin-top: 124px; }
+
 /* Country profile — indicator filter/sort controls */
 .ci-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .ci-controls input, .ci-controls select { background: var(--bg-elev); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 10px; font-size: 13px; }

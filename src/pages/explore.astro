@@ -12,8 +12,14 @@ const indicators = datasets.map((d) => ({
 }));
 ---
 <BaseLayout title="Explore" active="explore" description="Interactive explorer: pick an indicator, period and countries; view as bars, table or world map.">
-  <section class="section">
+  <section class="section" id="explorer">
     <div class="container">
+      <nav class="explore-nav">
+        <a class="ghost-btn" href="#explorer">🔍 Explorer</a>
+        <a class="ghost-btn" href="#bivariate">🗺️ Bivariate map</a>
+        <a class="ghost-btn" href="#country">🌍 Country profile</a>
+        <a class="ghost-btn" href="#compare">⚖️ Compare countries</a>
+      </nav>
       <span class="kicker">Interactive explorer</span>
       <h2>Explore the data</h2>
       <p class="sub">Pick an indicator, period and countries. Switch between bars, table and world map.</p>
@@ -30,7 +36,7 @@ const indicators = datasets.map((d) => ({
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
+  <section class="section" style="padding-top:0" id="country">
     <div class="container">
       <span class="kicker">Country profile</span>
       <h2>One country, every indicator</h2>
@@ -39,7 +45,7 @@ const indicators = datasets.map((d) => ({
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
+  <section class="section" style="padding-top:0" id="compare">
     <div class="container">
       <span class="kicker">Compare</span>
       <h2>Country vs country</h2>
