@@ -1,0 +1,101 @@
+---
+// Connected scatter — for each selected country, the path traced by two
+// indicators (X, Y) over time. Joins the two datasets on iso+year.
+export interface IndexItem { slug: string; title: string; unit: string; kind: string }
+interface Props { indicators: IndexItem[] }
+const { indicators } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const has = (s: string) => indicators.some((d) => d.slug === s);
+const config = {
+  base,
+  indicators: indicators.map((d) => ({ slug: d.slug, title: d.title, unit: d.unit })),
+  defX: has('imf-gdp-per-capita-ppp') ? 'imf-gdp-per-capita-ppp' : indicators[0]?.slug,
+  defY: has('whr-happiness') ? 'whr-happiness' : indicators[1]?.slug,
+  defIso: ['USA', 'CHN', 'DEU', 'IND', 'BRA', 'RUS'],
+};
+---
+<div class="cscatter">
+  <div class="controls">
+    <label>X (→)<select id="cs-x"></select></label>
+    <label>Y (↑)<select id="cs-y"></select></label>
+    <label>Add country<select id="cs-add"><option value="">＋ add…</option></select></label>
+  </div>
+  <span id="cs-chips" class="chips" style="display:flex; flex-wrap:wrap; gap:6px; margin:10px 0"></span>
+  <div class="bub-stage">
+    <svg id="cs-svg" viewBox="0 0 900 460" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Connected scatter"></svg>
+  </div>
+  <p class="sub" id="cs-note" style="margin-top:8px"></p>
+</div>
+<script type="application/json" id="cs-config" set:html={JSON.stringify(config)}></script>
+<script>
+  const cfg = JSON.parse(document.getElementById('cs-config').textContent);
+  const BASE = cfg.base;
+  const PAL = ['#fbbf24', '#508ce6', '#34d399', '#e0567b', '#a78bfa', '#22d3ee', '#f97316', '#94a3b8'];
+  const el = (id) => document.getElementById(id);
+  const svg = el('cs-svg');
+  const W = 900, H = 460, M = { l: 64, r: 24, t: 18, b: 44 };
+  const PW = W - M.l - M.r, PH = H - M.t - M.b;
+  const cache = new Map();
+  const state = { x: cfg.defX, y: cfg.defY, isos: cfg.defIso.slice() };
+  const titleOf = (s) => (cfg.indicators.find((d) => d.slug === s) || {}).title || s;
+  const fmt = (n) => Math.abs(n) >= 1000 ? n.toLocaleString('en-US', { maximumFractionDigits: 0 }) : n.toLocaleString('en-US', { maximumFractionDigits: 1 });
+
+  async function load(slug) {
+    if (cache.has(slug)) return cache.get(slug);
+    const ds = await (await fetch(`${BASE}/data/${slug}.json`)).json();
+    const byIso = new Map(); const names = new Map();
+    for (const o of ds.data) {
+      if (!o.iso || o.value == null) continue;
+      names.set(o.iso, o.entity);
+      let m = byIso.get(o.iso); if (!m) byIso.set(o.iso, m = new Map());
+      m.set(o.period, o.value);
+    }
+    const out = { byIso, names }; cache.set(slug, out); return out;
+  }
+
+  async function render() {
+    const [X, Y] = await Promise.all([load(state.x), load(state.y)]);
+    // add-country options
+    const opts = [...X.names.entries()].filter(([iso]) => Y.byIso.has(iso) && !state.isos.includes(iso)).sort((a, b) => a[1].localeCompare(b[1]));
+    el('cs-add').innerHTML = '<option value="">＋ add country…</option>' + opts.map(([iso, n]) => `<option value="${iso}">${n}</option>`).join('');
+    // build paths
+    const series = state.isos.map((iso, k) => {
+      const xs = X.byIso.get(iso), ys = Y.byIso.get(iso);
+      if (!xs || !ys) return null;
+      const years = [...xs.keys()].filter((p) => ys.has(p)).sort();
+      const pts = years.map((p) => ({ p, x: xs.get(p), y: ys.get(p) }));
+      return pts.length ? { iso, name: X.names.get(iso) || iso, color: PAL[k % PAL.length], pts } : null;
+    }).filter(Boolean);
+    const all = series.flatMap((s) => s.pts);
+    if (!all.length) { svg.innerHTML = '<text x="450" y="230" class="bub-axlbl" text-anchor="middle">No overlapping data</text>'; chips(series); return; }
+    const xd = [Math.min(...all.map((p) => p.x)), Math.max(...all.map((p) => p.x))];
+    const yd = [Math.min(...all.map((p) => p.y)), Math.max(...all.map((p) => p.y))];
+    const sx = (v) => M.l + (v - xd[0]) / ((xd[1] - xd[0]) || 1) * PW;
+    const sy = (v) => M.t + PH - (v - yd[0]) / ((yd[1] - yd[0]) || 1) * PH;
+    let g = '';
+    for (let i = 0; i <= 4; i++) { const vx = xd[0] + (xd[1] - xd[0]) * i / 4, x = sx(vx); g += `<line x1="${x}" y1="${M.t}" x2="${x}" y2="${M.t + PH}" class="bub-grid"/><text x="${x}" y="${H - 16}" class="bub-axt" text-anchor="middle">${fmt(vx)}</text>`;
+      const vy = yd[0] + (yd[1] - yd[0]) * i / 4, y = sy(vy); g += `<line x1="${M.l}" y1="${y}" x2="${M.l + PW}" y2="${y}" class="bub-grid"/><text x="${M.l - 8}" y="${y + 4}" class="bub-axt" text-anchor="end">${fmt(vy)}</text>`; }
+    g += `<text x="${M.l + PW / 2}" y="${H - 2}" class="bub-axlbl" text-anchor="middle">${titleOf(state.x)} →</text><text transform="translate(14 ${M.t + PH / 2}) rotate(-90)" class="bub-axlbl" text-anchor="middle">${titleOf(state.y)} →</text>`;
+    for (const s of series) {
+      const d = s.pts.map((p, i) => `${i ? 'L' : 'M'}${sx(p.x).toFixed(1)} ${sy(p.y).toFixed(1)}`).join(' ');
+      g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2" stroke-opacity="0.85"/>`;
+      g += s.pts.map((p, i) => `<circle cx="${sx(p.x).toFixed(1)}" cy="${sy(p.y).toFixed(1)}" r="${i === s.pts.length - 1 ? 4.5 : 2.5}" fill="${s.color}"><title>${s.name} ${p.p}: x ${fmt(p.x)}, y ${fmt(p.y)}</title></circle>`).join('');
+      const last = s.pts[s.pts.length - 1];
+      g += `<text x="${(sx(last.x) + 7).toFixed(1)}" y="${(sy(last.y) + 4).toFixed(1)}" class="bub-lbl" fill="${s.color}">${s.name}</text>`;
+    }
+    svg.innerHTML = g;
+    chips(series);
+    el('cs-note').textContent = `${series.length} countries · path = ${titleOf(state.x)} × ${titleOf(state.y)} over time (dot at each year, larger dot = latest).`;
+  }
+  function chips(series) {
+    el('cs-chips').innerHTML = series.map((s) => `<span class="chip" style="border-color:${s.color}">${s.name}<button data-rm="${s.iso}" aria-label="remove">×</button></span>`).join('');
+  }
+
+  el('cs-x').innerHTML = el('cs-y').innerHTML = cfg.indicators.map((d) => `<option value="${d.slug}">${d.title}</option>`).join('');
+  el('cs-x').value = state.x; el('cs-y').value = state.y;
+  el('cs-x').addEventListener('change', (e) => { state.x = e.target.value; render(); });
+  el('cs-y').addEventListener('change', (e) => { state.y = e.target.value; render(); });
+  el('cs-add').addEventListener('change', (e) => { if (e.target.value && !state.isos.includes(e.target.value)) { state.isos.push(e.target.value); render(); } });
+  el('cs-chips').addEventListener('click', (e) => { const iso = e.target.getAttribute('data-rm'); if (iso) { state.isos = state.isos.filter((x) => x !== iso); render(); } });
+  render();
+</script>

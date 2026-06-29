@@ -184,7 +184,7 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Explore section navigation */
 .explore-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; position: sticky; top: 60px; z-index: 20; background: var(--bg); padding: 10px 0; }
 .explore-nav .ghost-btn { margin: 0; text-decoration: none; }
-#explorer, #bivariate, #bubble, #correlation, #distribution, #heatmap, #country, #compare,
+#explorer, #bivariate, #bubble, #correlation, #distribution, #heatmap, #path, #country, #compare,
 #stories, #dashboards, #releases, #browse { scroll-margin-top: 124px; }
 
 /* Correlation matrix */

@@ -8,6 +8,7 @@ import BubbleChart from '@components/BubbleChart.astro';
 import CorrelationMatrix from '@components/CorrelationMatrix.astro';
 import SingleIndicatorViz from '@components/SingleIndicatorViz.astro';
 import CountryHeatmap from '@components/CountryHeatmap.astro';
+import ConnectedScatter from '@components/ConnectedScatter.astro';
 import { datasets } from '@data/datasets';
 
 const indicators = datasets.map((d) => ({
@@ -25,6 +26,7 @@ const indicators = datasets.map((d) => ({
         <a class="ghost-btn" href="#correlation">🔥 Correlations</a>
         <a class="ghost-btn" href="#distribution">📊 Distribution</a>
         <a class="ghost-btn" href="#heatmap">🌡️ Heatmap</a>
+        <a class="ghost-btn" href="#path">🛰️ Trajectories</a>
         <a class="ghost-btn" href="#country">🌍 Country profile</a>
         <a class="ghost-btn" href="#compare">⚖️ Compare countries</a>
       </nav>
@@ -77,6 +79,15 @@ const indicators = datasets.map((d) => ({
       <h2>Countries × indicators</h2>
       <p class="sub">A topic at a glance — every country’s strengths and weaknesses, cells coloured by global percentile.</p>
       <CountryHeatmap />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="path">
+    <div class="container">
+      <span class="kicker">Trajectories</span>
+      <h2>Where countries are heading</h2>
+      <p class="sub">A connected scatter — each country’s path through two indicators over time. Are they moving up-and-right, or sliding back?</p>
+      <ConnectedScatter indicators={indicators} />
     </div>
   </section>
 
