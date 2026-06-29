@@ -12,7 +12,7 @@ const indicators = datasets.map((d) => ({
 }));
 
 // Markets & companies — curated open, country-level market/financial indicators.
-const MARKET = ['wb-market-cap', 'wb-stocks-traded', 'wb-listed-companies'];
+const MARKET = ['forbes-global-2000', 'brandz-value', 'brandz-count', 'wb-market-cap', 'wb-stocks-traded', 'wb-listed-companies'];
 const FINANCE = ['wb-account-ownership', 'wb-digital-payments', 'wb-mobile-money', 'wb-debit-card', 'wb-bank-branches'];
 const marketSlugs = [...MARKET, ...FINANCE].filter((s) => getDataset(s));
 const card = (s: string) => { const d = getDataset(s)!; return { slug: d.slug, title: d.title, source: d.source, summary: d.summary }; };

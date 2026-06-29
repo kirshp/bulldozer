@@ -1,0 +1,402 @@
+{
+  "meta": {
+    "title": "Forbes Global 2000 Companies",
+    "valueLabel": "Companies in the Forbes Global 2000",
+    "unit": "count",
+    "changeMode": "pct",
+    "topic": "economy",
+    "summary": "Number of companies headquartered in each country that appear in the Forbes Global 2000 list of the world’s largest public companies (2023).",
+    "source": "Forbes Global 2000 (via Wikipedia)",
+    "license": "CC BY-SA (Wikipedia aggregate)",
+    "url": "https://www.forbes.com/lists/global2000/",
+    "parsedAt": "2026-06-29",
+    "kind": "macro"
+  },
+  "data": [
+    {
+      "entity": "United States",
+      "group": "Americas",
+      "period": "2023",
+      "value": 620,
+      "iso": "USA"
+    },
+    {
+      "entity": "China",
+      "group": "Asia",
+      "period": "2023",
+      "value": 298,
+      "iso": "CHN"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 192,
+      "iso": "JPN"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2023",
+      "value": 62,
+      "iso": "FRA"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2023",
+      "value": 61,
+      "iso": "KOR"
+    },
+    {
+      "entity": "United Kingdom",
+      "group": "Europe",
+      "period": "2023",
+      "value": 60,
+      "iso": "GBR"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2023",
+      "value": 57,
+      "iso": "CAN"
+    },
+    {
+      "entity": "India",
+      "group": "Asia",
+      "period": "2023",
+      "value": 55,
+      "iso": "IND"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2023",
+      "value": 50,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 45,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2023",
+      "value": 44,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 44,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2023",
+      "value": 32,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2023",
+      "value": 28,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2023",
+      "value": 25,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2023",
+      "value": 24,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2023",
+      "value": 22,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 22,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2023",
+      "value": 20,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Thailand",
+      "group": "Asia",
+      "period": "2023",
+      "value": 17,
+      "iso": "THA"
+    },
+    {
+      "entity": "United Arab Emirates",
+      "group": "Asia",
+      "period": "2023",
+      "value": 16,
+      "iso": "ARE"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2023",
+      "value": 14,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2023",
+      "value": 13,
+      "iso": "MEX"
+    },
+    {
+      "entity": "South Africa",
+      "group": "Africa",
+      "period": "2023",
+      "value": 12,
+      "iso": "ZAF"
+    },
+    {
+      "entity": "Israel",
+      "group": "Asia",
+      "period": "2023",
+      "value": 11,
+      "iso": "ISR"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2023",
+      "value": 10,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 10,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2023",
+      "value": 9,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2023",
+      "value": 9,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Turkey",
+      "group": "Europe",
+      "period": "2023",
+      "value": 9,
+      "iso": "TUR"
+    },
+    {
+      "entity": "Indonesia",
+      "group": "Asia",
+      "period": "2023",
+      "value": 8,
+      "iso": "IDN"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2023",
+      "value": 8,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2023",
+      "value": 8,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2023",
+      "value": 8,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 7,
+      "iso": "POL"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2023",
+      "value": 6,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Qatar",
+      "group": "Asia",
+      "period": "2023",
+      "value": 6,
+      "iso": "QAT"
+    },
+    {
+      "entity": "Luxembourg",
+      "group": "Europe",
+      "period": "2023",
+      "value": 6,
+      "iso": "LUX"
+    },
+    {
+      "entity": "Bermuda",
+      "group": "Americas",
+      "period": "2023",
+      "value": 6,
+      "iso": "BMU"
+    },
+    {
+      "entity": "Vietnam",
+      "group": "Asia",
+      "period": "2023",
+      "value": 5,
+      "iso": "VNM"
+    },
+    {
+      "entity": "Colombia",
+      "group": "Americas",
+      "period": "2023",
+      "value": 4,
+      "iso": "COL"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2023",
+      "value": 4,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2023",
+      "value": 4,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Kuwait",
+      "group": "Asia",
+      "period": "2023",
+      "value": 2,
+      "iso": "KWT"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2023",
+      "value": 2,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Cayman Islands",
+      "group": "Americas",
+      "period": "2023",
+      "value": 2,
+      "iso": "CYM"
+    },
+    {
+      "entity": "Kazakhstan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 2,
+      "iso": "KAZ"
+    },
+    {
+      "entity": "Morocco",
+      "group": "Africa",
+      "period": "2023",
+      "value": 2,
+      "iso": "MAR"
+    },
+    {
+      "entity": "Nigeria",
+      "group": "Africa",
+      "period": "2023",
+      "value": 2,
+      "iso": "NGA"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2023",
+      "value": 1,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2023",
+      "value": 1,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Uruguay",
+      "group": "Americas",
+      "period": "2023",
+      "value": 1,
+      "iso": "URY"
+    },
+    {
+      "entity": "Jordan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 1,
+      "iso": "JOR"
+    },
+    {
+      "entity": "Oman",
+      "group": "Asia",
+      "period": "2023",
+      "value": 1,
+      "iso": "OMN"
+    },
+    {
+      "entity": "Pakistan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 1,
+      "iso": "PAK"
+    }
+  ]
+}

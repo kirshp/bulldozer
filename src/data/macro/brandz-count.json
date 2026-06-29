@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "title": "Top Global Brands",
+    "valueLabel": "Brands in the BrandZ global ranking",
+    "unit": "count",
+    "changeMode": "pct",
+    "topic": "economy",
+    "summary": "Number of a country’s brands in Kantar BrandZ’s Most Valuable Global Brands ranking (2026).",
+    "source": "Kantar BrandZ (via Wikipedia)",
+    "license": "CC BY-SA (Wikipedia aggregate)",
+    "url": "https://www.kantar.com/campaigns/brandz",
+    "parsedAt": "2026-06-29",
+    "kind": "macro"
+  },
+  "data": [
+    {
+      "entity": "United States",
+      "group": "Americas",
+      "period": "2026",
+      "value": 62,
+      "iso": "USA"
+    },
+    {
+      "entity": "China",
+      "group": "Asia",
+      "period": "2026",
+      "value": 13,
+      "iso": "CHN"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2026",
+      "value": 4,
+      "iso": "DEU"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2026",
+      "value": 4,
+      "iso": "FRA"
+    },
+    {
+      "entity": "Saudi Arabia",
+      "group": "Asia",
+      "period": "2026",
+      "value": 1,
+      "iso": "SAU"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2026",
+      "value": 1,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2026",
+      "value": 2,
+      "iso": "CAN"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2026",
+      "value": 1,
+      "iso": "KOR"
+    },
+    {
+      "entity": "India",
+      "group": "Asia",
+      "period": "2026",
+      "value": 3,
+      "iso": "IND"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2026",
+      "value": 1,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2026",
+      "value": 1,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2026",
+      "value": 1,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2026",
+      "value": 1,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2026",
+      "value": 3,
+      "iso": "JPN"
+    },
+    {
+      "entity": "United Kingdom",
+      "group": "Europe",
+      "period": "2026",
+      "value": 1,
+      "iso": "GBR"
+    },
+    {
+      "entity": "Indonesia",
+      "group": "Asia",
+      "period": "2026",
+      "value": 1,
+      "iso": "IDN"
+    }
+  ]
+}

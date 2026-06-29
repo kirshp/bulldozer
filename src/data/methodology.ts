@@ -18,6 +18,10 @@ export function methodologyFor(slug: string): Methodology {
     return { vintage: 'Dimension matrix (2010)', method: 'Published national scores (0–100); a fixed model, not a time series.' };
   if (slug === 'wb-account-ownership' || slug === 'wb-debit-card' || slug === 'wb-digital-payments' || slug === 'wb-mobile-money')
     return { vintage: 'Global Findex 2021/2024', method: 'World Bank Findex survey; share of adults 15+; latest available year per country.' };
+  if (slug === 'forbes-global-2000')
+    return { vintage: 'Forbes Global 2000 — 2023 list', method: 'Count of a country’s companies in the Forbes Global 2000; aggregate parsed from Wikipedia, by HQ country.' };
+  if (slug.startsWith('brandz-'))
+    return { vintage: 'Kantar BrandZ — 2026 ranking', method: 'Country totals aggregated from the Kantar BrandZ Most Valuable Global Brands list (via Wikipedia), by brand HQ country. Brand values are Kantar estimates.' };
   if (slug.startsWith('who-'))
     return { method: 'WHO Global Health Observatory; latest available year per country (varies); both sexes, modelled estimates.' };
   if (slug.startsWith('wgm-'))
