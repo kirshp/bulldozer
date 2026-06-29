@@ -35,11 +35,42 @@ const browse = [
 <BaseLayout active="news" description="Marketing analytics & research — visual data stories and a world of public, parsed survey and macro data.">
   <section class="hero">
     <div class="container">
+      <div class="pwa-hint" id="pwa-hint" hidden>
+        <button type="button" class="pwa-chip" id="pwa-chip">📱 Add to your phone</button>
+        <div class="pwa-pop" id="pwa-pop" hidden>
+          <p><b>Install BullDozer as an app.</b> It opens from your home screen and works offline.</p>
+          <button type="button" class="ghost-btn" id="pwa-install" hidden style="margin:0 0 8px">Install now</button>
+          <p class="pwa-ios" hidden>On iPhone (Safari): tap <b>Share</b> ⬆️ → <b>Add to Home Screen</b>.</p>
+          <p class="pwa-other">On Android / desktop Chrome: open the <b>⋮ menu</b> → <b>Install app</b>.</p>
+        </div>
+      </div>
       <span class="kicker">Marketing Analytics &amp; Research</span>
       <h1>Move data like <span class="hl">heavy machinery.</span></h1>
       <p>Visual data stories and {datasets.length} public, parsed datasets — surveys, IMF & World Bank macro, democracy and wellbeing — every number sourced, every metric explained.</p>
     </div>
   </section>
+
+  <script>
+    (function () {
+      const hint = document.getElementById('pwa-hint');
+      if (!hint) return;
+      const standalone = matchMedia('(display-mode: standalone)').matches || (navigator).standalone;
+      if (standalone) return;                       // already installed
+      const chip = document.getElementById('pwa-chip');
+      const pop = document.getElementById('pwa-pop');
+      const installBtn = document.getElementById('pwa-install');
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      hint.querySelector('.pwa-ios').hidden = !isIOS;
+      hint.querySelector('.pwa-other').hidden = isIOS;
+      hint.hidden = false;
+      let deferred = null;
+      window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; installBtn.hidden = false; });
+      chip.addEventListener('click', () => { pop.hidden = !pop.hidden; });
+      installBtn.addEventListener('click', async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; installBtn.hidden = true; pop.hidden = true; });
+      document.addEventListener('click', (e) => { if (!hint.contains(e.target)) pop.hidden = true; });
+      window.addEventListener('appinstalled', () => { hint.hidden = true; });
+    })();
+  </script>
 
   <section class="section" id="stories">
     <div class="container">
