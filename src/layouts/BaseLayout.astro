@@ -10,9 +10,9 @@ const { title, description, active } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
   { id: 'news', label: 'News', href: `${base}/` },
-  { id: 'explore', label: 'Explore', href: `${base}/explore` },
+  { id: 'explore', label: 'Charts', href: `${base}/explore` },
   { id: 'macro', label: 'Macro', href: `${base}/macro` },
-  { id: 'markets', label: 'Markets', href: `${base}/markets` },
+  { id: 'markets', label: 'Firms', href: `${base}/markets` },
   { id: 'surveys', label: 'Polls', href: `${base}/surveys` },
   { id: 'geo', label: 'Geo', href: `${base}/geo` },
 ];

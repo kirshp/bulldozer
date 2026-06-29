@@ -16,7 +16,7 @@ const indicators = datasets.map((d) => ({
   changeMode: d.changeMode, periods: [...new Set(d.data.map((o) => o.period))].sort(),
 }));
 ---
-<BaseLayout title="Explore" active="explore" description="Interactive explorer: pick an indicator, period and countries; view as bars, table or world map.">
+<BaseLayout title="Charts" active="explore" description="Interactive explorer: pick an indicator, period and countries; view as bars, table or world map.">
   <section class="section" id="explorer">
     <div class="container">
       <nav class="explore-nav">
