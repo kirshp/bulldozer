@@ -1,0 +1,78 @@
+---
+// Custom index builder — weight several indicators into one composite score
+// (weighted mean of global percentiles) and rank countries by it.
+export interface IndexItem { slug: string; title: string; kind: string }
+interface Props { indicators: IndexItem[] }
+const { indicators } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const has = (s: string) => indicators.some((d) => d.slug === s);
+const PRESET = [
+  { slug: 'imf-gdp-growth', w: 1, invert: false },
+  { slug: 'wb-account-ownership', w: 1, invert: false },
+  { slug: 'gapminder-internet', w: 1, invert: false },
+  { slug: 'qog-ti-cpi', w: 1, invert: false },
+  { slug: 'imf-inflation', w: 1, invert: true },
+].filter((p) => has(p.slug));
+const config = { base, indicators: indicators.map((d) => ({ slug: d.slug, title: d.title })), preset: PRESET };
+---
+<div class="ixb">
+  <div class="ixb-rows" id="ixb-rows"></div>
+  <div class="ci-controls" style="margin-top:10px">
+    <label>Add indicator<select id="ixb-add"><option value="">＋ add…</option></select></label>
+  </div>
+  <h3 style="margin-top:22px">Your index — top countries</h3>
+  <div class="bars" id="ixb-bars"></div>
+  <p class="sub" id="ixb-note" style="margin-top:8px"></p>
+</div>
+<script type="application/json" id="ixb-config" set:html={JSON.stringify(config)}></script>
+<script>
+  const cfg = JSON.parse(document.getElementById('ixb-config').textContent);
+  const el = (id) => document.getElementById(id);
+  const titleOf = (s) => (cfg.indicators.find((d) => d.slug === s) || {}).title || s;
+  let countries = [];
+  let rows = cfg.preset.map((p) => ({ ...p }));
+
+  const perc = (it) => it.total > 1 ? (it.total - it.rank) / (it.total - 1) : 0.5;
+
+  function renderRows() {
+    el('ixb-rows').innerHTML = rows.map((r, i) => `
+      <div class="ixb-row">
+        <span class="ixb-name">${titleOf(r.slug)}</span>
+        <label class="ixb-w">weight <input type="range" min="0" max="3" step="0.5" value="${r.w}" data-i="${i}" class="ixb-weight"><b>${r.w}×</b></label>
+        <label class="ixb-inv"><input type="checkbox" data-i="${i}" class="ixb-invert" ${r.invert ? 'checked' : ''}> lower is better</label>
+        <button type="button" class="ixb-rm" data-i="${i}" aria-label="remove">×</button>
+      </div>`).join('');
+    el('ixb-add').innerHTML = '<option value="">＋ add indicator…</option>' +
+      cfg.indicators.filter((d) => !rows.some((r) => r.slug === d.slug)).map((d) => `<option value="${d.slug}">${d.title}</option>`).join('');
+  }
+
+  function compute() {
+    const active = rows.filter((r) => r.w > 0);
+    const scored = [];
+    for (const c of countries) {
+      let sum = 0, wsum = 0;
+      const byslug = new Map(c.items.map((it) => [it.slug, it]));
+      for (const r of active) { const it = byslug.get(r.slug); if (!it) continue; let p = perc(it); if (r.invert) p = 1 - p; sum += p * r.w; wsum += r.w; }
+      if (wsum > 0 && byslug.size) scored.push({ c, score: sum / wsum, cover: active.filter((r) => byslug.has(r.slug)).length });
+    }
+    // require coverage of most chosen indicators
+    const need = Math.max(1, Math.ceil(active.length * 0.6));
+    const ranked = scored.filter((x) => x.cover >= need).sort((a, b) => b.score - a.score);
+    const top = ranked.slice(0, 15);
+    const max = Math.max(0.01, ...top.map((x) => x.score));
+    el('ixb-bars').innerHTML = top.map((x, i) => {
+      const v = Math.round(x.score * 100);
+      return `<div class="bar-row"><span>#${i + 1} ${x.c.name}</span><span class="bar-track"><span class="bar-fill co-bar" style="width:${Math.round(x.score / max * 100)}%"></span></span><span class="bar-val">${v}</span></div>`;
+    }).join('') || '<p class="sub">Add an indicator to build your index.</p>';
+    el('ixb-note').textContent = active.length ? `Composite score 0–100 = weighted mean of global percentiles across ${active.length} indicator${active.length > 1 ? 's' : ''}. ${ranked.length} countries ranked.` : '';
+  }
+
+  function refresh() { renderRows(); compute(); }
+
+  el('ixb-rows').addEventListener('input', (e) => { const i = +e.target.dataset.i; if (e.target.classList.contains('ixb-weight')) { rows[i].w = +e.target.value; e.target.nextElementSibling.textContent = rows[i].w + '×'; compute(); } });
+  el('ixb-rows').addEventListener('change', (e) => { const i = +e.target.dataset.i; if (e.target.classList.contains('ixb-invert')) { rows[i].invert = e.target.checked; compute(); } });
+  el('ixb-rows').addEventListener('click', (e) => { if (e.target.classList.contains('ixb-rm')) { rows.splice(+e.target.dataset.i, 1); refresh(); } });
+  el('ixb-add').addEventListener('change', (e) => { if (e.target.value) { rows.push({ slug: e.target.value, w: 1, invert: false }); refresh(); } });
+
+  fetch(`${cfg.base}/data/country-index.json`).then((r) => r.json()).then((d) => { countries = d; refresh(); });
+</script>

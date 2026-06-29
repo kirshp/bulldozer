@@ -7,6 +7,7 @@ import CorrelationMatrix from '@components/CorrelationMatrix.astro';
 import SingleIndicatorViz from '@components/SingleIndicatorViz.astro';
 import CountryHeatmap from '@components/CountryHeatmap.astro';
 import ConnectedScatter from '@components/ConnectedScatter.astro';
+import IndexBuilder from '@components/IndexBuilder.astro';
 import { datasets } from '@data/datasets';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -26,6 +27,7 @@ const indicators = datasets.map((d) => ({
         <a class="ghost-btn" href="#distribution">📊 Distribution</a>
         <a class="ghost-btn" href="#heatmap">🌡️ Heatmap</a>
         <a class="ghost-btn" href="#path">🛰️ Trajectories</a>
+        <a class="ghost-btn" href="#index">🏗️ Index builder</a>
         <a class="ghost-btn" href={`${base}/geo`}>🌍 Geo →</a>
       </nav>
       <span class="kicker">Interactive explorer</span>
@@ -86,6 +88,15 @@ const indicators = datasets.map((d) => ({
       <h2>Where countries are heading</h2>
       <p class="sub">A connected scatter — each country’s path through two indicators over time. Are they moving up-and-right, or sliding back?</p>
       <ConnectedScatter indicators={indicators} />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="index">
+    <div class="container">
+      <span class="kicker">Index builder</span>
+      <h2>Build your own index</h2>
+      <p class="sub">Weight any indicators into one composite score (a weighted mean of global percentiles) and rank countries — e.g. a “market attractiveness” index. Tick “lower is better” for things like inflation.</p>
+      <IndexBuilder indicators={indicators} />
     </div>
   </section>
 

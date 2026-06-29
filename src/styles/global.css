@@ -184,7 +184,7 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Explore section navigation */
 .explore-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; position: sticky; top: 60px; z-index: 20; background: var(--bg); padding: 10px 0; }
 .explore-nav .ghost-btn { margin: 0; text-decoration: none; }
-#explorer, #bivariate, #bubble, #correlation, #distribution, #heatmap, #path, #country, #similar, #compare,
+#explorer, #bivariate, #bubble, #correlation, #distribution, #heatmap, #path, #index, #country, #similar, #compare,
 #stories, #dashboards, #releases, #browse { scroll-margin-top: 124px; }
 
 /* Correlation matrix */
@@ -195,6 +195,15 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .corr-col { height: 96px; vertical-align: bottom; }
 .corr-col span { display: inline-block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; color: var(--text); }
 .corr-cell { width: 40px; height: 32px; text-align: center; border: 1px solid var(--bg); font-variant-numeric: tabular-nums; }
+
+/* Index builder */
+.ixb-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 8px 10px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; }
+.ixb-name { flex: 1; min-width: 140px; color: var(--text); font-size: 14px; }
+.ixb-w, .ixb-inv { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-dim); }
+.ixb-w input { accent-color: var(--accent); }
+.ixb-w b { color: var(--text); min-width: 26px; }
+.ixb-rm { background: none; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer; }
+.ixb-rm:hover { color: var(--accent); }
 
 /* Similar countries */
 .simc-list { display: flex; flex-direction: column; gap: 6px; }
