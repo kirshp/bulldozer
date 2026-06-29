@@ -57,12 +57,19 @@ a:hover { text-decoration: underline; }
 .nav a { color: var(--text-dim); font-size: 16px; font-weight: 500; }
 .nav a:hover, .nav a.active { color: var(--text); text-decoration: none; }
 @media (max-width: 560px) {
-  .site-header .container { gap: 10px; padding: 0 12px; }
-  .brand { gap: 7px; }
+  .site-header .container { gap: 8px; padding: 0 10px; }
+  .brand { gap: 6px; flex: 0 0 auto; }
   .brand .mark { width: 22px; height: 22px; font-size: 13px; }
-  .brand .name { font-size: 14px; }
-  .nav { gap: 15px; }
-  .nav a { font-size: 13px; white-space: nowrap; }
+  .brand .name { font-size: 13px; }
+  /* nav scrolls horizontally so nothing is cut off; thin dividers keep items distinct */
+  .nav { gap: 0; margin-left: auto; flex: 1 1 auto; min-width: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { font-size: 12px; white-space: nowrap; padding: 0 7px; }
+  .nav a + a { border-left: 1px solid var(--border); }
+}
+/* On the narrowest phones, drop the wordmark (keep the logo) so all 6 menu items fit */
+@media (max-width: 400px) {
+  .brand .name { display: none; }
 }
 
 /* Hero */
