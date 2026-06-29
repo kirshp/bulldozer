@@ -1,0 +1,60 @@
+---
+// "Markets like X" — nearest-neighbour countries by global percentile across
+// every shared indicator. Pure analysis over the country-index data.
+import isoAlpha2 from '@data/iso-alpha2.json';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const config = { base };
+---
+<div class="simc">
+  <div class="controls">
+    <label>Country<select id="simc-sel"><option>Loading…</option></select></label>
+  </div>
+  <div id="simc-list" class="simc-list" style="margin-top:12px"></div>
+  <p class="sub" id="simc-note" style="margin-top:8px"></p>
+</div>
+<script type="application/json" id="simc-config" set:html={JSON.stringify(config)}></script>
+<script type="application/json" id="simc-a2" set:html={JSON.stringify(isoAlpha2)}></script>
+<script>
+  const cfg = JSON.parse(document.getElementById('simc-config').textContent);
+  const A2 = JSON.parse(document.getElementById('simc-a2').textContent);
+  const flag = (iso) => { const a2 = iso && A2[iso.toUpperCase()]; return a2 ? String.fromCodePoint(...[...a2].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) + ' ' : ''; };
+  const el = (id) => document.getElementById(id);
+  const sel = el('simc-sel');
+  let countries = [];
+  const perc = (it) => it.total > 1 ? (it.total - it.rank) / (it.total - 1) : 0.5;
+  const vecOf = (c) => new Map(c.items.map((it) => [it.slug, perc(it)]));
+
+  function render() {
+    const me = countries.find((c) => c.iso === sel.value); if (!me) return;
+    const mv = vecOf(me);
+    const scored = [];
+    for (const c of countries) {
+      if (c.iso === me.iso) continue;
+      const cv = vecOf(c);
+      let sum = 0, n = 0;
+      for (const [s, p] of mv) if (cv.has(s)) { const d = p - cv.get(s); sum += d * d; n++; }
+      if (n < 8) continue;
+      const rmsd = Math.sqrt(sum / n);
+      scored.push({ c, sim: Math.max(0, 1 - rmsd), n });
+    }
+    scored.sort((a, b) => b.sim - a.sim);
+    const top = scored.slice(0, 8);
+    el('simc-list').innerHTML = top.map((x) => {
+      const w = Math.round(x.sim * 100);
+      return `<a class="simc-row" href="${cfg.base}/geo?c=${x.c.iso}#country">
+        <span class="simc-name">${flag(x.c.iso)}${x.c.name}</span>
+        <span class="bar-track"><span class="bar-fill co-bar" style="width:${w}%"></span></span>
+        <span class="bar-val">${w}% match · ${x.c.region}</span></a>`;
+    }).join('');
+    el('simc-note').textContent = `Most similar to ${me.name} across ${mv.size} indicators — by global percentile (100% = identical profile). Click a country to open its profile.`;
+  }
+
+  fetch(`${cfg.base}/data/country-index.json`).then((r) => r.json()).then((d) => {
+    countries = d.filter((c) => c.items.length >= 10);
+    sel.innerHTML = countries.map((c) => `<option value="${c.iso}">${flag(c.iso)}${c.name}</option>`).join('');
+    const want = new URLSearchParams(location.search).get('sim');
+    sel.value = (want && countries.some((c) => c.iso === want)) ? want : (countries.find((c) => c.iso === 'DEU') || countries[0]).iso;
+    render();
+  });
+  sel.addEventListener('change', render);
+</script>

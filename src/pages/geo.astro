@@ -2,18 +2,29 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CountryPanel from '@components/CountryPanel.astro';
 import CompareCountries from '@components/CompareCountries.astro';
+import SimilarCountries from '@components/SimilarCountries.astro';
 ---
 <BaseLayout title="Geo" active="geo" description="Country profiles and side-by-side country comparison across every indicator.">
   <section class="section" id="country">
     <div class="container">
       <nav class="explore-nav">
         <a class="ghost-btn" href="#country">🌍 Country profile</a>
+        <a class="ghost-btn" href="#similar">🧬 Similar countries</a>
         <a class="ghost-btn" href="#compare">⚖️ Compare countries</a>
       </nav>
       <span class="kicker">Geo</span>
       <h2>One country, every indicator</h2>
       <p class="sub">Pick a country to see all its statistics and where it ranks — highlighted on the map, with a downloadable CSV.</p>
       <CountryPanel />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="similar">
+    <div class="container">
+      <span class="kicker">Similar countries</span>
+      <h2>Markets like this one</h2>
+      <p class="sub">The countries with the most similar profile across every shared indicator — by global percentile. Handy for picking comparable markets.</p>
+      <SimilarCountries />
     </div>
   </section>
 
