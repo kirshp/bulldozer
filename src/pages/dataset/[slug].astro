@@ -49,8 +49,27 @@ const panelIndicator = [{
 }];
 const backHref = ds.kind === 'survey' ? `${base}/surveys` : `${base}/macro`;
 const active = ds.kind === 'survey' ? 'surveys' : 'macro';
+const dsPeriods = [...new Set(ds.data.map((o) => o.period))].sort();
+// schema.org/Dataset — indexed by Google Dataset Search.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: ds.title,
+  description: ds.summary,
+  url: `https://shpara.com${base}/dataset/${ds.slug}`,
+  license: ds.license,
+  creator: { '@type': 'Organization', name: ds.source, url: ds.url },
+  temporalCoverage: dsPeriods.length > 1 ? `${dsPeriods[0]}/${dsPeriods.at(-1)}` : dsPeriods[0],
+  variableMeasured: ds.valueLabel,
+  distribution: [{
+    '@type': 'DataDownload',
+    encodingFormat: 'text/csv',
+    contentUrl: `https://shpara.com${base}/data/${ds.slug}.csv`,
+  }],
+};
 ---
-<BaseLayout title={ds.title} description={ds.summary} active={active}>
+<BaseLayout title={ds.title} description={ds.summary} active={active} ogPath={`/og/${ds.slug}.png`}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <section class="section">
     <div class="container">
       <a class="back-link" href={backHref}>← {ds.kind === 'survey' ? 'Polls' : 'Macro'}</a>

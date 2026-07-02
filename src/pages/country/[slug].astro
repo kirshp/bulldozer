@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { buildCountryIndex, countrySlug, similarCountries } from '@lib/countryIndex';
+import { flagFor } from '@lib/flags';
+import { TOPICS, TOPIC_ORDER } from '@lib/topics';
+
+export function getStaticPaths() {
+  return buildCountryIndex().map((c) => ({ params: { slug: countrySlug(c.name) }, props: { iso: c.iso } }));
+}
+
+const { iso } = Astro.props;
+const all = buildCountryIndex();
+const c = all.find((x) => x.iso === iso)!;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const flag = flagFor(c.iso);
+
+const fmt = (v: number, unit: string) =>
+  `${v.toLocaleString('en-US', { maximumFractionDigits: 1 })}${unit && unit.includes('%') ? '%' : ''}`;
+const find = (slug: string) => c.items.find((i) => i.slug === slug);
+
+// Headline stats — same recipe as the interactive Geo panel.
+const gdp = find('imf-gdp-per-capita-ppp') || find('imf-gdp-per-capita');
+const life = find('gapminder-life-expectancy');
+const happy = find('whr-happiness');
+const dem = find('v-dem-v2x-libdem');
+const headline = [
+  gdp && { label: 'GDP per capita (PPP)', value: `$${Math.round(gdp.value).toLocaleString()}`, rank: gdp },
+  life && { label: 'Life expectancy', value: `${life.value.toFixed(1)} yrs`, rank: life },
+  happy && { label: 'Happiness score', value: happy.value.toFixed(2), rank: happy },
+  dem && { label: 'Liberal democracy', value: dem.value.toFixed(2), rank: dem },
+].filter(Boolean) as { label: string; value: string; rank: { rank: number; total: number } }[];
+
+const similar = similarCountries(c, all, 5);
+const byTopic = TOPIC_ORDER.map((id) => ({
+  id, label: TOPICS[id].label, icon: TOPICS[id].icon,
+  items: c.items.filter((it) => it.topic === id).sort((a, b) => a.title.localeCompare(b.title)),
+})).filter((t) => t.items.length);
+
+const desc = `${c.name} — ${c.items.length} indicators with world ranks: ${
+  headline.map((h) => `${h.label.toLowerCase()} ${h.value} (#${h.rank.rank} of ${h.rank.total})`).join(', ')
+}. Data from IMF, World Bank, Gapminder, WHR, V-Dem and more.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Place',
+  name: c.name,
+  url: `https://shpara.com${base}/country/${countrySlug(c.name)}`,
+  description: desc,
+};
+---
+<BaseLayout title={`${c.name} — country data profile`} description={desc} active="geo">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <section class="section">
+    <div class="container">
+      <a class="back-link" href={`${base}/country`}>← All countries</a>
+      <span class="kicker">{c.region || 'Country profile'}</span>
+      <h2>{flag} {c.name}</h2>
+      <p class="sub">
+        Every statistic we track for {c.name} — {c.items.length} indicators, each with its latest value and world rank.
+        <a href={`${base}/geo?c=${c.iso}`}>Open the interactive profile →</a>
+      </p>
+
+      {headline.length > 0 && (
+        <div class="grid cols-4" style="margin:14px 0 6px">
+          {headline.map((h) => (
+            <div class="card">
+              <p class="meta" style="margin:0">{h.label}</p>
+              <h3 style="margin:4px 0 2px">{h.value}</h3>
+              <p class="meta" style="margin:0">#{h.rank.rank} of {h.rank.total}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {similar.length > 0 && (
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <h2 style="font-size:18px">Most similar countries</h2>
+        <p class="sub">By profile across every shared indicator (global percentiles).</p>
+        <p style="display:flex; gap:10px; flex-wrap:wrap">
+          {similar.map((s) => (
+            <a class="ghost-btn" style="margin:0; text-decoration:none" href={`${base}/country/${countrySlug(s.c.name)}`}>
+              {flagFor(s.c.iso)} {s.c.name} · {Math.round(s.match * 100)}%
+            </a>
+          ))}
+        </p>
+      </div>
+    </section>
+  )}
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2 style="font-size:18px">All indicators</h2>
+      {byTopic.map((t) => (
+        <div>
+          <h3 style="font-size:13px;margin:18px 0 6px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">{t.icon} {t.label}</h3>
+          <table class="data">
+            <tbody>
+              {t.items.map((it) => (
+                <tr>
+                  <td><a href={`${base}/dataset/${it.slug}`}>{it.title}</a></td>
+                  <td class="num">{fmt(it.value, it.unit)}</td>
+                  <td class="num" style="color:var(--text-dim)">#{it.rank}/{it.total}</td>
+                  <td class="num" style="color:var(--text-dim)">{it.period}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
+      <p class="sub" style="margin-top:14px">
+        Latest available period per indicator; rank is the country's position among all countries with data.
+        Sources are credited on each indicator page.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

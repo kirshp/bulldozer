@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { buildCountryIndex, countrySlug } from '@lib/countryIndex';
+import { flagFor } from '@lib/flags';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const all = buildCountryIndex();
+
+// Group by region, regions with most countries first.
+const regions = [...new Set(all.map((c) => c.region || 'Other'))]
+  .map((r) => ({ region: r, countries: all.filter((c) => (c.region || 'Other') === r) }))
+  .sort((a, b) => b.countries.length - a.countries.length);
+
+const desc = `Data profiles for ${all.length} countries — every indicator we track with latest values and world ranks. IMF, World Bank, Gapminder, WHR, V-Dem and more.`;
+---
+<BaseLayout title="All countries — data profiles" description={desc} active="geo">
+  <section class="section">
+    <div class="container">
+      <span class="kicker">Geo</span>
+      <h2>All countries</h2>
+      <p class="page-tagline">Take the data by the horns.</p>
+      <p class="sub">
+        {all.length} country profiles — every indicator with its latest value and world rank.
+        Prefer it interactive? <a href={`${base}/geo`}>Open the Geo explorer →</a>
+      </p>
+      {regions.map((r) => (
+        <div>
+          <h3 style="font-size:13px;margin:18px 0 8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">{r.region} · {r.countries.length}</h3>
+          <p style="display:flex; gap:8px; flex-wrap:wrap; margin:0">
+            {r.countries.map((c) => (
+              <a class="ghost-btn" style="margin:0; text-decoration:none" href={`${base}/country/${countrySlug(c.name)}`}>{flagFor(c.iso)} {c.name}</a>
+            ))}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

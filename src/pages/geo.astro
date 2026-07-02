@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CountryPanel from '@components/CountryPanel.astro';
 import CompareCountries from '@components/CompareCountries.astro';
 import SimilarCountries from '@components/SimilarCountries.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <BaseLayout title="Geo" active="geo">
   <section class="section" id="country">
@@ -15,7 +16,7 @@ import SimilarCountries from '@components/SimilarCountries.astro';
       <span class="kicker">Geo</span>
       <h2>One country, every indicator</h2>
       <p class="page-tagline">Take the data by the horns.</p>
-      <p class="sub">Pick a country to see all its statistics and where it ranks — highlighted on the map, with a downloadable CSV.</p>
+      <p class="sub">Pick a country to see all its statistics and where it ranks — highlighted on the map, with a downloadable CSV. Or <a href={`${base}/country`}>browse the static profiles of all countries →</a></p>
       <CountryPanel />
     </div>
   </section>
