@@ -14,6 +14,8 @@ export interface Source {
   category: string;
   /** substring matched against dataset `source` to count live datasets */
   match?: string;
+  /** file name (no .html) of a detailed results dashboard in /public/dashboards */
+  dash?: string;
 }
 
 export const sources: Source[] = [
@@ -34,25 +36,25 @@ export const sources: Source[] = [
     description: 'Open research and data on development, health, energy, education and more — schooling, poverty, electricity, renewables, military spending and beyond.' },
 
   // ── Governance & democracy ─────────────────────────────────────────
-  { name: 'V-Dem — Varieties of Democracy', url: 'https://www.v-dem.net/data/the-v-dem-dataset/', status: 'live', category: 'Governance & democracy', match: 'V-Dem',
+  { name: 'V-Dem — Varieties of Democracy', url: 'https://www.v-dem.net/data/the-v-dem-dataset/', status: 'live', category: 'Governance & democracy', match: 'V-Dem', dash: 'vdem',
     description: 'Expert-coded indices of electoral, liberal, participatory, deliberative and egalitarian democracy, 1900–present.' },
-  { name: 'Quality of Government (QoG)', url: 'https://www.gu.se/en/quality-government/qog-data', status: 'live', category: 'Governance & democracy', match: 'Quality of Government',
+  { name: 'Quality of Government (QoG)', url: 'https://www.gu.se/en/quality-government/qog-data', status: 'live', category: 'Governance & democracy', match: 'Quality of Government', dash: 'qog',
     description: 'University of Gothenburg compilation harmonising governance, corruption, rule-of-law and institutional indicators.' },
 
   // ── Wellbeing & values ─────────────────────────────────────────────
-  { name: 'World Happiness Report', url: 'https://worldhappiness.report/', status: 'live', category: 'Wellbeing & values', match: 'World Happiness Report',
+  { name: 'World Happiness Report', url: 'https://worldhappiness.report/', status: 'live', category: 'Wellbeing & values', match: 'World Happiness Report', dash: 'whr',
     description: 'Cantril-ladder life evaluations from the Gallup World Poll, plus the six factors that explain happiness.' },
-  { name: 'Gapminder', url: 'https://www.gapminder.org/data/', status: 'live', category: 'Wellbeing & values', match: 'Gapminder',
+  { name: 'Gapminder', url: 'https://www.gapminder.org/data/', status: 'live', category: 'Wellbeing & values', match: 'Gapminder', dash: 'gapminder',
     description: 'Curated long-run development indicators — income, health, education, demography — harmonised for every country.' },
-  { name: 'World Values Survey (WVS)', url: 'https://www.worldvaluessurvey.org/', status: 'live', category: 'Wellbeing & values', match: 'World Values Survey',
+  { name: 'World Values Survey (WVS)', url: 'https://www.worldvaluessurvey.org/', status: 'live', category: 'Wellbeing & values', match: 'World Values Survey', dash: 'wvs',
     description: 'Global survey of values across ~100 societies. We aggregated Wave 7 into the Inglehart-Welzel cultural dimensions (secular & self-expression values).' },
   { name: 'Hofstede cultural dimensions', url: 'https://geerthofstede.com/research-and-vsm/dimension-data-matrix/', status: 'live', category: 'Wellbeing & values', match: 'Hofstede',
     description: 'Geert Hofstede’s six (here five) dimensions of national culture — power distance, individualism, masculinity, uncertainty avoidance and long-term orientation.' },
   { name: 'European Values Study (EVS)', url: 'https://europeanvaluesstudy.eu/', status: 'catalog', category: 'Wellbeing & values',
     description: 'Large-scale, repeated survey of human values across Europe; integrated dataset available via GESIS.' },
-  { name: 'Wellcome Global Monitor', url: 'https://wellcome.org/reports/wellcome-global-monitor', status: 'catalog', category: 'Wellbeing & values',
+  { name: 'Wellcome Global Monitor', url: 'https://wellcome.org/reports/wellcome-global-monitor', status: 'catalog', category: 'Wellbeing & values', dash: 'wellcome',
     description: 'Gallup study of how people worldwide think and feel about science and health; full crosstabs collected.' },
-  { name: 'World Risk Poll', url: 'https://wrp.lrfoundation.org.uk/', status: 'live', category: 'Risk & resilience', match: 'World Risk Poll',
+  { name: 'World Risk Poll', url: 'https://wrp.lrfoundation.org.uk/', status: 'live', category: 'Risk & resilience', match: 'World Risk Poll', dash: 'wrp',
     description: 'Lloyd’s Register Foundation / Gallup global study of how people experience and cope with risk — the Resilience Index.' },
   { name: 'WorldRiskIndex', url: 'https://weltrisikobericht.de/en/', status: 'live', category: 'Risk & resilience', match: 'WorldRiskIndex',
     description: 'IFHV / Bündnis Entwicklung Hilft model of disaster risk from extreme natural events and climate change — exposure × vulnerability.' },
@@ -66,7 +68,7 @@ export const sources: Source[] = [
     description: 'Rigorous biennial survey of attitudes across Europe. We aggregated trust in people and satisfaction with democracy.' },
   { name: 'ISSP — International Social Survey Programme', url: 'https://issp.org/', status: 'catalog', category: 'Public opinion barometers',
     description: 'Annual cross-national survey on rotating social-science themes (role of government, religion, work…).' },
-  { name: 'Afrobarometer', url: 'https://www.afrobarometer.org/', status: 'live', category: 'Public opinion barometers', match: 'Afrobarometer',
+  { name: 'Afrobarometer', url: 'https://www.afrobarometer.org/', status: 'live', category: 'Public opinion barometers', match: 'Afrobarometer', dash: 'afrobarometer',
     description: 'Pan-African survey of attitudes on democracy, governance and quality of life. We aggregated Round 9 (39 countries): support for democracy, trust, perceived democracy.' },
   { name: 'Arab Barometer', url: 'https://www.arabbarometer.org/', status: 'catalog', category: 'Public opinion barometers',
     description: 'Public opinion across the Middle East and North Africa on politics, economy and society.' },
@@ -74,7 +76,7 @@ export const sources: Source[] = [
     description: 'Annual household survey for Armenia, Azerbaijan and Georgia from the Caucasus Research Resource Centers.' },
   { name: 'EBRD — Life in Transition Survey (LiTS)', url: 'https://www.ebrd.com/what-we-do/economic-research-and-data/data/lits.html', status: 'live', category: 'Public opinion barometers', match: 'EBRD — Life in Transition',
     description: 'Attitudes to transition, markets and democracy across Central/Eastern Europe and Central Asia. Trust, risk tolerance, religion and more.' },
-  { name: 'SDR — Survey Data Recycling', url: 'https://dataharmonization.org/', status: 'catalog', category: 'Public opinion barometers',
+  { name: 'SDR — Survey Data Recycling', url: 'https://dataharmonization.org/', status: 'catalog', category: 'Public opinion barometers', dash: 'sdr2',
     description: 'Large harmonised ex-post integration of international survey projects; SDR2 master file gathered.' },
 
   // ── Health & demography ────────────────────────────────────────────
