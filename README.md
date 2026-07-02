@@ -1,105 +1,87 @@
-# BullDozer
+# BullDozer 🚜
 
-Marketing analytics & research platform, built on the **Madeira Ativa** analytics engine.
-Served at **https://shpara.com/bulldozer** (Astro static build, `base: /bulldozer`).
+**Bulldoze the noise. Mine the signal.**
 
-> Only **public, parsed** data. Every dataset carries its source, licence, unit and parse date.
+Marketing analytics & research site: **136 public, parsed datasets** — surveys, IMF & World Bank macro, markets and people. Every number sourced.
 
-## Sections
+**Live: [shpara.com/bulldozer](https://shpara.com/bulldozer)**
 
-| Section | Route | What |
-|---|---|---|
-| Surveys | `/bulldozer/surveys` | Parsed public opinion & market surveys (Eurobarometer, Gallup …) |
-| Macro | `/bulldozer/macro` | IMF / World Bank indicators from open APIs |
-| Glossary | `/bulldozer/glossary` | Plain-language explanations of every metric |
-| Dashboard | `/bulldozer/dataset/<slug>` | KPIs, leaders, movers, group rollups per dataset |
+![BullDozer](public/og.png)
+
+## What's inside
+
+| Section | What |
+|---|---|
+| [News](https://shpara.com/bulldozer) | Data stories, dashboards and release notes |
+| [Charts](https://shpara.com/bulldozer/explore) | Interactive explorer: bubble, correlations, beeswarm, heatmap, trajectories, index builder |
+| [Macro](https://shpara.com/bulldozer/macro) | 47 objective indicators — IMF WEO, World Bank WDI, OECD, BIS, WHO, OWID |
+| [Firms](https://shpara.com/bulldozer/markets) | Largest companies & most valuable brands with directories and metric switchers |
+| [Polls](https://shpara.com/bulldozer/surveys) | 89 opinion datasets — WVS, WHR, V-Dem, Afrobarometer, ESS, Hofstede and more |
+| [Geo](https://shpara.com/bulldozer/geo) | Country profiles, similar-country matching, side-by-side comparison |
+
+Plus **231 static country profiles** ([/country](https://shpara.com/bulldozer/country)), per-dataset dashboards with KPIs / movers / maps / trends, downloadable CSVs, a glossary, and detailed source-level results dashboards.
+
+## Highlights
+
+- **Rosling bubble chart** — income × life expectancy × population, animated 1800→2020 (Gapminder long series, 40k+ observations)
+- **Correlation matrix** — Pearson r across 15 curated indicators
+- **Composite index builder** — weight indicators into your own country ranking, live re-ranking
+- **Similar countries** — nearest-neighbour matching on global percentile profiles
+- **Country heatmap** — percentile grid with topic/region/search filters
+- **Cultural map of the world** — Inglehart-Welzel dimensions from WVS Wave 7
+- Every dataset page ships **schema.org/Dataset JSON-LD**, its own **OG image** and a **CSV download**
+
+## Principles
+
+1. **Only public data.** Cross-country surveys and open statistical sources; no proprietary or internal data — ever.
+2. **Every number sourced.** Each dataset carries source, licence, URL, unit and parse date, surfaced in the UI.
+3. **No client framework.** Astro static build; interactivity is hand-written browser JS. 380+ pages, fast everywhere.
 
 ## Architecture
 
 ```
 src/
-  lib/analytics.ts   # generic port of Madeira data_processor.py
-                     # KPI, top movers, group rollups, period-over-period trends
-  lib/format.ts      # number / percent formatting
   data/
-    datasets.ts      # registry — every dataset + provenance metadata
-    surveys/*.json    macro/*.json   # normalised observations
-    glossary.ts      # metric definitions
-  components/        # KpiRow, BarList, MoversTable, Provenance
-  pages/             # index, surveys/, macro/, glossary/, dataset/[slug]
-scripts/fetch_imf.mjs # pulls real IMF DataMapper data (no API key)
+    datasets.ts        # auto-registry: import.meta.glob over surveys/*.json + macro/*.json
+    surveys/  macro/    # normalised observations { meta: provenance, data: [Observation] }
+    sources.ts          # catalogue of survey programmes (live + collected)
+  lib/
+    analytics.ts        # KPIs, movers, group rollups, period-over-period change
+    countryIndex.ts     # per-country profiles: latest value + world rank per indicator
+    topics.ts palette.ts worldgeo.ts …
+  components/           # 23 viz components (bubble, heatmap, matrix, maps, index builder…)
+  pages/                # index, explore, macro, markets, surveys, geo, country/[slug],
+                        # dataset/[slug], stories/, glossary
+scripts/
+  parse_*.mjs           # one parser per source family → normalised JSON
+  make_og_datasets.mjs  # 136 per-dataset OG images (sharp)
 ```
 
-### Data model
-
-One long-format `Observation`: `{ entity, period, value, group? }` — the same shape
-the Madeira pipeline used for `region / date / search_volume`, generalised so
-surveys, macro indicators and (later) brand data all flow through one analytics layer.
+**Data model** — one long-format `Observation`: `{ entity, iso, period, value, group? }`.
+Surveys, macro indicators and market data all flow through the same analytics layer.
+Drop a normalised JSON into `src/data/surveys/` or `src/data/macro/` and the dataset
+page, CSV endpoint, country profiles and explorer pick it up automatically.
 
 ## Develop
 
 ```bash
 npm install
-npm run dev          # http://localhost:4321/bulldozer/
-npm run build        # → dist/
-npm run data:build   # rebuild all datasets from curated sources (macro + surveys)
-npm run parse:macro  # IMF WEO tidy → src/data/macro/*.json
-npm run parse:surveys# Gapminder + World Happiness → src/data/surveys/*.json
-npm run fetch:imf    # optional: live IMF DataMapper API fallback
+npm run dev     # http://localhost:4321/bulldozer/
+npm run build   # → dist/ (static, host-agnostic)
 ```
 
-## Data sources
+Parsers (`npm run parse:*`) read curated public exports and soft-skip when a
+source file is absent, so a fresh clone builds out of the box.
 
-The parsers read curated, public, tidy exports from local paths (overridable by env):
-
-| Parser | Default source | Env override |
-|---|---|---|
-| `parse:macro` | `~/Documents/tableau_data/macro/imf_weo_apr2026_tidy.csv` | `IMF_WEO_CSV`, `REF_YEAR` |
-| `parse:surveys` (Gapminder) | `…/BK/Opros/Inter_survey/Gapminder/` | `GAPMINDER_DIR` |
-| `parse:surveys` (WHR) | `~/Documents/tableau_data/happiness/whr_tidy.csv` | `WHR_CSV` |
-
-Output is small normalised JSON (latest two periods per indicator) committed to
-the repo. Russian region/indicator labels in the sources are mapped to English.
-Each parser soft-skips when its source is absent, so CI without the curated
-files still succeeds.
-
-## Add a dataset
-
-1. Drop a normalised JSON in `src/data/surveys/` or `src/data/macro/`
-   (shape: `{ meta: {...provenance}, data: [Observation] }`).
-2. Register it in `src/data/datasets.ts`.
-   A dashboard at `/bulldozer/dataset/<slug>` is generated automatically.
-
-## Change semantics (pct vs pp)
-
-Datasets in percentage/rate units (`%`, `% YoY`) are compared in **percentage
-points (pp)** — e.g. trust 58→61 is `+3.0pp`, GDP growth 0.7→−0.2 is `−0.9pp`.
-Count/volume datasets use **multiplicative percent (%)**. The mode is derived
-from the unit in `src/data/datasets.ts` (`deriveChangeMode`) and threaded
-through the analytics layer, dashboards and the Telegram digest.
-
-## Automation & access
-
-GitHub Actions workflows (`.github/workflows/`):
+## Automation
 
 | Workflow | Schedule | Does |
 |---|---|---|
-| `update-data.yml` | Mon 06:00 UTC | runs parsers (`fetch:imf`, …), commits data changes |
-| `telegram-digest.yml` | Mon 06:30 UTC | posts a top-movers digest to Telegram |
+| `update-data.yml` | weekly | re-runs parsers, commits data changes |
+| `telegram-digest.yml` | weekly | posts a top-movers digest (env: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`) |
 
-Secrets (set in GitHub → Settings → Secrets and variables → Actions; never
-commit values — see `.env.example`):
+## Licence
 
-- `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` — digest delivery (`npm run digest`).
-- Deploy token for the chosen host (`VERCEL_TOKEN` / `CLOUDFLARE_API_TOKEN` …).
-
-## Deploy
-
-Static Astro export (`npm run build` → `dist/`), host-agnostic:
-
-- **Vercel** — connect the repo, build `npm run build`, output `dist`. For a
-  subdomain (`bulldozer.shpara.com`) drop `base` to `'/'` in `astro.config.mjs`.
-- **Cloudflare Pages** — same build/output; add Workers + D1/R2 if a server
-  data layer is needed.
-- The `base: '/bulldozer'` setting path-prefixes the build for mounting under
-  `…/bulldozer`; remove it for a root/subdomain deploy.
+Code is [MIT](LICENSE). The datasets remain the property of their original
+publishers — every dataset page credits its source and licence; check the
+source's terms before redistributing data.
