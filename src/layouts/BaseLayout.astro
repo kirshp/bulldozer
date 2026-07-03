@@ -18,7 +18,6 @@ const nav = [
   { id: 'surveys', label: 'Polls', href: `${base}/surveys` },
   { id: 'geo', label: 'Geo', href: `${base}/geo` },
   { id: 'edu', label: 'Edu', href: `${base}/edu` },
-  { id: 'quiz', label: 'Quiz', href: `${base}/quiz` },
 ];
 const fullTitle = title ? `${title} · BullDozer` : 'BullDozer — Marketing Analytics & Research';
 const desc = description ?? 'Bulldoze the noise. Mine the signal. 136 public, parsed datasets — surveys, IMF & World Bank macro, markets and people. Every number sourced.';
@@ -101,6 +100,7 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
         <span>
           <a href={`${base}/about`}>About</a> ·
           <a href={`${base}/glossary`}>Glossary</a> ·
+          <a href={`${base}/quiz`}>Quiz</a> ·
           <a href="mailto:azenha.agent@gmail.com">Contact</a> ·
           Public, parsed data only · sources cited per dataset
         </span>

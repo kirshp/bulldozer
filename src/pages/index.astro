@@ -102,6 +102,14 @@ const browse = [
         <p class="meta" style="color:var(--accent)">Read the story · happiest countries {happyLatest} →</p>
       </a>
 
+      <div class="quiz-row">
+        <span class="quiz-blurb">🎯 <b>Country Quiz</b> — one mystery country, five real statistics. Most people lose to a chimp. Will you?</span>
+        <span class="quiz-btns">
+          <a class="quiz-play" href={`${base}/quiz`}>Play the quiz →</a>
+          <a class="ghost-btn" href={`${base}/explore`} style="margin:0">Try other charts →</a>
+        </span>
+      </div>
+
       <div class="grid cols-2" style="margin-top:16px">
         {rest.map((s) => (
           <a class="card link news-card" href={s.href}>
