@@ -102,7 +102,8 @@ async function parseGapminder(geoMap) {
       if (!rec) byGeo.set(row.geo, (rec = {}));
       rec[row.time] = v;
     }
-    const keep = pickPeriodsN(yearCounts, 8);
+    // Cap at the current year — some Gapminder series carry projections to 2100.
+    const keep = pickPeriodsN(yearCounts, 8, new Date().getFullYear());
     if (keep.length < 2) {
       console.log(`  – ${cfg.slug}: not enough years, skipped`);
       continue;

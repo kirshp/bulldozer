@@ -4,20 +4,21 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
-  active?: 'home' | 'news' | 'explore' | 'sources' | 'surveys' | 'macro' | 'markets' | 'geo' | 'edu' | 'glossary';
+  active?: 'home' | 'news' | 'explore' | 'sources' | 'surveys' | 'macro' | 'markets' | 'geo' | 'edu' | 'quiz' | 'glossary';
   /** Path (under base) to a page-specific OG image, e.g. `/og/whr-happiness.png`. */
   ogPath?: string;
 }
 const { title, description, active, ogPath } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
-  { id: 'news', label: 'News', href: `${base}/` },
-  { id: 'explore', label: 'Charts', href: `${base}/explore` },
+  { id: 'news', label: 'New', href: `${base}/` },
+  { id: 'explore', label: 'Top', href: `${base}/explore` },
   { id: 'macro', label: 'Macro', href: `${base}/macro` },
-  { id: 'markets', label: 'Firms', href: `${base}/markets` },
+  { id: 'markets', label: 'Biz', href: `${base}/markets` },
   { id: 'surveys', label: 'Polls', href: `${base}/surveys` },
   { id: 'geo', label: 'Geo', href: `${base}/geo` },
   { id: 'edu', label: 'Edu', href: `${base}/edu` },
+  { id: 'quiz', label: 'Quiz', href: `${base}/quiz` },
 ];
 const fullTitle = title ? `${title} · BullDozer` : 'BullDozer — Marketing Analytics & Research';
 const desc = description ?? 'Bulldoze the noise. Mine the signal. 136 public, parsed datasets — surveys, IMF & World Bank macro, markets and people. Every number sourced.';

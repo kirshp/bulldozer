@@ -53,9 +53,12 @@ a:hover { text-decoration: underline; }
 }
 .brand .name { font-size: 17px; }
 .brand .name b { color: var(--accent); }
-.nav { display: flex; gap: 24px; margin-left: auto; }
-.nav a { color: var(--text-dim); font-size: 16px; font-weight: 500; }
-.nav a:hover, .nav a.active { color: var(--text); text-decoration: none; }
+.nav { display: flex; gap: 16px; margin-left: auto; align-items: center; }
+.nav a { color: var(--text-dim); font-size: 16px; font-weight: 500; padding: 3px 12px; border-radius: 999px; }
+.nav a:hover { color: var(--text); text-decoration: none; }
+/* Active tab: amber pill, Forbes-style */
+.nav a.active { background: var(--accent); color: #1a1300; font-weight: 700; text-decoration: none; }
+.nav a.active:hover { color: #1a1300; }
 @media (max-width: 560px) {
   .site-header .container { gap: 8px; padding: 0 10px; }
   .brand { gap: 6px; flex: 0 0 auto; }
@@ -64,8 +67,8 @@ a:hover { text-decoration: underline; }
   /* nav scrolls horizontally so nothing is cut off; thin dividers keep items distinct */
   .nav { gap: 0; margin-left: auto; flex: 1 1 auto; min-width: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .nav::-webkit-scrollbar { display: none; }
-  .nav a { font-size: 12px; white-space: nowrap; padding: 0 7px; }
-  .nav a + a { border-left: 1px solid var(--border); }
+  .nav a { font-size: 12px; white-space: nowrap; padding: 3px 8px; }
+  .nav a:not(.active) + a:not(.active) { border-left: 1px solid var(--border); border-radius: 0; }
 }
 /* On the narrowest phones, drop the wordmark (keep the logo) so all 6 menu items fit */
 @media (max-width: 400px) {
