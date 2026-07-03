@@ -7,9 +7,23 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const groups = TOPIC_ORDER
   .map((id) => ({ topic: TOPICS[id], list: items.filter((d) => d.topic === id) }))
   .filter((g) => g.list.length);
+
+// study filter chips — one per source, biggest studies first
+const short = (s: string) => s.split(' — ')[0].split(' (')[0];
+const bySource = new Map<string, number>();
+for (const d of items) bySource.set(d.source, (bySource.get(d.source) ?? 0) + 1);
+const chips = [...bySource.entries()]
+  .map(([full, n]) => ({ full, label: short(full), n }))
+  .sort((a, b) => b.n - a.n || a.label.localeCompare(b.label));
 ---
 <div class="dlist">
   <input id="dlist-search" class="dlist-search" type="search" placeholder="Search indicators…" autocomplete="off" />
+  <div class="dlist-filters" id="dlist-filters">
+    <button type="button" class="fchip active" data-src="">All studies</button>
+    {chips.map((c) => (
+      <button type="button" class="fchip" data-src={c.full} title={c.full}>{c.label} <span class="fchip-n">{c.n}</span></button>
+    ))}
+  </div>
   <div id="dlist-empty" class="sub" hidden>No indicators match.</div>
 
   {groups.map((g, i) => (
@@ -22,6 +36,7 @@ const groups = TOPIC_ORDER
       <div class="grid cols-2 topic-body">
         {g.list.map((d) => (
           <a class="card link dl-card" href={`${base}/dataset/${d.slug}`}
+             data-src={d.source}
              data-text={`${d.title} ${d.source} ${d.valueLabel}`.toLowerCase()}>
             <h3 style="font-size:16px"><span class="ind-ic" aria-hidden="true">{g.topic.icon}</span>{d.title}</h3>
             <p class="meta">{d.summary}</p>
@@ -34,23 +49,35 @@ const groups = TOPIC_ORDER
 </div>
 
 <script>
-  const q = document.getElementById('dlist-search');
-  const cards = [...document.querySelectorAll('.dl-card')];
-  const groups = [...document.querySelectorAll('.dlist .topic')];
-  const empty = document.getElementById('dlist-empty');
-  q.addEventListener('input', () => {
+  const q = document.getElementById('dlist-search') as HTMLInputElement;
+  const filters = document.getElementById('dlist-filters')!;
+  const cards = [...document.querySelectorAll('.dl-card')] as HTMLElement[];
+  const groups = [...document.querySelectorAll('.dlist .topic')] as HTMLDetailsElement[];
+  const empty = document.getElementById('dlist-empty')!;
+  let src = '';
+
+  function apply() {
     const s = q.value.trim().toLowerCase();
     let any = false;
     for (const c of cards) {
-      const hit = !s || c.getAttribute('data-text').includes(s);
+      const hit = (!s || c.getAttribute('data-text')!.includes(s)) && (!src || c.getAttribute('data-src') === src);
       c.style.display = hit ? '' : 'none';
       if (hit) any = true;
     }
     for (const g of groups) {
-      const visible = [...g.querySelectorAll('.dl-card')].some((c) => c.style.display !== 'none');
+      const visible = [...g.querySelectorAll('.dl-card')].some((c) => (c as HTMLElement).style.display !== 'none');
       g.style.display = visible ? '' : 'none';
-      if (s && visible) g.open = true;
+      if ((s || src) && visible) g.open = true;
     }
     empty.hidden = any;
+  }
+
+  q.addEventListener('input', apply);
+  filters.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest('.fchip') as HTMLElement | null;
+    if (!b) return;
+    src = b.getAttribute('data-src') ?? '';
+    filters.querySelectorAll('.fchip').forEach((f) => f.classList.toggle('active', f === b));
+    apply();
   });
 </script>

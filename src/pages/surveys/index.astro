@@ -35,15 +35,30 @@ const points = (emo?.data || [])
           <p style="margin:8px 0 28px"><a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/stories/cultural-map`}>Open the full cultural map →</a></p>
         </div>
       )}
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="studies">
+    <div class="container">
+      <h2>Studies — one card per survey</h2>
+      <p class="sub">Everything we parsed from each study in one place: all its indicators, plus the full results dashboard where we built one.</p>
+      <SourceCatalog kind="survey" mode="live" />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="indicators">
+    <div class="container">
+      <h2>All survey indicators</h2>
+      <p class="sub">The same data sliced by topic — search, or filter by study.</p>
       <DatasetList items={items} />
     </div>
   </section>
 
   <section class="section" style="padding-top:0">
     <div class="container">
-      <h2>Survey programmes we gathered</h2>
-      <p class="sub">Every survey source — live in BullDozer or catalogued, with an official link and a short description.</p>
-      <SourceCatalog kind="survey" />
+      <h2>More programmes in the catalogue</h2>
+      <p class="sub">Gathered and documented — microdata available from the official source, not yet aggregated into BullDozer.</p>
+      <SourceCatalog kind="survey" mode="catalog" />
     </div>
   </section>
 </BaseLayout>
