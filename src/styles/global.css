@@ -372,13 +372,27 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .bi-demo { display: inline-block; margin-top: 6px; font-size: 13px; color: var(--accent); }
 
 /* Quiz promo row (home page, under the feature story) */
-.quiz-row { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; margin-top: 16px; padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+.quiz-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap;
+  margin-top: 16px; padding: 14px 18px;
+  background: linear-gradient(120deg, rgba(255, 176, 0, 0.13), rgba(217, 95, 0, 0.05) 55%, transparent) var(--bg-card);
+  border: 1px solid rgba(255, 176, 0, 0.4); border-radius: var(--radius);
+}
 .quiz-row:hover { border-color: var(--accent); }
 .quiz-blurb { font-size: 14px; color: var(--text-dim); }
 .quiz-blurb b { color: var(--text); }
+.quiz-blurb .q-emo { display: inline-block; animation: q-wiggle 2.4s ease-in-out infinite; }
+@keyframes q-wiggle {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(10deg) scale(1.15); }
+}
 .quiz-btns { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.quiz-play { background: var(--accent); color: #1a1300; font-weight: 700; font-size: 13px; padding: 8px 16px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
-.quiz-play:hover { background: var(--accent-2); color: #1a1300; }
+.quiz-play { background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: #1a1300; font-weight: 700; font-size: 13px; padding: 8px 16px; border-radius: 8px; text-decoration: none; white-space: nowrap; transition: transform 0.15s; }
+.quiz-play:hover { color: #1a1300; transform: scale(1.05); }
+@media (prefers-reduced-motion: reduce) {
+  .quiz-blurb .q-emo { animation: none; }
+  .quiz-play:hover { transform: none; }
+}
 
 /* Dataset list with topics + search */
 .dlist-search { width: 100%; background: var(--bg-card); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 15px; font-family: var(--font); margin-bottom: 18px; }

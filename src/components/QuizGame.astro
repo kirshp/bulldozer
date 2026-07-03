@@ -7,11 +7,13 @@
 interface Props {
   /** Render hidden — the page reveals it (see home's quiz-row Play button). */
   collapsed?: boolean;
+  /** Skip the start card and begin a game when the quiz scrolls into view. */
+  autostart?: boolean;
 }
-const { collapsed = false } = Astro.props;
+const { collapsed = false, autostart = false } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
-<div id="quiz-game-root" data-base={base} hidden={collapsed}>
+<div id="quiz-game-root" data-base={base} data-autostart={autostart ? '' : undefined} hidden={collapsed}>
   <div class="card q-card" id="q-start">
     <h3>🌍 Ready?</h3>
     <p class="q-rules">
@@ -90,7 +92,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     const li = document.createElement('li');
     li.textContent = clueText(c, clues);
     $('q-clues').appendChild(li);
-    $('q-worth').textContent = `Worth: ${worth()} pt${worth() === 1 ? '' : 's'}`;
+    const w = $('q-worth');
+    w.textContent = `Worth: ${worth()} pt${worth() === 1 ? '' : 's'}`;
+    w.classList.remove('q-bump');
+    void w.offsetWidth; // restart the bump animation
+    w.classList.add('q-bump');
     ($('q-more') as HTMLButtonElement).hidden = clues >= MAX_CLUES;
   }
 
@@ -105,14 +111,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     $('q-score').textContent = `Score: ${score}`;
     const opts = shuffle([c, ...distractors(c)]);
     $('q-options').innerHTML = '';
-    for (const o of opts) {
+    opts.forEach((o, i) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'q-opt';
+      b.style.animationDelay = `${i * 70}ms`;
       b.textContent = o.name;
       b.addEventListener('click', () => answer(o, b));
       $('q-options').appendChild(b);
-    }
+    });
     addClue();
   }
 
@@ -137,6 +144,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     $('q-next').hidden = false;
   }
 
+  function confetti(won: boolean) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const host = $('q-end');
+    const emo = won ? ['🎉', '🎊', '⭐', '🥳', '🌍'] : ['🍌', '🐒', '🍌', '🙈', '🍌'];
+    for (let i = 0; i < 24; i++) {
+      const s = document.createElement('span');
+      s.className = 'q-confetti';
+      s.textContent = emo[i % emo.length];
+      s.style.left = `${Math.random() * 96}%`;
+      s.style.animationDelay = `${(Math.random() * 0.9).toFixed(2)}s`;
+      s.style.fontSize = `${Math.round(13 + Math.random() * 13)}px`;
+      host.appendChild(s);
+      setTimeout(() => s.remove(), 4000);
+    }
+  }
+
   function finish() {
     $('q-game').hidden = true;
     $('q-end').hidden = false;
@@ -151,6 +174,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     localStorage.setItem(BEST_KEY, String(best));
     $('q-final').innerHTML = `You scored <b>${score} / ${max}</b> — a random chimp gets ~12. Personal best: ${best}.`;
     $('q-grid').textContent = perRound.map((p) => (p >= 4 ? '🟩' : p >= 1 ? '🟨' : '🟥')).join('');
+    confetti(score > 12);
   }
 
   $('q-start-btn').addEventListener('click', async () => {
@@ -185,47 +209,93 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     $('q-best').textContent = `Personal best: ${best} / ${ROUNDS * MAX_CLUES}`;
     $('q-best').hidden = false;
   }
+
+  // autostart mode (home page): the start card is hidden via CSS and round 1
+  // begins right away, so the game is already on screen when the reader scrolls to it.
+  if (root.dataset.autostart !== undefined) {
+    ($('q-start-btn') as HTMLButtonElement).click();
+  }
 </script>
 
 <style is:global>
   /* Global: clue <li> and .q-opt buttons are created client-side and would miss Astro's scope class. */
-  .q-card { max-width: 640px; margin-top: 20px; padding: 22px 24px; }
+  .q-card {
+    max-width: 640px; margin-top: 20px; padding: 22px 24px;
+    border-color: rgba(255, 176, 0, 0.4);
+    background-image: linear-gradient(155deg, rgba(255, 176, 0, 0.09), rgba(217, 95, 0, 0.03) 45%, transparent 70%);
+    box-shadow: 0 6px 32px rgba(255, 176, 0, 0.09);
+  }
+  [data-autostart] #q-start { display: none; }
   .q-rules { color: var(--text-dim); line-height: 1.7; }
   .q-best { font-family: var(--mono); font-size: 13px; color: var(--accent); }
   .q-primary {
-    background: var(--accent); color: #0e0f11; border: 0; border-radius: 8px;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: #0e0f11; border: 0; border-radius: 8px;
     padding: 10px 22px; font-weight: 700; font-size: 15px; cursor: pointer; font-family: inherit;
+    transition: transform 0.15s;
   }
-  .q-primary:hover { filter: brightness(1.1); }
+  .q-primary:hover { filter: brightness(1.1); transform: scale(1.04); }
   .q-primary:disabled { opacity: 0.7; cursor: wait; }
   .q-top {
-    display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
     font-family: var(--mono); font-size: 13px; color: var(--text-dim);
-    border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 14px;
+    border-bottom: 1px dashed rgba(255, 176, 0, 0.45); padding-bottom: 10px; margin-bottom: 14px;
   }
-  .q-top #q-worth { color: var(--accent); }
+  .q-top #q-worth {
+    display: inline-block; background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    color: #1a1300; font-weight: 700; padding: 2px 11px; border-radius: 999px;
+  }
+  .q-top #q-worth.q-bump { animation: q-bump 0.45s cubic-bezier(0.2, 1.6, 0.4, 1); }
   .q-clues { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
   .q-clues li {
     background: var(--bg-elev); border: 1px solid var(--border); border-radius: 8px;
-    padding: 9px 12px; font-size: 14.5px;
+    padding: 9px 12px 9px 10px; font-size: 14.5px;
+    animation: q-pop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) backwards;
   }
+  .q-clues li:nth-child(5n + 1) { border-left: 4px solid #ffb000; }
+  .q-clues li:nth-child(5n + 2) { border-left: 4px solid #ff7a45; }
+  .q-clues li:nth-child(5n + 3) { border-left: 4px solid #4cc38a; }
+  .q-clues li:nth-child(5n + 4) { border-left: 4px solid #58a6ff; }
+  .q-clues li:nth-child(5n + 5) { border-left: 4px solid #d95fd0; }
   .q-clues li::before { content: '🧩 '; }
+  .q-clues li:nth-child(5n + 2)::before { content: '🔍 '; }
+  .q-clues li:nth-child(5n + 3)::before { content: '💡 '; }
+  .q-clues li:nth-child(5n + 4)::before { content: '🎲 '; }
+  .q-clues li:nth-child(5n + 5)::before { content: '🏁 '; }
   #q-more { margin: 0 0 16px; }
   .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .q-opt {
     background: var(--bg-elev); color: var(--text); border: 1px solid var(--border);
     border-radius: 8px; padding: 12px 10px; font-size: 15px; font-weight: 600;
-    cursor: pointer; font-family: inherit; transition: border-color 0.15s;
+    cursor: pointer; font-family: inherit; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    animation: q-pop 0.4s cubic-bezier(0.2, 1.6, 0.4, 1) backwards;
   }
-  .q-opt:hover:not(:disabled) { border-color: var(--accent); }
+  .q-opt:hover:not(:disabled) {
+    border-color: var(--accent); transform: translateY(-2px) rotate(-0.6deg);
+    box-shadow: 0 4px 14px rgba(255, 176, 0, 0.18);
+  }
   .q-opt:disabled { cursor: default; opacity: 0.75; }
-  .q-opt.right { border-color: var(--up); color: var(--up); opacity: 1; }
-  .q-opt.wrong { border-color: var(--down); color: var(--down); opacity: 1; }
-  .q-reveal { margin: 16px 0 0; font-size: 15px; }
+  .q-opt.right { border-color: var(--up); color: var(--up); opacity: 1; animation: q-yes 0.5s cubic-bezier(0.2, 1.6, 0.4, 1); }
+  .q-opt.wrong { border-color: var(--down); color: var(--down); opacity: 1; animation: q-no 0.45s; }
+  .q-reveal { margin: 16px 0 0; font-size: 15px; animation: q-pop 0.35s cubic-bezier(0.2, 1.6, 0.4, 1) backwards; }
   #q-next { margin-top: 14px; }
+  #q-end { position: relative; overflow: hidden; }
+  #q-verdict { font-size: 23px; animation: q-pop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) backwards; }
   .q-final { font-size: 16px; }
   .q-grid { font-size: 22px; letter-spacing: 3px; }
   .q-endbtns { display: flex; gap: 12px; align-items: center; }
   .q-endbtns .ghost-btn { margin: 0; }
+  .q-confetti { position: absolute; top: -26px; pointer-events: none; animation: q-fall 2.8s ease-in forwards; }
+  @keyframes q-pop { from { opacity: 0; transform: scale(0.85) translateY(8px); } }
+  @keyframes q-bump { 35% { transform: scale(1.25) rotate(-3deg); } }
+  @keyframes q-yes { 35% { transform: scale(1.07); } }
+  @keyframes q-no {
+    20% { transform: translateX(-7px); } 40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); } 80% { transform: translateX(3px); }
+  }
+  @keyframes q-fall { to { transform: translateY(380px) rotate(560deg); opacity: 0; } }
   @media (max-width: 520px) { .q-options { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) {
+    .q-clues li, .q-opt, .q-reveal, #q-verdict, .q-confetti, .q-top #q-worth.q-bump { animation: none; }
+    .q-opt:hover:not(:disabled), .q-primary:hover { transform: none; }
+  }
 </style>
