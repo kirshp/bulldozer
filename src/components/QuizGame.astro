@@ -1,0 +1,231 @@
+---
+/**
+ * The country-quiz game UI + client logic. Used on /quiz and (collapsed) on the
+ * home page. The country pool is fetched lazily from /data/quiz-pool.json on
+ * the first start, so embedding the game doesn't weigh the page down.
+ */
+interface Props {
+  /** Render hidden — the page reveals it (see home's quiz-row Play button). */
+  collapsed?: boolean;
+}
+const { collapsed = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<div id="quiz-game-root" data-base={base} hidden={collapsed}>
+  <div class="card q-card" id="q-start">
+    <h3>🌍 Ready?</h3>
+    <p class="q-rules">
+      10 rounds · 4 options each · up to 5 clues per round.<br />
+      Answer on clue 1 → <b>5 pts</b> … on clue 5 (the flag) → <b>1 pt</b>. Miss → 0.
+    </p>
+    <p class="q-best" id="q-best" hidden></p>
+    <button type="button" class="q-primary" id="q-start-btn">Start the quiz</button>
+  </div>
+
+  <div class="card q-card" id="q-game" hidden>
+    <div class="q-top">
+      <span id="q-progress">Round 1 / 10</span>
+      <span id="q-score">Score: 0</span>
+      <span id="q-worth">Worth: 5 pts</span>
+    </div>
+    <ul class="q-clues" id="q-clues"></ul>
+    <button type="button" class="ghost-btn" id="q-more">🔎 Reveal another clue (−1 pt)</button>
+    <div class="q-options" id="q-options"></div>
+    <p class="q-reveal" id="q-reveal" hidden></p>
+    <button type="button" class="q-primary" id="q-next" hidden>Next round →</button>
+  </div>
+
+  <div class="card q-card" id="q-end" hidden>
+    <h3 id="q-verdict"></h3>
+    <p class="q-final" id="q-final"></p>
+    <p class="q-grid" id="q-grid"></p>
+    <div class="q-endbtns">
+      <button type="button" class="ghost-btn" id="q-share">📋 Copy result</button>
+      <button type="button" class="q-primary" id="q-again">Play again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('quiz-game-root')!;
+  const base = root.dataset.base ?? '';
+  const $ = (id: string) => document.getElementById(id)!;
+  const ROUNDS = 10, MAX_CLUES = 5, BEST_KEY = 'bd-quiz-best';
+
+  interface C { name: string; region: string; flag: string; slug: string; facts: string[] }
+
+  let POOL: C[] | null = null;
+  async function ensurePool(): Promise<C[]> {
+    if (!POOL) POOL = await (await fetch(`${base}/data/quiz-pool.json`)).json();
+    return POOL!;
+  }
+
+  const shuffle = <T,>(a: T[]): T[] => {
+    const r = [...a];
+    for (let i = r.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [r[i], r[j]] = [r[j], r[i]];
+    }
+    return r;
+  };
+
+  let rounds: C[] = [], idx = 0, score = 0, clues = 0, perRound: number[] = [];
+
+  function worth() { return MAX_CLUES + 1 - clues; }
+
+  function distractors(c: C): C[] {
+    const same = shuffle(POOL!.filter((p) => p.region === c.region && p.name !== c.name));
+    const rest = shuffle(POOL!.filter((p) => p.region !== c.region));
+    return [...same, ...rest].slice(0, 3);
+  }
+
+  function clueText(c: C, k: number): string {
+    // clues 1..4 are shuffled facts; clue 5 is the flag — the give-away.
+    return k < MAX_CLUES ? c.facts[k - 1] : `The flag is ${c.flag}`;
+  }
+
+  function addClue() {
+    const c = rounds[idx];
+    clues++;
+    const li = document.createElement('li');
+    li.textContent = clueText(c, clues);
+    $('q-clues').appendChild(li);
+    $('q-worth').textContent = `Worth: ${worth()} pt${worth() === 1 ? '' : 's'}`;
+    ($('q-more') as HTMLButtonElement).hidden = clues >= MAX_CLUES;
+  }
+
+  function startRound() {
+    const c = rounds[idx];
+    clues = 0;
+    c.facts = shuffle(c.facts);
+    $('q-clues').innerHTML = '';
+    $('q-reveal').hidden = true;
+    $('q-next').hidden = true;
+    $('q-progress').textContent = `Round ${idx + 1} / ${ROUNDS}`;
+    $('q-score').textContent = `Score: ${score}`;
+    const opts = shuffle([c, ...distractors(c)]);
+    $('q-options').innerHTML = '';
+    for (const o of opts) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'q-opt';
+      b.textContent = o.name;
+      b.addEventListener('click', () => answer(o, b));
+      $('q-options').appendChild(b);
+    }
+    addClue();
+  }
+
+  function answer(picked: C, btn: HTMLButtonElement) {
+    const c = rounds[idx];
+    const ok = picked.name === c.name;
+    const pts = ok ? worth() : 0;
+    score += pts;
+    perRound.push(pts);
+    for (const b of $('q-options').querySelectorAll('button')) {
+      (b as HTMLButtonElement).disabled = true;
+      if (b.textContent === c.name) b.classList.add('right');
+    }
+    if (!ok) btn.classList.add('wrong');
+    $('q-score').textContent = `Score: ${score}`;
+    ($('q-more') as HTMLButtonElement).hidden = true;
+    const r = $('q-reveal');
+    r.innerHTML = `${ok ? `✅ +${pts} — it's` : `❌ It was`} ${c.flag} <b>${c.name}</b>. ` +
+      `<a href="${base}/country/${c.slug}">Full profile →</a>`;
+    r.hidden = false;
+    $('q-next').textContent = idx + 1 < ROUNDS ? 'Next round →' : 'See your result →';
+    $('q-next').hidden = false;
+  }
+
+  function finish() {
+    $('q-game').hidden = true;
+    $('q-end').hidden = false;
+    const max = ROUNDS * MAX_CLUES;
+    const verdict =
+      score <= 12 ? '🐒 The chimps won this time' :
+      score <= 24 ? '🌱 Better than the chimps' :
+      score <= 37 ? '📊 Data-savvy' :
+      score <= 45 ? '🌍 Geography nerd' : '🏆 BullDozer analyst';
+    $('q-verdict').textContent = verdict;
+    const best = Math.max(score, Number(localStorage.getItem(BEST_KEY) ?? 0));
+    localStorage.setItem(BEST_KEY, String(best));
+    $('q-final').innerHTML = `You scored <b>${score} / ${max}</b> — a random chimp gets ~12. Personal best: ${best}.`;
+    $('q-grid').textContent = perRound.map((p) => (p >= 4 ? '🟩' : p >= 1 ? '🟨' : '🟥')).join('');
+  }
+
+  $('q-start-btn').addEventListener('click', async () => {
+    const btn = $('q-start-btn') as HTMLButtonElement;
+    btn.disabled = true;
+    btn.textContent = 'Loading…';
+    const pool = await ensurePool();
+    btn.disabled = false;
+    btn.textContent = 'Start the quiz';
+    rounds = shuffle(pool).slice(0, ROUNDS);
+    idx = 0; score = 0; perRound = [];
+    $('q-start').hidden = true;
+    $('q-end').hidden = true;
+    $('q-game').hidden = false;
+    startRound();
+  });
+  $('q-more').addEventListener('click', addClue);
+  $('q-next').addEventListener('click', () => {
+    idx++;
+    if (idx < ROUNDS) startRound(); else finish();
+  });
+  $('q-again').addEventListener('click', () => ($('q-start-btn') as HTMLButtonElement).click());
+  $('q-share').addEventListener('click', async () => {
+    const grid = perRound.map((p) => (p >= 4 ? '🟩' : p >= 1 ? '🟨' : '🟥')).join('');
+    const text = `BullDozer Country Quiz — ${score}/${ROUNDS * MAX_CLUES}\n${grid}\nhttps://shpara.com${base}/quiz`;
+    try { await navigator.clipboard.writeText(text); $('q-share').textContent = '✅ Copied'; } catch { /* ignore */ }
+    setTimeout(() => ($('q-share').textContent = '📋 Copy result'), 1500);
+  });
+
+  const best = Number(localStorage.getItem(BEST_KEY) ?? 0);
+  if (best > 0) {
+    $('q-best').textContent = `Personal best: ${best} / ${ROUNDS * MAX_CLUES}`;
+    $('q-best').hidden = false;
+  }
+</script>
+
+<style is:global>
+  /* Global: clue <li> and .q-opt buttons are created client-side and would miss Astro's scope class. */
+  .q-card { max-width: 640px; margin-top: 20px; padding: 22px 24px; }
+  .q-rules { color: var(--text-dim); line-height: 1.7; }
+  .q-best { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+  .q-primary {
+    background: var(--accent); color: #0e0f11; border: 0; border-radius: 8px;
+    padding: 10px 22px; font-weight: 700; font-size: 15px; cursor: pointer; font-family: inherit;
+  }
+  .q-primary:hover { filter: brightness(1.1); }
+  .q-primary:disabled { opacity: 0.7; cursor: wait; }
+  .q-top {
+    display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 13px; color: var(--text-dim);
+    border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 14px;
+  }
+  .q-top #q-worth { color: var(--accent); }
+  .q-clues { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .q-clues li {
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 8px;
+    padding: 9px 12px; font-size: 14.5px;
+  }
+  .q-clues li::before { content: '🧩 '; }
+  #q-more { margin: 0 0 16px; }
+  .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .q-opt {
+    background: var(--bg-elev); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 10px; font-size: 15px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: border-color 0.15s;
+  }
+  .q-opt:hover:not(:disabled) { border-color: var(--accent); }
+  .q-opt:disabled { cursor: default; opacity: 0.75; }
+  .q-opt.right { border-color: var(--up); color: var(--up); opacity: 1; }
+  .q-opt.wrong { border-color: var(--down); color: var(--down); opacity: 1; }
+  .q-reveal { margin: 16px 0 0; font-size: 15px; }
+  #q-next { margin-top: 14px; }
+  .q-final { font-size: 16px; }
+  .q-grid { font-size: 22px; letter-spacing: 3px; }
+  .q-endbtns { display: flex; gap: 12px; align-items: center; }
+  .q-endbtns .ghost-btn { margin: 0; }
+  @media (max-width: 520px) { .q-options { grid-template-columns: 1fr; } }
+</style>

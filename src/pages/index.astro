@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import QuizGame from '../components/QuizGame.astro';
 import { datasets, datasetsByKind, getDataset } from '@data/datasets';
 import { upcoming } from '@data/releases';
 import { flagFor } from '@lib/flags';
@@ -105,10 +106,22 @@ const browse = [
       <div class="quiz-row">
         <span class="quiz-blurb">🎯 <b>Country Quiz</b> — one mystery country, five real statistics. Most people lose to a chimp. Will you?</span>
         <span class="quiz-btns">
-          <a class="quiz-play" href={`${base}/quiz`}>Play the quiz →</a>
+          <a class="quiz-play" id="quiz-play" href={`${base}/quiz`}>Play the quiz →</a>
           <a class="ghost-btn" href={`${base}/explore`} style="margin:0">Try other charts →</a>
         </span>
       </div>
+
+      <QuizGame collapsed />
+      <script>
+        // Expand the quiz in place; the href to /quiz stays as the no-JS fallback.
+        document.getElementById('quiz-play')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          const root = document.getElementById('quiz-game-root')!;
+          root.hidden = false;
+          document.getElementById('q-start-btn')!.click();
+          root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      </script>
 
       <div class="grid cols-2" style="margin-top:16px">
         {rest.map((s) => (
