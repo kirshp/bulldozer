@@ -32,6 +32,20 @@ const config = { base, indicators: indicators.map((d) => ({ slug: d.slug, title:
   let countries = [];
   let rows = cfg.preset.map((p) => ({ ...p }));
 
+  // ---- deep-link state from the URL: ix=slug*weight[*i]~slug*weight… ----
+  const iq = new URLSearchParams(location.search).get('ix');
+  if (iq) {
+    const parsed = iq.split('~').map((t) => { const [slug, w, inv] = t.split('*'); return { slug, w: Math.max(0, Math.min(3, +w || 1)), invert: inv === 'i' }; })
+      .filter((r) => cfg.indicators.some((d) => d.slug === r.slug));
+    if (parsed.length) rows = parsed;
+  }
+  function syncUrl() {
+    const p = new URLSearchParams(location.search);
+    const s = rows.map((r) => `${r.slug}*${r.w}${r.invert ? '*i' : ''}`).join('~');
+    if (s) p.set('ix', s); else p.delete('ix');
+    history.replaceState(null, '', location.pathname + '?' + p.toString() + location.hash);
+  }
+
   const perc = (it) => it.total > 1 ? (it.total - it.rank) / (it.total - 1) : 0.5;
 
   function renderRows() {
@@ -69,10 +83,10 @@ const config = { base, indicators: indicators.map((d) => ({ slug: d.slug, title:
 
   function refresh() { renderRows(); compute(); }
 
-  el('ixb-rows').addEventListener('input', (e) => { const i = +e.target.dataset.i; if (e.target.classList.contains('ixb-weight')) { rows[i].w = +e.target.value; e.target.nextElementSibling.textContent = rows[i].w + '×'; compute(); } });
-  el('ixb-rows').addEventListener('change', (e) => { const i = +e.target.dataset.i; if (e.target.classList.contains('ixb-invert')) { rows[i].invert = e.target.checked; compute(); } });
-  el('ixb-rows').addEventListener('click', (e) => { if (e.target.classList.contains('ixb-rm')) { rows.splice(+e.target.dataset.i, 1); refresh(); } });
-  el('ixb-add').addEventListener('change', (e) => { if (e.target.value) { rows.push({ slug: e.target.value, w: 1, invert: false }); refresh(); } });
+  el('ixb-rows').addEventListener('input', (e) => { const i = +e.target.dataset.i; if (e.target.classList.contains('ixb-weight')) { rows[i].w = +e.target.value; e.target.nextElementSibling.textContent = rows[i].w + '×'; compute(); syncUrl(); } });
+  el('ixb-rows').addEventListener('change', (e) => { const i = +e.target.dataset.i; if (e.target.classList.contains('ixb-invert')) { rows[i].invert = e.target.checked; compute(); syncUrl(); } });
+  el('ixb-rows').addEventListener('click', (e) => { if (e.target.classList.contains('ixb-rm')) { rows.splice(+e.target.dataset.i, 1); refresh(); syncUrl(); } });
+  el('ixb-add').addEventListener('change', (e) => { if (e.target.value) { rows.push({ slug: e.target.value, w: 1, invert: false }); refresh(); syncUrl(); } });
 
   fetch(`${cfg.base}/data/country-index.json`).then((r) => r.json()).then((d) => { countries = d; refresh(); });
 </script>

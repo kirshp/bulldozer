@@ -40,6 +40,16 @@ const config = {
   const PW = W - M.l - M.r, PH = H - M.t - M.b;
   const cache = new Map();
   const state = { slug: cfg.def, type: 'beeswarm', ds: null, playing: false, timer: null, raceYear: null };
+
+  // ---- deep-link state from the URL ----
+  const sq = new URLSearchParams(location.search);
+  if (cfg.indicators.some((d) => d.slug === sq.get('di'))) state.slug = sq.get('di');
+  if (['beeswarm', 'slope', 'race'].includes(sq.get('dt'))) state.type = sq.get('dt');
+  function syncUrl() {
+    const p = new URLSearchParams(location.search);
+    p.set('di', state.slug); p.set('dt', state.type);
+    history.replaceState(null, '', location.pathname + '?' + p.toString() + location.hash);
+  }
   const titleOf = (s) => (cfg.indicators.find((d) => d.slug === s) || {}).title || s;
   const fmt = (n) => Math.abs(n) >= 1000 ? n.toLocaleString('en-US', { maximumFractionDigits: 0 }) : n.toLocaleString('en-US', { maximumFractionDigits: 1 });
 
@@ -122,8 +132,9 @@ const config = {
 
   el('siv-ind').innerHTML = cfg.indicators.map((d) => `<option value="${d.slug}">${d.title}</option>`).join('');
   el('siv-ind').value = state.slug;
-  el('siv-ind').addEventListener('change', (e) => { state.slug = e.target.value; rebuild(); });
-  el('siv-type').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; state.type = b.dataset.t; Array.prototype.forEach.call(el('siv-type').children, (x) => x.classList.toggle('active', x === b)); render(); });
+  Array.prototype.forEach.call(el('siv-type').children, (x) => x.classList.toggle('active', x.dataset.t === state.type));
+  el('siv-ind').addEventListener('change', (e) => { state.slug = e.target.value; rebuild(); syncUrl(); });
+  el('siv-type').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; state.type = b.dataset.t; Array.prototype.forEach.call(el('siv-type').children, (x) => x.classList.toggle('active', x === b)); render(); syncUrl(); });
   el('siv-play').addEventListener('click', playRace);
   svg.addEventListener('mousemove', (e) => {
     const t = e.target;

@@ -46,6 +46,22 @@ const config = {
   const cache = new Map();
   const state = { x: cfg.defX, y: cfg.defY, size: cfg.defS, logx: true, year: null, years: [], dom: null, playing: false, timer: null };
 
+  // ---- deep-link state from the URL ----
+  const bq = new URLSearchParams(location.search);
+  const validSlug = (s) => cfg.indicators.some((d) => d.slug === s);
+  if (validSlug(bq.get('bbx'))) state.x = bq.get('bbx');
+  if (validSlug(bq.get('bby'))) state.y = bq.get('bby');
+  if (validSlug(bq.get('bbs'))) state.size = bq.get('bbs');
+  if (bq.get('bbl') === '0') state.logx = false;
+  const initYear = bq.get('bbyr');
+  function syncUrl() {
+    const p = new URLSearchParams(location.search);
+    p.set('bbx', state.x); p.set('bby', state.y); p.set('bbs', state.size);
+    if (state.logx) p.delete('bbl'); else p.set('bbl', '0');
+    if (state.year != null) p.set('bbyr', String(state.year)); else p.delete('bbyr');
+    history.replaceState(null, '', location.pathname + '?' + p.toString() + location.hash);
+  }
+
   function fill(sel, val) {
     sel.innerHTML = cfg.indicators.map((d) => `<option value="${d.slug}">${d.title}</option>`).join('');
     sel.value = val;
@@ -84,6 +100,7 @@ const config = {
     state.dom = { x: ext(xs), y: ext(ys), s: ext(ss.length ? ss : [1]), X, Y, S };
     const slider = el('bub-year');
     slider.min = 0; slider.max = years.length - 1; slider.step = 1;
+    if (state.year == null && initYear != null) { const iy = years.find((y) => String(y) === initYear); if (iy != null) state.year = iy; }
     state.year = (state.year != null && years.includes(state.year)) ? state.year : years[years.length - 1];
     slider.value = years.indexOf(state.year);
     el('bub-legend').innerHTML = Object.entries(REGION).map(([r, c]) => `<span class="lr"><span class="lr-dot" style="background:${c}"></span>${r}</span>`).join('');
@@ -144,11 +161,12 @@ const config = {
   function stop() { state.playing = false; el('bub-play').textContent = '▶ Play'; clearInterval(state.timer); }
 
   fill(el('bub-x'), state.x); fill(el('bub-y'), state.y); fill(el('bub-size'), state.size);
-  el('bub-x').addEventListener('change', (e) => { state.x = e.target.value; rebuild(); });
-  el('bub-y').addEventListener('change', (e) => { state.y = e.target.value; rebuild(); });
-  el('bub-size').addEventListener('change', (e) => { state.size = e.target.value; rebuild(); });
-  el('bub-logx').addEventListener('change', (e) => { state.logx = e.target.checked; render(); });
-  el('bub-year').addEventListener('input', (e) => { stop(); state.year = state.years[+e.target.value]; render(); });
+  el('bub-logx').checked = state.logx;
+  el('bub-x').addEventListener('change', (e) => { state.x = e.target.value; rebuild(); syncUrl(); });
+  el('bub-y').addEventListener('change', (e) => { state.y = e.target.value; rebuild(); syncUrl(); });
+  el('bub-size').addEventListener('change', (e) => { state.size = e.target.value; rebuild(); syncUrl(); });
+  el('bub-logx').addEventListener('change', (e) => { state.logx = e.target.checked; render(); syncUrl(); });
+  el('bub-year').addEventListener('input', (e) => { stop(); state.year = state.years[+e.target.value]; render(); syncUrl(); });
   el('bub-play').addEventListener('click', play);
   svg.addEventListener('mousemove', (e) => {
     const t = e.target;

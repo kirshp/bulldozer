@@ -40,8 +40,25 @@ const config = { base, topicMeta };
   let countries = [];
   const perc = (it) => it.total > 1 ? (it.total - it.rank) / (it.total - 1) : 0.5;
 
+  // ---- deep-link state from the URL ----
+  const hq = new URLSearchParams(location.search);
+  if (cfg.topicMeta.some((t) => t.id === hq.get('hmt'))) state.topic = hq.get('hmt');
+  if (hq.get('hmr')) state.region = hq.get('hmr');
+  if (['mean', 'meanAsc', 'name'].includes(hq.get('hms')) || (hq.get('hms') || '').startsWith('col:')) state.sort = hq.get('hms');
+  if (['10', '25', '0'].includes(hq.get('hmn'))) state.limit = +hq.get('hmn');
+  function syncUrl() {
+    const p = new URLSearchParams(location.search);
+    p.set('hmt', state.topic);
+    if (state.region) p.set('hmr', state.region); else p.delete('hmr');
+    if (state.sort !== 'mean') p.set('hms', state.sort); else p.delete('hms');
+    if (state.limit !== 10) p.set('hmn', String(state.limit)); else p.delete('hmn');
+    history.replaceState(null, '', location.pathname + '?' + p.toString() + location.hash);
+  }
+
   el('cheat-topic').innerHTML = cfg.topicMeta.map((t) => `<option value="${t.id}">${t.icon} ${t.label}</option>`).join('');
   el('cheat-topic').value = state.topic;
+  if (!state.sort.startsWith('col:')) el('cheat-sort').value = state.sort;
+  Array.prototype.forEach.call(el('cheat-views').children, (b) => b.classList.toggle('active', +b.dataset.n === state.limit));
 
   function render() {
     // columns = indicators in the topic (union, ordered by title)
@@ -79,17 +96,19 @@ const config = { base, topicMeta };
     el('cheat-note').textContent = `Showing ${rows.length} of ${total} countries × ${colList.length} indicators · coloured by global percentile (green = top, red = bottom). Click a column header to sort by it.`;
   }
 
-  el('cheat-topic').addEventListener('change', (e) => { state.topic = e.target.value; state.sort = 'mean'; el('cheat-sort').value = 'mean'; render(); });
-  el('cheat-region').addEventListener('change', (e) => { state.region = e.target.value; render(); });
+  el('cheat-topic').addEventListener('change', (e) => { state.topic = e.target.value; state.sort = 'mean'; el('cheat-sort').value = 'mean'; render(); syncUrl(); });
+  el('cheat-region').addEventListener('change', (e) => { state.region = e.target.value; render(); syncUrl(); });
   el('cheat-search').addEventListener('input', (e) => { state.q = e.target.value.trim().toLowerCase(); render(); });
-  el('cheat-sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); });
-  el('cheat-views').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; state.limit = +b.dataset.n; Array.prototype.forEach.call(el('cheat-views').children, (x) => x.classList.toggle('active', x === b)); render(); });
-  el('cheat-table').addEventListener('click', (e) => { const th = e.target.closest('.cheat-colhead'); if (!th) return; const s = 'col:' + th.dataset.slug; state.sort = state.sort === s ? 'mean' : s; el('cheat-sort').value = 'mean'; render(); });
+  el('cheat-sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); syncUrl(); });
+  el('cheat-views').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; state.limit = +b.dataset.n; Array.prototype.forEach.call(el('cheat-views').children, (x) => x.classList.toggle('active', x === b)); render(); syncUrl(); });
+  el('cheat-table').addEventListener('click', (e) => { const th = e.target.closest('.cheat-colhead'); if (!th) return; const s = 'col:' + th.dataset.slug; state.sort = state.sort === s ? 'mean' : s; el('cheat-sort').value = 'mean'; render(); syncUrl(); });
 
   fetch(`${cfg.base}/data/country-index.json`).then((r) => r.json()).then((d) => {
     countries = d;
     const regions = [...new Set(d.map((c) => c.region).filter(Boolean))].sort();
     el('cheat-region').innerHTML = '<option value="">All regions</option>' + regions.map((r) => `<option value="${r}">${r}</option>`).join('');
+    if (state.region && !regions.includes(state.region)) state.region = '';
+    el('cheat-region').value = state.region;
     render();
   });
 </script>

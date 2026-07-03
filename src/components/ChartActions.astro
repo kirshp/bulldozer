@@ -1,0 +1,87 @@
+---
+// Share-link + PNG-export buttons under a chart. `svg` is a CSS selector for
+// the chart's <svg> (omit for HTML-only charts — share link only). `hash` pins
+// the copied URL to the chart's section anchor. Script is hoisted once per page.
+interface Props { name: string; svg?: string; hash?: string }
+const { name, svg, hash } = Astro.props;
+---
+<p class="chart-actions" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px">
+  <button type="button" class="ghost-btn ca-share" data-hash={hash} style="margin:0">🔗 Copy link</button>
+  {svg && <button type="button" class="ghost-btn ca-png" data-svg={svg} data-name={name} style="margin:0">↓ PNG</button>}
+</p>
+<script>
+  const BRAND = 'shpara.com/bulldozer · every number sourced';
+  const FOOT = 26; // extra band under the chart for the brand line
+
+  // Rasterise a live <svg> to a downloadable PNG: clone it, bake computed CSS
+  // into inline styles (stylesheets don't travel into the blob), add an opaque
+  // background + brand line, then draw through an <img> onto a 2x canvas.
+  async function toPng(svg: SVGSVGElement, name: string) {
+    const vb = svg.viewBox && svg.viewBox.baseVal;
+    const w = vb && vb.width ? vb.width : svg.clientWidth || 900;
+    const h = vb && vb.height ? vb.height : svg.clientHeight || 480;
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    const src = [svg, ...svg.querySelectorAll('*')];
+    const dst = [clone, ...clone.querySelectorAll('*')];
+    const PROPS = ['fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap',
+      'opacity', 'font-family', 'font-size', 'font-weight', 'letter-spacing', 'text-anchor', 'dominant-baseline'];
+    src.forEach((s, i) => {
+      const cs = getComputedStyle(s);
+      (dst[i] as Element).setAttribute('style', PROPS.map((p) => `${p}:${cs.getPropertyValue(p)}`).join(';'));
+    });
+    const NS = 'http://www.w3.org/2000/svg';
+    clone.setAttribute('xmlns', NS);
+    clone.setAttribute('width', String(w));
+    clone.setAttribute('height', String(h + FOOT));
+    clone.setAttribute('viewBox', `0 0 ${w} ${h + FOOT}`);
+    const bg = document.createElementNS(NS, 'rect');
+    bg.setAttribute('width', String(w)); bg.setAttribute('height', String(h + FOOT));
+    bg.setAttribute('fill', getComputedStyle(document.body).backgroundColor || '#0e0f11');
+    clone.insertBefore(bg, clone.firstChild);
+    const brand = document.createElementNS(NS, 'text');
+    brand.setAttribute('x', String(w - 10)); brand.setAttribute('y', String(h + FOOT - 9));
+    brand.setAttribute('text-anchor', 'end'); brand.setAttribute('fill', '#8b8f98');
+    brand.setAttribute('style', 'font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px');
+    brand.textContent = BRAND;
+    clone.appendChild(brand);
+    const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' }));
+    try {
+      const img = new Image();
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+      const S = 2;
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(w * S); canvas.height = Math.round((h + FOOT) * S);
+      canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((b) => {
+        if (!b) return;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(b); a.download = `${name}.png`; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      }, 'image/png');
+    } finally { URL.revokeObjectURL(url); }
+  }
+
+  function flash(btn: HTMLElement, txt: string) {
+    const t = btn.textContent; btn.textContent = txt;
+    setTimeout(() => { btn.textContent = t; }, 1400);
+  }
+
+  document.addEventListener('click', async (e) => {
+    const t = e.target as HTMLElement;
+    const share = t.closest('.ca-share') as HTMLElement | null;
+    if (share) {
+      const hash = share.dataset.hash ? '#' + share.dataset.hash : location.hash;
+      const url = location.origin + location.pathname + location.search + hash;
+      try { await navigator.clipboard.writeText(url); flash(share, '✓ Link copied'); }
+      catch { prompt('Copy link:', url); }
+      return;
+    }
+    const png = t.closest('.ca-png') as HTMLElement | null;
+    if (png) {
+      const svg = document.querySelector(png.dataset.svg!) as SVGSVGElement | null;
+      if (!svg) return;
+      try { await toPng(svg, png.dataset.name!); flash(png, '✓ Saved'); }
+      catch { flash(png, '✗ Export failed'); }
+    }
+  });
+</script>

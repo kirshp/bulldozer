@@ -8,6 +8,7 @@ import SingleIndicatorViz from '@components/SingleIndicatorViz.astro';
 import CountryHeatmap from '@components/CountryHeatmap.astro';
 import ConnectedScatter from '@components/ConnectedScatter.astro';
 import IndexBuilder from '@components/IndexBuilder.astro';
+import ChartActions from '@components/ChartActions.astro';
 import { datasets } from '@data/datasets';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -35,6 +36,7 @@ const indicators = datasets.map((d) => ({
       <p class="page-tagline">Crush the data, keep the nuggets.</p>
       <p class="sub">Pick an indicator, period and countries. Switch between bars, table and world map.</p>
       <DataPanel indicators={indicators} />
+      <ChartActions name="bulldozer-explorer" hash="explorer" />
     </div>
   </section>
 
@@ -44,6 +46,7 @@ const indicators = datasets.map((d) => ({
       <h2>Two indicators, one map</h2>
       <p class="sub">See how two measures combine across the world — colour mixes amber (X) and blue (Y).</p>
       <BivariateExplore indicators={indicators} />
+      <ChartActions name="bulldozer-bivariate-map" svg="#biv-map svg" hash="bivariate" />
     </div>
   </section>
 
@@ -53,6 +56,7 @@ const indicators = datasets.map((d) => ({
       <h2>Three indicators, moving through time</h2>
       <p class="sub">Gapminder-style — X, Y and bubble size are three different datasets merged on country & year; press play to watch the world move.</p>
       <BubbleChart indicators={indicators} />
+      <ChartActions name="bulldozer-bubble" svg="#bub-svg" hash="bubble" />
     </div>
   </section>
 
@@ -62,6 +66,7 @@ const indicators = datasets.map((d) => ({
       <h2>What moves together</h2>
       <p class="sub">Pearson correlation between key indicators across countries — green = move together, red = move apart.</p>
       <CorrelationMatrix />
+      <ChartActions name="bulldozer-correlations" hash="correlation" />
     </div>
   </section>
 
@@ -71,6 +76,7 @@ const indicators = datasets.map((d) => ({
       <h2>The whole field at once</h2>
       <p class="sub">One indicator, three ways — every country as a dot (beeswarm), the change between years (slope), or an animated ranking (bar race).</p>
       <SingleIndicatorViz indicators={indicators} />
+      <ChartActions name="bulldozer-distribution" svg="#siv-svg" hash="distribution" />
     </div>
   </section>
 
@@ -80,6 +86,7 @@ const indicators = datasets.map((d) => ({
       <h2>Countries × indicators</h2>
       <p class="sub">A topic at a glance — every country’s strengths and weaknesses, cells coloured by global percentile.</p>
       <CountryHeatmap />
+      <ChartActions name="bulldozer-heatmap" hash="heatmap" />
     </div>
   </section>
 
@@ -89,6 +96,7 @@ const indicators = datasets.map((d) => ({
       <h2>Where countries are heading</h2>
       <p class="sub">A connected scatter — each country’s path through two indicators over time. Are they moving up-and-right, or sliding back?</p>
       <ConnectedScatter indicators={indicators} />
+      <ChartActions name="bulldozer-trajectories" svg="#cs-svg" hash="path" />
     </div>
   </section>
 
@@ -98,6 +106,7 @@ const indicators = datasets.map((d) => ({
       <h2>Build your own index</h2>
       <p class="sub">Weight any indicators into one composite score (a weighted mean of global percentiles) and rank countries — e.g. a “market attractiveness” index. Tick “lower is better” for things like inflation.</p>
       <IndexBuilder indicators={indicators} />
+      <ChartActions name="bulldozer-index" hash="index" />
     </div>
   </section>
 

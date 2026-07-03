@@ -37,6 +37,18 @@ const config = {
   const PW = W - M.l - M.r, PH = H - M.t - M.b;
   const cache = new Map();
   const state = { x: cfg.defX, y: cfg.defY, isos: cfg.defIso.slice() };
+
+  // ---- deep-link state from the URL ----
+  const cq = new URLSearchParams(location.search);
+  const validSlug = (s) => cfg.indicators.some((d) => d.slug === s);
+  if (validSlug(cq.get('csx'))) state.x = cq.get('csx');
+  if (validSlug(cq.get('csy'))) state.y = cq.get('csy');
+  if (cq.get('csc')) { const isos = cq.get('csc').split('.').filter((s) => /^[A-Z]{3}$/.test(s)); if (isos.length) state.isos = isos; }
+  function syncUrl() {
+    const p = new URLSearchParams(location.search);
+    p.set('csx', state.x); p.set('csy', state.y); p.set('csc', state.isos.join('.'));
+    history.replaceState(null, '', location.pathname + '?' + p.toString() + location.hash);
+  }
   const titleOf = (s) => (cfg.indicators.find((d) => d.slug === s) || {}).title || s;
   const fmt = (n) => Math.abs(n) >= 1000 ? n.toLocaleString('en-US', { maximumFractionDigits: 0 }) : n.toLocaleString('en-US', { maximumFractionDigits: 1 });
 
@@ -93,9 +105,9 @@ const config = {
 
   el('cs-x').innerHTML = el('cs-y').innerHTML = cfg.indicators.map((d) => `<option value="${d.slug}">${d.title}</option>`).join('');
   el('cs-x').value = state.x; el('cs-y').value = state.y;
-  el('cs-x').addEventListener('change', (e) => { state.x = e.target.value; render(); });
-  el('cs-y').addEventListener('change', (e) => { state.y = e.target.value; render(); });
-  el('cs-add').addEventListener('change', (e) => { if (e.target.value && !state.isos.includes(e.target.value)) { state.isos.push(e.target.value); render(); } });
-  el('cs-chips').addEventListener('click', (e) => { const iso = e.target.getAttribute('data-rm'); if (iso) { state.isos = state.isos.filter((x) => x !== iso); render(); } });
+  el('cs-x').addEventListener('change', (e) => { state.x = e.target.value; render(); syncUrl(); });
+  el('cs-y').addEventListener('change', (e) => { state.y = e.target.value; render(); syncUrl(); });
+  el('cs-add').addEventListener('change', (e) => { if (e.target.value && !state.isos.includes(e.target.value)) { state.isos.push(e.target.value); render(); syncUrl(); } });
+  el('cs-chips').addEventListener('click', (e) => { const iso = e.target.getAttribute('data-rm'); if (iso) { state.isos = state.isos.filter((x) => x !== iso); render(); syncUrl(); } });
   render();
 </script>
