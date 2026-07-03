@@ -32,6 +32,20 @@ export function isOpinionSurvey(slug: string): boolean {
     || slug.startsWith('lb-') || slug.startsWith('dnr-');
 }
 
+/** Explicit topic overrides — win over the topic stored in the dataset JSON.
+ *  Used to fold near-empty survey rubrics into bigger ones on the Polls page. */
+const TOPIC_OVERRIDES: Record<string, string> = {
+  'wrp-climate-threat': 'risk',      // all six World Risk Poll questions live together
+  'wrp-discrimination': 'risk',
+  'wrp-worry-crime': 'risk',
+  'wgm-vaccines-effective': 'attitudes', // perception questions, not health statistics
+  'wgm-vaccines-safe': 'attitudes',
+};
+
+export function topicOverride(slug: string): string | undefined {
+  return TOPIC_OVERRIDES[slug];
+}
+
 /** Assign a topic to a dataset by slug. */
 export function topicFor(slug: string): string {
   if (slug.startsWith('whr-')) return 'wellbeing';

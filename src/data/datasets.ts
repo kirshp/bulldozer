@@ -5,7 +5,7 @@
  * (scripts/parse_*.mjs) can add datasets without touching code.
  */
 import type { Observation } from '@lib/analytics';
-import { isOpinionSurvey, topicFor } from '@lib/topics';
+import { isOpinionSurvey, topicFor, topicOverride } from '@lib/topics';
 import { methodologyFor } from '@data/methodology';
 
 export type DatasetKind = 'survey' | 'macro';
@@ -59,7 +59,7 @@ function build(modules: Record<string, { default: RawDataset }>): Dataset[] {
       ...raw.meta,
       // kind reflects opinion surveys vs objective statistics, not the source folder
       kind: isOpinionSurvey(slug) ? 'survey' : 'macro',
-      topic: raw.meta.topic ?? topicFor(slug),
+      topic: topicOverride(slug) ?? raw.meta.topic ?? topicFor(slug),
       changeMode: raw.meta.changeMode ?? deriveChangeMode(raw.meta.unit),
       ...methodologyFor(slug),
       data: raw.data,

@@ -5,7 +5,9 @@ import DatasetList from '@components/DatasetList.astro';
 import Scatter from '@components/Scatter.astro';
 import { datasetsByKind, getDataset } from '@data/datasets';
 import { colorFor, regionList } from '@lib/palette';
-const items = datasetsByKind('survey');
+// RLMS covers a single country — keep it inside its study card only, out of the
+// cross-country topic blocks and the filter chips.
+const items = datasetsByKind('survey').filter((d) => !d.slug.startsWith('rlms-'));
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Inglehart-Welzel cultural map — the headline 2-D values picture.
