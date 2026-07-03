@@ -1,0 +1,451 @@
+{
+  "meta": {
+    "title": "Daily Cigarette Smokers",
+    "summary": "Share of adults who smoke cigarettes every day. Eurostat EHIS, 2014–2019.",
+    "unit": "%",
+    "valueLabel": "Daily Cigarette Smokers",
+    "changeMode": "pp",
+    "topic": "health",
+    "source": "Eurostat — EHIS",
+    "license": "CC BY 4.0 (Eurostat reuse policy)",
+    "url": "https://ec.europa.eu/eurostat/databrowser/view/hlth_ehis_sk3e/default/table",
+    "parsedAt": "2026-07-03",
+    "kind": "macro"
+  },
+  "data": [
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2014",
+      "value": 17.2,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2019",
+      "value": 14.6,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2014",
+      "value": 27.3,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2019",
+      "value": 28.7,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Czechia",
+      "group": "Europe",
+      "period": "2014",
+      "value": 21.2,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Czechia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 19.3,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2014",
+      "value": 12.3,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2019",
+      "value": 11.7,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2014",
+      "value": 15,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2019",
+      "value": 21.9,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Estonia",
+      "group": "Europe",
+      "period": "2014",
+      "value": 22.7,
+      "iso": "EST"
+    },
+    {
+      "entity": "Estonia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 18.9,
+      "iso": "EST"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2014",
+      "value": 12.7,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2019",
+      "value": 13.8,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2014",
+      "value": 27,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2019",
+      "value": 23.6,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2014",
+      "value": 22.2,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2019",
+      "value": 19.7,
+      "iso": "ESP"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2014",
+      "value": 20.5,
+      "iso": "FRA"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2019",
+      "value": 17.8,
+      "iso": "FRA"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2014",
+      "value": 24.5,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 21.8,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2014",
+      "value": 17.4,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2019",
+      "value": 16.5,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Cyprus",
+      "group": "Europe",
+      "period": "2014",
+      "value": 25.2,
+      "iso": "CYP"
+    },
+    {
+      "entity": "Cyprus",
+      "group": "Europe",
+      "period": "2019",
+      "value": 21.2,
+      "iso": "CYP"
+    },
+    {
+      "entity": "Latvia",
+      "group": "Europe",
+      "period": "2014",
+      "value": 24.1,
+      "iso": "LVA"
+    },
+    {
+      "entity": "Latvia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 22.1,
+      "iso": "LVA"
+    },
+    {
+      "entity": "Lithuania",
+      "group": "Europe",
+      "period": "2014",
+      "value": 20.2,
+      "iso": "LTU"
+    },
+    {
+      "entity": "Lithuania",
+      "group": "Europe",
+      "period": "2019",
+      "value": 18.4,
+      "iso": "LTU"
+    },
+    {
+      "entity": "Luxembourg",
+      "group": "Europe",
+      "period": "2014",
+      "value": 13.8,
+      "iso": "LUX"
+    },
+    {
+      "entity": "Luxembourg",
+      "group": "Europe",
+      "period": "2019",
+      "value": 10.5,
+      "iso": "LUX"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2014",
+      "value": 25.8,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2019",
+      "value": 19.3,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Malta",
+      "group": "Europe",
+      "period": "2014",
+      "value": 18.9,
+      "iso": "MLT"
+    },
+    {
+      "entity": "Malta",
+      "group": "Europe",
+      "period": "2019",
+      "value": 19.4,
+      "iso": "MLT"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2014",
+      "value": 17.2,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2019",
+      "value": 14.6,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2014",
+      "value": 23.9,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2019",
+      "value": 20.2,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2014",
+      "value": 21.9,
+      "iso": "POL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2019",
+      "value": 18.4,
+      "iso": "POL"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2014",
+      "value": 16.3,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2019",
+      "value": 11.5,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2014",
+      "value": 19.8,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2019",
+      "value": 18.7,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Slovenia",
+      "group": "Europe",
+      "period": "2014",
+      "value": 18,
+      "iso": "SVN"
+    },
+    {
+      "entity": "Slovenia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 16.6,
+      "iso": "SVN"
+    },
+    {
+      "entity": "Slovakia",
+      "group": "Europe",
+      "period": "2014",
+      "value": 22.6,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Slovakia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 20.4,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2014",
+      "value": 11.6,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2019",
+      "value": 9.9,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2014",
+      "value": 8.7,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2019",
+      "value": 6.4,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Iceland",
+      "group": "Europe",
+      "period": "2014",
+      "value": 11,
+      "iso": "ISL"
+    },
+    {
+      "entity": "Iceland",
+      "group": "Europe",
+      "period": "2019",
+      "value": 7.5,
+      "iso": "ISL"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2014",
+      "value": 12.5,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2019",
+      "value": 10.2,
+      "iso": "NOR"
+    },
+    {
+      "entity": "United Kingdom",
+      "group": "Europe",
+      "period": "2014",
+      "value": 13.7,
+      "iso": "GBR"
+    },
+    {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 26.2,
+      "iso": "SRB"
+    },
+    {
+      "entity": "Türkiye",
+      "group": "Europe",
+      "period": "2014",
+      "value": 27.2,
+      "iso": "TUR"
+    },
+    {
+      "entity": "Türkiye",
+      "group": "Europe",
+      "period": "2019",
+      "value": 27.3,
+      "iso": "TUR"
+    }
+  ]
+}
