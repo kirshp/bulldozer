@@ -1,0 +1,2321 @@
+{
+  "meta": {
+    "title": "Paying for Online News (Digital News Report)",
+    "summary": "Share who paid for online news content or a paid online news service in the last year. Reuters Institute Digital News Report, 2019–2026.",
+    "unit": "%",
+    "valueLabel": "Paid for online news last year",
+    "changeMode": "pp",
+    "topic": "media",
+    "method": "Online YouGov panels (~2,000 per market per year); in India, Kenya, Morocco, Nigeria and South Africa samples are urban/English-speaking and not nationally representative.",
+    "source": "Reuters Institute Digital News Report",
+    "license": "Reuters Institute — public aggregates",
+    "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report",
+    "parsedAt": "2026-07-03",
+    "kind": "survey"
+  },
+  "data": [
+    {
+      "entity": "UK",
+      "group": "Europe",
+      "period": "2019",
+      "value": 9,
+      "iso": "GBR"
+    },
+    {
+      "entity": "UK",
+      "group": "Europe",
+      "period": "2020",
+      "value": 7,
+      "iso": "GBR"
+    },
+    {
+      "entity": "UK",
+      "group": "Europe",
+      "period": "2021",
+      "value": 8,
+      "iso": "GBR"
+    },
+    {
+      "entity": "UK",
+      "group": "Europe",
+      "period": "2022",
+      "value": 9,
+      "iso": "GBR"
+    },
+    {
+      "entity": "UK",
+      "group": "Europe",
+      "period": "2023",
+      "value": 9,
+      "iso": "GBR"
+    },
+    {
+      "entity": "UK",
+      "group": "Europe",
+      "period": "2024",
+      "value": 8,
+      "iso": "GBR"
+    },
+    {
+      "entity": "UK",
+      "group": "Europe",
+      "period": "2025",
+      "value": 10,
+      "iso": "GBR"
+    },
+    {
+      "entity": "UK",
+      "group": "Europe",
+      "period": "2026",
+      "value": 10,
+      "iso": "GBR"
+    },
+    {
+      "entity": "USA",
+      "group": "Americas",
+      "period": "2019",
+      "value": 16,
+      "iso": "USA"
+    },
+    {
+      "entity": "USA",
+      "group": "Americas",
+      "period": "2020",
+      "value": 20,
+      "iso": "USA"
+    },
+    {
+      "entity": "USA",
+      "group": "Americas",
+      "period": "2021",
+      "value": 21,
+      "iso": "USA"
+    },
+    {
+      "entity": "USA",
+      "group": "Americas",
+      "period": "2022",
+      "value": 19,
+      "iso": "USA"
+    },
+    {
+      "entity": "USA",
+      "group": "Americas",
+      "period": "2023",
+      "value": 21,
+      "iso": "USA"
+    },
+    {
+      "entity": "USA",
+      "group": "Americas",
+      "period": "2024",
+      "value": 22,
+      "iso": "USA"
+    },
+    {
+      "entity": "USA",
+      "group": "Americas",
+      "period": "2025",
+      "value": 20,
+      "iso": "USA"
+    },
+    {
+      "entity": "USA",
+      "group": "Americas",
+      "period": "2026",
+      "value": 16,
+      "iso": "USA"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2019",
+      "value": 9,
+      "iso": "FRA"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2020",
+      "value": 10,
+      "iso": "FRA"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2021",
+      "value": 11,
+      "iso": "FRA"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2022",
+      "value": 11,
+      "iso": "FRA"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2023",
+      "value": 11,
+      "iso": "FRA"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2024",
+      "value": 11,
+      "iso": "FRA"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2025",
+      "value": 11,
+      "iso": "FRA"
+    },
+    {
+      "entity": "France",
+      "group": "Europe",
+      "period": "2026",
+      "value": 12,
+      "iso": "FRA"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2019",
+      "value": 8,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2020",
+      "value": 10,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2021",
+      "value": 9,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2022",
+      "value": 14,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2023",
+      "value": 11,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2024",
+      "value": 13,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2025",
+      "value": 13,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Germany",
+      "group": "Europe",
+      "period": "2026",
+      "value": 11,
+      "iso": "DEU"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2019",
+      "value": 15,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2020",
+      "value": 17,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2021",
+      "value": 16,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2022",
+      "value": 18,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2023",
+      "value": 19,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2024",
+      "value": 17,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2025",
+      "value": 19,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Denmark",
+      "group": "Europe",
+      "period": "2026",
+      "value": 20,
+      "iso": "DNK"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2019",
+      "value": 16,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2020",
+      "value": 19,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2021",
+      "value": 20,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2022",
+      "value": 19,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 21,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2024",
+      "value": 20,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2025",
+      "value": 21,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Finland",
+      "group": "Europe",
+      "period": "2026",
+      "value": 23,
+      "iso": "FIN"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2019",
+      "value": 9,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2020",
+      "value": 10,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2021",
+      "value": 13,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2022",
+      "value": 12,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2023",
+      "value": 12,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2024",
+      "value": 10,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2025",
+      "value": 9,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Italy",
+      "group": "Europe",
+      "period": "2026",
+      "value": 8,
+      "iso": "ITA"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2019",
+      "value": 10,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2020",
+      "value": 12,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2021",
+      "value": 12,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2022",
+      "value": 12,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2023",
+      "value": 13,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2024",
+      "value": 12,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2025",
+      "value": 10,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Spain",
+      "group": "Europe",
+      "period": "2026",
+      "value": 9,
+      "iso": "ESP"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2019",
+      "value": 7,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2020",
+      "value": 8,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2021",
+      "value": 10,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2022",
+      "value": 10,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 9,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2024",
+      "value": 9,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2025",
+      "value": 10,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Japan",
+      "group": "Asia",
+      "period": "2026",
+      "value": 9,
+      "iso": "JPN"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2019",
+      "value": 22,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2020",
+      "value": 27,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2021",
+      "value": 17,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2022",
+      "value": 18,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2023",
+      "value": 20,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2024",
+      "value": 19,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2025",
+      "value": 17,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2026",
+      "value": 15,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2019",
+      "value": 14,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2020",
+      "value": 14,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2021",
+      "value": 13,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2022",
+      "value": 18,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2023",
+      "value": 22,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2024",
+      "value": 21,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2025",
+      "value": 22,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Australia",
+      "group": "Asia",
+      "period": "2026",
+      "value": 23,
+      "iso": "AUS"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2019",
+      "value": 12,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2020",
+      "value": 12,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2021",
+      "value": 16,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2022",
+      "value": 16,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 15,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2024",
+      "value": 17,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2025",
+      "value": 20,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Ireland",
+      "group": "Europe",
+      "period": "2026",
+      "value": 22,
+      "iso": "IRL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2019",
+      "value": 16,
+      "iso": "POL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2020",
+      "value": 20,
+      "iso": "POL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2021",
+      "value": 18,
+      "iso": "POL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2022",
+      "value": 14,
+      "iso": "POL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 14,
+      "iso": "POL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2024",
+      "value": 14,
+      "iso": "POL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2025",
+      "value": 13,
+      "iso": "POL"
+    },
+    {
+      "entity": "Poland",
+      "group": "Europe",
+      "period": "2026",
+      "value": 11,
+      "iso": "POL"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2019",
+      "value": 7,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2020",
+      "value": 10,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2021",
+      "value": 13,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2022",
+      "value": 12,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2023",
+      "value": 14,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2024",
+      "value": 13,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2025",
+      "value": 13,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Czech Republic",
+      "group": "Europe",
+      "period": "2026",
+      "value": 13,
+      "iso": "CZE"
+    },
+    {
+      "entity": "Turkey",
+      "group": "Europe",
+      "period": "2019",
+      "value": 34,
+      "iso": "TUR"
+    },
+    {
+      "entity": "Turkey",
+      "group": "Europe",
+      "period": "2020",
+      "value": 46,
+      "iso": "TUR"
+    },
+    {
+      "entity": "Turkey",
+      "group": "Europe",
+      "period": "2021",
+      "value": 28,
+      "iso": "TUR"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2019",
+      "value": 7,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2020",
+      "value": 10,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2021",
+      "value": 17,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2022",
+      "value": 12,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2023",
+      "value": 11,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2024",
+      "value": 12,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2025",
+      "value": 10,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Portugal",
+      "group": "Europe",
+      "period": "2026",
+      "value": 8,
+      "iso": "PRT"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2019",
+      "value": 9,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2020",
+      "value": 11,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2021",
+      "value": 12,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2022",
+      "value": 14,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2023",
+      "value": 14,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2024",
+      "value": 14,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2025",
+      "value": 22,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Austria",
+      "group": "Europe",
+      "period": "2026",
+      "value": 16,
+      "iso": "AUT"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2019",
+      "value": 11,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2020",
+      "value": 14,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2021",
+      "value": 17,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2022",
+      "value": 17,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2023",
+      "value": 17,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2024",
+      "value": 15,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2025",
+      "value": 17,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Netherlands",
+      "group": "Europe",
+      "period": "2026",
+      "value": 15,
+      "iso": "NLD"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2019",
+      "value": 7,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2020",
+      "value": 11,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2021",
+      "value": 12,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2022",
+      "value": 11,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2023",
+      "value": 10,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2024",
+      "value": 11,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2025",
+      "value": 7,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Greece",
+      "group": "Europe",
+      "period": "2026",
+      "value": 8,
+      "iso": "GRC"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2019",
+      "value": 7,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2020",
+      "value": 10,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2021",
+      "value": 14,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2022",
+      "value": 11,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2023",
+      "value": 9,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2024",
+      "value": 10,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2025",
+      "value": 8,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Hungary",
+      "group": "Europe",
+      "period": "2026",
+      "value": 6,
+      "iso": "HUN"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2019",
+      "value": 34,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2020",
+      "value": 42,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2021",
+      "value": 45,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2022",
+      "value": 41,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2023",
+      "value": 39,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2024",
+      "value": 40,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2025",
+      "value": 42,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Norway",
+      "group": "Europe",
+      "period": "2026",
+      "value": 40,
+      "iso": "NOR"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2019",
+      "value": 27,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2020",
+      "value": 27,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2021",
+      "value": 30,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2022",
+      "value": 33,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2023",
+      "value": 33,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2024",
+      "value": 31,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2025",
+      "value": 31,
+      "iso": "SWE"
+    },
+    {
+      "entity": "Sweden",
+      "group": "Europe",
+      "period": "2026",
+      "value": 32,
+      "iso": "SWE"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2019",
+      "value": 10,
+      "iso": "KOR"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2020",
+      "value": 10,
+      "iso": "KOR"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2021",
+      "value": 13,
+      "iso": "KOR"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2022",
+      "value": 14,
+      "iso": "KOR"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2023",
+      "value": 11,
+      "iso": "KOR"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2024",
+      "value": 15,
+      "iso": "KOR"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2025",
+      "value": 19,
+      "iso": "KOR"
+    },
+    {
+      "entity": "South Korea",
+      "group": "Asia",
+      "period": "2026",
+      "value": 19,
+      "iso": "KOR"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2019",
+      "value": 11,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2020",
+      "value": 12,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2021",
+      "value": 16,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2022",
+      "value": 19,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2023",
+      "value": 15,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2024",
+      "value": 15,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2025",
+      "value": 16,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Belgium",
+      "group": "Europe",
+      "period": "2026",
+      "value": 14,
+      "iso": "BEL"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2019",
+      "value": 11,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2020",
+      "value": 13,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2021",
+      "value": 17,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2022",
+      "value": 18,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2023",
+      "value": 17,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2024",
+      "value": 17,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2025",
+      "value": 22,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Switzerland",
+      "group": "Europe",
+      "period": "2026",
+      "value": 19,
+      "iso": "CHE"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2019",
+      "value": 9,
+      "iso": "CAN"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2020",
+      "value": 13,
+      "iso": "CAN"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2021",
+      "value": 13,
+      "iso": "CAN"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2022",
+      "value": 15,
+      "iso": "CAN"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2023",
+      "value": 11,
+      "iso": "CAN"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2024",
+      "value": 15,
+      "iso": "CAN"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2025",
+      "value": 14,
+      "iso": "CAN"
+    },
+    {
+      "entity": "Canada",
+      "group": "Americas",
+      "period": "2026",
+      "value": 12,
+      "iso": "CAN"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2019",
+      "value": 12,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2020",
+      "value": 15,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2021",
+      "value": 14,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2022",
+      "value": 14,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2023",
+      "value": 13,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2024",
+      "value": 15,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2025",
+      "value": 14,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Taiwan",
+      "group": "Asia",
+      "period": "2026",
+      "value": 10,
+      "iso": "TWN"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2019",
+      "value": 16,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2020",
+      "value": 17,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2021",
+      "value": 16,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2022",
+      "value": 17,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2023",
+      "value": 18,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2024",
+      "value": 21,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2025",
+      "value": 18,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Malaysia",
+      "group": "Asia",
+      "period": "2026",
+      "value": 18,
+      "iso": "MYS"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2019",
+      "value": 16,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2020",
+      "value": 14,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2021",
+      "value": 14,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2022",
+      "value": 17,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2023",
+      "value": 15,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2024",
+      "value": 14,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2025",
+      "value": 16,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Singapore",
+      "group": "Asia",
+      "period": "2026",
+      "value": 17,
+      "iso": "SGP"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2019",
+      "value": 17,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2020",
+      "value": 29,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2021",
+      "value": 23,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2022",
+      "value": 22,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2023",
+      "value": 16,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2024",
+      "value": 18,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2025",
+      "value": 22,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Hong Kong",
+      "group": "Asia",
+      "period": "2026",
+      "value": 18,
+      "iso": "HKG"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2019",
+      "value": 10,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2020",
+      "value": 16,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2021",
+      "value": 19,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2022",
+      "value": 16,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2023",
+      "value": 15,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2024",
+      "value": 16,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2025",
+      "value": 12,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Romania",
+      "group": "Europe",
+      "period": "2026",
+      "value": 15,
+      "iso": "ROU"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2019",
+      "value": 8,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2020",
+      "value": 12,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2021",
+      "value": 13,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2022",
+      "value": 14,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2023",
+      "value": 12,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2024",
+      "value": 12,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2025",
+      "value": 12,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Slovak Republic",
+      "group": "Europe",
+      "period": "2026",
+      "value": 11,
+      "iso": "SVK"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 6,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2020",
+      "value": 7,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2021",
+      "value": 7,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2022",
+      "value": 8,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 8,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2024",
+      "value": 9,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2025",
+      "value": 6,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Croatia",
+      "group": "Europe",
+      "period": "2026",
+      "value": 8,
+      "iso": "HRV"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2019",
+      "value": 16,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2020",
+      "value": 17,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2021",
+      "value": 18,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2022",
+      "value": 18,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2023",
+      "value": 16,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2024",
+      "value": 18,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2025",
+      "value": 14,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2026",
+      "value": 15,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2019",
+      "value": 7,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2020",
+      "value": 9,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2021",
+      "value": 12,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2022",
+      "value": 10,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2023",
+      "value": 11,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2024",
+      "value": 12,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2025",
+      "value": 10,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2026",
+      "value": 10,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2019",
+      "value": 8,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2020",
+      "value": 11,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2021",
+      "value": 15,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2022",
+      "value": 10,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2023",
+      "value": 12,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2024",
+      "value": 15,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2025",
+      "value": 11,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2026",
+      "value": 10,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2019",
+      "value": 7,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2020",
+      "value": 10,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2021",
+      "value": 15,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2022",
+      "value": 12,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2023",
+      "value": 11,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2024",
+      "value": 11,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2025",
+      "value": 9,
+      "iso": "BGR"
+    },
+    {
+      "entity": "Bulgaria",
+      "group": "Europe",
+      "period": "2026",
+      "value": 9,
+      "iso": "BGR"
+    },
+    {
+      "entity": "South Africa",
+      "group": "Africa",
+      "period": "2019",
+      "value": 16,
+      "iso": "ZAF"
+    },
+    {
+      "entity": "South Africa",
+      "group": "Africa",
+      "period": "2020",
+      "value": 21,
+      "iso": "ZAF"
+    },
+    {
+      "entity": "South Africa",
+      "group": "Africa",
+      "period": "2021",
+      "value": 24,
+      "iso": "ZAF"
+    },
+    {
+      "entity": "Kenya",
+      "group": "Africa",
+      "period": "2020",
+      "value": 39,
+      "iso": "KEN"
+    },
+    {
+      "entity": "Kenya",
+      "group": "Africa",
+      "period": "2021",
+      "value": 39,
+      "iso": "KEN"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2020",
+      "value": 19,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2021",
+      "value": 17,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2022",
+      "value": 19,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2023",
+      "value": 16,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2024",
+      "value": 18,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2025",
+      "value": 15,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Philippines",
+      "group": "Asia",
+      "period": "2026",
+      "value": 13,
+      "iso": "PHL"
+    },
+    {
+      "entity": "Colombia",
+      "group": "Americas",
+      "period": "2021",
+      "value": 15,
+      "iso": "COL"
+    },
+    {
+      "entity": "Colombia",
+      "group": "Americas",
+      "period": "2022",
+      "value": 12,
+      "iso": "COL"
+    },
+    {
+      "entity": "Colombia",
+      "group": "Americas",
+      "period": "2023",
+      "value": 14,
+      "iso": "COL"
+    },
+    {
+      "entity": "Colombia",
+      "group": "Americas",
+      "period": "2024",
+      "value": 15,
+      "iso": "COL"
+    },
+    {
+      "entity": "Colombia",
+      "group": "Americas",
+      "period": "2025",
+      "value": 14,
+      "iso": "COL"
+    },
+    {
+      "entity": "Colombia",
+      "group": "Americas",
+      "period": "2026",
+      "value": 15,
+      "iso": "COL"
+    },
+    {
+      "entity": "India",
+      "group": "Asia",
+      "period": "2021",
+      "value": 36,
+      "iso": "IND"
+    },
+    {
+      "entity": "Indonesia",
+      "group": "Asia",
+      "period": "2021",
+      "value": 19,
+      "iso": "IDN"
+    },
+    {
+      "entity": "Indonesia",
+      "group": "Asia",
+      "period": "2022",
+      "value": 18,
+      "iso": "IDN"
+    },
+    {
+      "entity": "Indonesia",
+      "group": "Asia",
+      "period": "2023",
+      "value": 19,
+      "iso": "IDN"
+    },
+    {
+      "entity": "Indonesia",
+      "group": "Asia",
+      "period": "2024",
+      "value": 16,
+      "iso": "IDN"
+    },
+    {
+      "entity": "Indonesia",
+      "group": "Asia",
+      "period": "2025",
+      "value": 18,
+      "iso": "IDN"
+    },
+    {
+      "entity": "Indonesia",
+      "group": "Asia",
+      "period": "2026",
+      "value": 17,
+      "iso": "IDN"
+    },
+    {
+      "entity": "Nigeria",
+      "group": "Africa",
+      "period": "2021",
+      "value": 32,
+      "iso": "NGA"
+    },
+    {
+      "entity": "Peru",
+      "group": "Americas",
+      "period": "2021",
+      "value": 16,
+      "iso": "PER"
+    },
+    {
+      "entity": "Peru",
+      "group": "Americas",
+      "period": "2022",
+      "value": 14,
+      "iso": "PER"
+    },
+    {
+      "entity": "Peru",
+      "group": "Americas",
+      "period": "2023",
+      "value": 13,
+      "iso": "PER"
+    },
+    {
+      "entity": "Peru",
+      "group": "Americas",
+      "period": "2024",
+      "value": 16,
+      "iso": "PER"
+    },
+    {
+      "entity": "Peru",
+      "group": "Americas",
+      "period": "2025",
+      "value": 18,
+      "iso": "PER"
+    },
+    {
+      "entity": "Peru",
+      "group": "Americas",
+      "period": "2026",
+      "value": 14,
+      "iso": "PER"
+    },
+    {
+      "entity": "Thailand",
+      "group": "Asia",
+      "period": "2021",
+      "value": 20,
+      "iso": "THA"
+    },
+    {
+      "entity": "Morocco",
+      "group": "Africa",
+      "period": "2024",
+      "value": 14,
+      "iso": "MAR"
+    },
+    {
+      "entity": "Morocco",
+      "group": "Africa",
+      "period": "2025",
+      "value": 14,
+      "iso": "MAR"
+    },
+    {
+      "entity": "Morocco",
+      "group": "Africa",
+      "period": "2026",
+      "value": 16,
+      "iso": "MAR"
+    },
+    {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2025",
+      "value": 7,
+      "iso": "SRB"
+    },
+    {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2026",
+      "value": 7,
+      "iso": "SRB"
+    }
+  ]
+}

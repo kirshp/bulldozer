@@ -42,6 +42,12 @@ export const releases: Release[] = [
   { name: 'RSF — World Press Freedom Index', window: 'May (Press Freedom Day)', months: [5], kind: 'survey',
     description: 'Reporters Without Borders’ annual ranking of press freedom in 180 countries.',
     url: 'https://rsf.org/en/index' },
+  { name: 'Reuters Institute Digital News Report', window: 'Mid June', months: [6], kind: 'survey',
+    description: 'The yearly study of news consumption across ~48 markets — trust, payment, avoidance, platforms.',
+    url: 'https://reutersinstitute.politics.ox.ac.uk/digital-news-report' },
+  { name: 'Latinobarómetro report', window: 'December', months: [12], kind: 'survey',
+    description: 'Annual report on democracy and society across 18 Latin American countries.',
+    url: 'https://www.latinobarometro.org/' },
 ];
 
 /** Releases ordered by how soon the next one is, from the given month (1–12). */

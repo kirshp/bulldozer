@@ -11,6 +11,7 @@ export const TOPICS: Record<string, Topic> = {
   environment: { id: 'environment', label: 'Environment', icon: '🌱' },
   connectivity: { id: 'connectivity', label: 'Connectivity', icon: '🌐' },
   governance: { id: 'governance', label: 'Governance', icon: '🏛️' },
+  media: { id: 'media', label: 'Media & news', icon: '📰' },
   safety: { id: 'safety', label: 'Safety', icon: '🛡️' },
   risk: { id: 'risk', label: 'Risk & resilience', icon: '⚠️' },
   wellbeing: { id: 'wellbeing', label: 'Wellbeing', icon: '😊' },
@@ -20,14 +21,15 @@ export const TOPICS: Record<string, Topic> = {
 /** Display order of topics — alphabetical by label (Attitudes first). */
 export const TOPIC_ORDER = [
   'attitudes', 'connectivity', 'demographics', 'economy', 'education',
-  'environment', 'governance', 'health', 'risk', 'safety', 'wellbeing',
+  'environment', 'governance', 'health', 'media', 'risk', 'safety', 'wellbeing',
 ];
 
 /** True opinion/perception surveys (everything else is objective statistics). */
 export function isOpinionSurvey(slug: string): boolean {
   return slug.startsWith('whr-') || slug.startsWith('lits-') || slug.startsWith('wrp-')
     || slug.startsWith('hofstede-') || slug.startsWith('wvs-') || slug.startsWith('afro-') || slug.startsWith('ess-')
-    || slug.startsWith('sdr2-') || slug.startsWith('cb-') || slug.startsWith('wgm-') || slug.startsWith('rlms-');
+    || slug.startsWith('sdr2-') || slug.startsWith('cb-') || slug.startsWith('wgm-') || slug.startsWith('rlms-')
+    || slug.startsWith('lb-') || slug.startsWith('dnr-');
 }
 
 /** Assign a topic to a dataset by slug. */

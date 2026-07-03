@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "title": "Interpersonal Trust (Latinobarómetro)",
+    "summary": "Share who say most people can be trusted. Latinobarómetro 2024 report, single 2024 wave.",
+    "unit": "%",
+    "valueLabel": "Most people can be trusted",
+    "changeMode": "pp",
+    "topic": "attitudes",
+    "vintage": "2024 wave",
+    "method": "Country aggregates as published in the Informe 2024 (report tables, weighted national samples ~1,000–1,200 per country).",
+    "source": "Latinobarómetro (Informe 2024)",
+    "license": "Latinobarómetro — public report aggregates",
+    "url": "https://www.latinobarometro.org/",
+    "parsedAt": "2026-07-03",
+    "kind": "survey"
+  },
+  "data": [
+    {
+      "entity": "Mexico",
+      "group": "Americas",
+      "period": "2024",
+      "value": 26,
+      "iso": "MEX"
+    },
+    {
+      "entity": "Argentina",
+      "group": "Americas",
+      "period": "2024",
+      "value": 24,
+      "iso": "ARG"
+    },
+    {
+      "entity": "Panama",
+      "group": "Americas",
+      "period": "2024",
+      "value": 19,
+      "iso": "PAN"
+    },
+    {
+      "entity": "Costa Rica",
+      "group": "Americas",
+      "period": "2024",
+      "value": 10,
+      "iso": "CRI"
+    },
+    {
+      "entity": "Dominican Republic",
+      "group": "Americas",
+      "period": "2024",
+      "value": 20,
+      "iso": "DOM"
+    },
+    {
+      "entity": "Guatemala",
+      "group": "Americas",
+      "period": "2024",
+      "value": 15,
+      "iso": "GTM"
+    },
+    {
+      "entity": "Ecuador",
+      "group": "Americas",
+      "period": "2024",
+      "value": 8,
+      "iso": "ECU"
+    },
+    {
+      "entity": "Honduras",
+      "group": "Americas",
+      "period": "2024",
+      "value": 14,
+      "iso": "HND"
+    },
+    {
+      "entity": "Chile",
+      "group": "Americas",
+      "period": "2024",
+      "value": 21,
+      "iso": "CHL"
+    },
+    {
+      "entity": "Paraguay",
+      "group": "Americas",
+      "period": "2024",
+      "value": 12,
+      "iso": "PRY"
+    },
+    {
+      "entity": "Venezuela",
+      "group": "Americas",
+      "period": "2024",
+      "value": 15,
+      "iso": "VEN"
+    },
+    {
+      "entity": "El Salvador",
+      "group": "Americas",
+      "period": "2024",
+      "value": 16,
+      "iso": "SLV"
+    },
+    {
+      "entity": "Colombia",
+      "group": "Americas",
+      "period": "2024",
+      "value": 15,
+      "iso": "COL"
+    },
+    {
+      "entity": "Uruguay",
+      "group": "Americas",
+      "period": "2024",
+      "value": 20,
+      "iso": "URY"
+    },
+    {
+      "entity": "Brazil",
+      "group": "Americas",
+      "period": "2024",
+      "value": 5,
+      "iso": "BRA"
+    },
+    {
+      "entity": "Bolivia",
+      "group": "Americas",
+      "period": "2024",
+      "value": 12,
+      "iso": "BOL"
+    },
+    {
+      "entity": "Peru",
+      "group": "Americas",
+      "period": "2024",
+      "value": 10,
+      "iso": "PER"
+    }
+  ]
+}
