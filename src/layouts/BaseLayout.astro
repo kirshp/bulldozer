@@ -58,6 +58,17 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;600&display=swap"
       rel="stylesheet"
     />
+    {import.meta.env.PROD && (
+      <>
+        <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-QM1PRCY7M1"></script>
+        <script is:inline>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-QM1PRCY7M1');
+        </script>
+      </>
+    )}
   </head>
   <body>
     <header class="site-header">
