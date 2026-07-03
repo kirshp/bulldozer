@@ -4,7 +4,7 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
-  active?: 'home' | 'news' | 'explore' | 'sources' | 'surveys' | 'macro' | 'markets' | 'geo' | 'glossary';
+  active?: 'home' | 'news' | 'explore' | 'sources' | 'surveys' | 'macro' | 'markets' | 'geo' | 'edu' | 'glossary';
   /** Path (under base) to a page-specific OG image, e.g. `/og/whr-happiness.png`. */
   ogPath?: string;
 }
@@ -17,6 +17,7 @@ const nav = [
   { id: 'markets', label: 'Firms', href: `${base}/markets` },
   { id: 'surveys', label: 'Polls', href: `${base}/surveys` },
   { id: 'geo', label: 'Geo', href: `${base}/geo` },
+  { id: 'edu', label: 'Edu', href: `${base}/edu` },
 ];
 const fullTitle = title ? `${title} · BullDozer` : 'BullDozer — Marketing Analytics & Research';
 const desc = description ?? 'Bulldoze the noise. Mine the signal. 136 public, parsed datasets — surveys, IMF & World Bank macro, markets and people. Every number sourced.';

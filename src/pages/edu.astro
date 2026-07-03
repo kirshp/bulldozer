@@ -1,0 +1,230 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const DASH_TYPES = [
+  {
+    icon: '📌',
+    name: 'KPI / executive',
+    what: 'A handful of headline numbers with trend and target — revenue, share, NPS. Read in ten seconds, updated on a schedule.',
+    example: 'Board one-pager, weekly business review',
+    tools: 'Tableau, Power BI, Looker Studio',
+  },
+  {
+    icon: '⚡',
+    name: 'Operational / real-time',
+    what: 'Live state of a system or campaign: traffic, conversions, error rates. Optimised for monitoring and alerting, not analysis.',
+    example: 'Grafana wall in a NOC, campaign launch monitor',
+    tools: 'Grafana, Superset, Metabase',
+  },
+  {
+    icon: '🔬',
+    name: 'Analytical / exploratory',
+    what: 'Many linked filters and cross-sections so an analyst can slice the data themselves and hunt for the "why" behind a number.',
+    example: 'Survey explorer, cohort browser — most of BullDozer’s Charts page',
+    tools: 'Tableau, Superset, Plotly Dash, Streamlit',
+  },
+  {
+    icon: '🧭',
+    name: 'Strategic',
+    what: 'Long horizons and few updates: market sizing, country scoring, scenario comparison. Depth over freshness.',
+    example: 'Market-entry scorecard, annual planning deck',
+    tools: 'Tableau, Power BI, hand-built D3',
+  },
+  {
+    icon: '📖',
+    name: 'Data story / scrollytelling',
+    what: 'A fixed narrative with charts in a deliberate order. The author controls the path; the reader scrolls, not filters.',
+    example: 'FT and The Pudding longreads, Our World in Data articles',
+    tools: 'D3/SVG, Observable, Flourish, Datawrapper',
+  },
+  {
+    icon: '🗺️',
+    name: 'Geospatial',
+    what: 'The map is the interface: choropleths, point clusters, flows. Works when location itself carries the signal.',
+    example: 'BullDozer’s Geo page, election maps, store networks',
+    tools: 'Kepler.gl, Mapbox, deck.gl, QGIS',
+  },
+];
+
+const BI_TOOLS = [
+  { name: 'Tableau', url: 'https://www.tableau.com/', kind: 'Commercial', best: 'Deep visual exploration; the analyst drag-and-drop standard. Free publishing via Tableau Public.', note: 'Desktop app; steep licence, gentle learning curve' },
+  { name: 'Power BI', url: 'https://www.microsoft.com/power-platform/products/power-bi', kind: 'Commercial', best: 'Corporate reporting in Microsoft shops; tight Excel/Azure integration, DAX for modelling.', note: 'Cheap per seat; Windows-centric' },
+  { name: 'Apache Superset', url: 'https://superset.apache.org/', kind: 'Open source', best: 'Self-hosted BI over SQL databases; dashboards, SQL Lab, row-level security. The main OSS Tableau alternative.', note: 'Needs a server and some ops' },
+  { name: 'Grafana', url: 'https://grafana.com/', kind: 'Open source', best: 'Time series and monitoring: metrics, logs, alerting. Less suited to ad-hoc table analytics.', note: 'Try live demos at play.grafana.org' },
+  { name: 'Metabase', url: 'https://www.metabase.com/', kind: 'Open source', best: 'The fastest "questions over a database" tool for non-analysts; five-minute setup.', note: 'Simpler charts than Superset' },
+  { name: 'Looker Studio', url: 'https://lookerstudio.google.com/', kind: 'Free (Google)', best: 'Free shareable dashboards over Google Analytics, Sheets and BigQuery.', note: 'Weak outside the Google ecosystem' },
+  { name: 'Plotly / Dash', url: 'https://dash.plotly.com/', kind: 'Open source', best: 'Analytical web apps in pure Python — full control over interactivity and layout.', note: 'You write code, not drag charts' },
+  { name: 'Streamlit', url: 'https://streamlit.io/', kind: 'Open source', best: 'Turning a Python script into an interactive app in an afternoon; ideal for prototypes and ML demos.', note: 'Reruns whole script per interaction' },
+  { name: 'Observable', url: 'https://observablehq.com/', kind: 'Freemium', best: 'JavaScript notebooks for bespoke D3 visuals; home of Observable Plot.', note: 'For people who like code' },
+  { name: 'Datawrapper', url: 'https://www.datawrapper.de/', kind: 'Freemium', best: 'Newsroom-grade single charts and maps with zero code; excellent defaults.', note: 'Charts, not full dashboards' },
+  { name: 'Flourish', url: 'https://flourish.studio/', kind: 'Freemium', best: 'Animated templates — bar chart races, scrollytelling — publishable in minutes.', note: 'Template-bound' },
+  { name: 'D3 / hand-written SVG', url: 'https://d3js.org/', kind: 'Open source', best: 'Total control, zero dependencies, any design. Everything on BullDozer is built this way.', note: 'Slowest to build, most durable' },
+];
+
+const RESOURCES = [
+  {
+    group: 'Chart choice & dataviz craft',
+    items: [
+      { name: 'FT Visual Vocabulary', url: 'https://github.com/Financial-Times/chart-doctor/tree/main/visual-vocabulary', desc: 'The Financial Times poster of ~70 chart types organised by what you want to show. The single best cheat sheet.' },
+      { name: 'From Data to Viz', url: 'https://www.data-to-viz.com/', desc: 'Decision tree from your data shape to the right chart, with code for each.' },
+      { name: 'Data Viz Project', url: 'https://datavizproject.com/', desc: 'Searchable catalogue of 150+ chart types with real examples.' },
+      { name: 'Datawrapper Academy & blog', url: 'https://academy.datawrapper.de/', desc: 'Short, practical lessons on colour, annotation and chart choice — useful with any tool.' },
+    ],
+  },
+  {
+    group: 'Inspiration — the best public data journalism',
+    items: [
+      { name: 'Our World in Data', url: 'https://ourworldindata.org/', desc: 'Long-run global indicators, all charts downloadable with sources. BullDozer follows its sourcing discipline.' },
+      { name: 'The Pudding', url: 'https://pudding.cool/', desc: 'Visual essays; the reference for scrollytelling.' },
+      { name: 'Tableau Public gallery', url: 'https://public.tableau.com/app/discover', desc: 'Thousands of open dashboards — Viz of the Day shows what the tool can really do.' },
+      { name: 'Information is Beautiful', url: 'https://informationisbeautiful.net/', desc: 'David McCandless’s gallery; annual Kantar awards collect the year’s best work.' },
+    ],
+  },
+  {
+    group: 'SQL & analytics practice',
+    items: [
+      { name: 'SQLBolt', url: 'https://sqlbolt.com/', desc: 'Interactive SQL from zero, in the browser.' },
+      { name: 'PostgreSQL Exercises', url: 'https://pgexercises.com/', desc: 'Realistic Postgres drills — joins, aggregates, window functions.' },
+      { name: 'Mode SQL Tutorial', url: 'https://mode.com/sql-tutorial/', desc: 'SQL taught the way analysts actually use it, up to window functions and optimisation.' },
+      { name: 'Kaggle Learn', url: 'https://www.kaggle.com/learn', desc: 'Free micro-courses: pandas, data viz, SQL, ML basics — with in-browser notebooks.' },
+    ],
+  },
+  {
+    group: 'Scraping & data pipelines',
+    items: [
+      { name: 'Beautiful Soup docs', url: 'https://www.crummy.com/software/BeautifulSoup/bs4/doc/', desc: 'The standard Python library for parsing HTML you have already fetched.' },
+      { name: 'Scrapy', url: 'https://scrapy.org/', desc: 'Framework for crawlers that need queues, retries and pipelines — when one script is not enough.' },
+      { name: 'Playwright', url: 'https://playwright.dev/', desc: 'Drives a real browser; the answer when the data only appears after JavaScript runs.' },
+      { name: 'GitHub Actions', url: 'https://docs.github.com/actions', desc: 'Free cron for data work: schedule a parser, commit the output, publish a static site.' },
+    ],
+  },
+];
+---
+<BaseLayout
+  title="Edu"
+  description="A field guide to dashboards: the six dashboard types, an honest comparison of BI tools from Tableau to Superset and Grafana, how BullDozer parses its data, and the best free places to learn."
+  active="edu"
+>
+  <section class="section" id="types">
+    <div class="container">
+      <nav class="explore-nav">
+        <a class="ghost-btn" href="#types">🗂 Dashboard types</a>
+        <a class="ghost-btn" href="#tools">🛠 BI tools</a>
+        <a class="ghost-btn" href="#pipeline">⚙️ How BullDozer is built</a>
+        <a class="ghost-btn" href="#learn">🎓 Learning resources</a>
+      </nav>
+      <span class="kicker">Edu</span>
+      <h2>A field guide to dashboards</h2>
+      <p class="page-tagline">Learn the trade, then break ground.</p>
+      <p class="sub">
+        What kinds of dashboards exist, which tool to reach for, how this site parses its own data — and the
+        best free places to learn. Opinionated on purpose; every link is a primary source.
+      </p>
+
+      <h2 style="margin-top:34px">Six kinds of dashboard</h2>
+      <p class="sub">Most dashboard failures are type errors — a real-time layout answering a strategic question. Decide the type first, then the tool.</p>
+      <div class="grid cols-2">
+        {DASH_TYPES.map((t) => (
+          <div class="card">
+            <h3>{t.icon} {t.name}</h3>
+            <p style="font-size:14px; margin:8px 0">{t.what}</p>
+            <p class="meta"><b>Example:</b> {t.example}</p>
+            <p class="meta"><b>Typical tools:</b> {t.tools}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="tools">
+    <div class="container">
+      <span class="kicker">Tooling</span>
+      <h2>BI tools, honestly compared</h2>
+      <p class="sub">
+        There is no best tool, only a best fit. Rough rule: <b>Metabase</b> to give a team self-serve answers,
+        <b>Superset</b> or <b>Grafana</b> to self-host seriously, <b>Tableau</b> or <b>Power BI</b> when the company already pays for them,
+        <b>Dash</b>/<b>Streamlit</b> when the logic lives in Python, and <b>D3</b> when the output must be exactly what you designed.
+      </p>
+      <div style="overflow-x:auto">
+        <table class="data">
+          <thead>
+            <tr><th>Tool</th><th>Licence</th><th>Strongest at</th><th>Keep in mind</th></tr>
+          </thead>
+          <tbody>
+            {BI_TOOLS.map((t) => (
+              <tr>
+                <td style="white-space:nowrap"><a href={t.url} target="_blank" rel="noopener">{t.name} ↗</a></td>
+                <td style="white-space:nowrap">{t.kind}</td>
+                <td>{t.best}</td>
+                <td>{t.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="pipeline">
+    <div class="container">
+      <span class="kicker">Under the hood</span>
+      <h2>How BullDozer is built</h2>
+      <p class="sub">This whole site is one worked example of a parsing-to-publication pipeline — no database, no BI licence, no server.</p>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>1 · Parse</h3>
+          <p style="font-size:14px; margin:8px 0">
+            Every dataset starts as a public file — IMF and World Bank APIs, survey CSVs from WVS, Afrobarometer or V-Dem,
+            Excel sheets from research institutes. A parser script per source downloads it and reads it as-is.
+          </p>
+          <p class="meta">One source = one script, so a broken source never blocks the rest.</p>
+        </div>
+        <div class="card">
+          <h3>2 · Normalise</h3>
+          <p style="font-size:14px; margin:8px 0">
+            Everything is reshaped into one long format: <code>country · period · value</code>, with ISO-3 codes and
+            a metadata block (source, licence, method, link). 136 datasets, one schema.
+          </p>
+          <p class="meta">The long format is why every chart on the site works with every indicator.</p>
+        </div>
+        <div class="card">
+          <h3>3 · Publish</h3>
+          <p style="font-size:14px; margin:8px 0">
+            A static site generator (Astro) bakes the JSON into pages and hand-written SVG charts at build time.
+            The result is plain HTML on a CDN — fast, free to host, nothing to hack.
+          </p>
+          <p class="meta">Interactivity is a few KB of vanilla JS per chart; no framework ships to the reader.</p>
+        </div>
+      </div>
+      <p class="sub" style="margin-top:18px">
+        Practical parsing notes: prefer an official API or bulk-download over scraping HTML; keep the raw file and parse a copy;
+        re-run on a schedule (GitHub Actions cron) rather than by hand; and record the source URL and access date next to the data —
+        that is what makes “every number sourced” possible. Browse the results on
+        <a href={`${base}/surveys`}>Polls</a> and <a href={`${base}/macro`}>Macro</a>, or check definitions in the
+        <a href={`${base}/glossary`}>Glossary</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" id="learn">
+    <div class="container">
+      <span class="kicker">Learning</span>
+      <h2>Free places to learn</h2>
+      <p class="sub">A short list that is actually short — each entry earns its place.</p>
+      {RESOURCES.map((g) => (
+        <div style="margin-bottom:26px">
+          <h3 style="font-size:16px; margin:22px 0 12px">{g.group}</h3>
+          <div class="grid cols-2">
+            {g.items.map((r) => (
+              <a class="card link" href={r.url} target="_blank" rel="noopener" style="text-decoration:none">
+                <h3 style="font-size:15px">{r.name} ↗</h3>
+                <p class="meta">{r.desc}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
