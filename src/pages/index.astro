@@ -36,14 +36,17 @@ const browse = [
 <BaseLayout active="news">
   <section class="hero">
     <div class="container">
-      <div class="pwa-hint" id="pwa-hint" hidden>
-        <button type="button" class="pwa-chip" id="pwa-chip">📱 Add to your phone</button>
-        <div class="pwa-pop" id="pwa-pop" hidden>
-          <p><b>Install BullDozer as an app.</b> It opens from your home screen and works offline.</p>
-          <button type="button" class="ghost-btn" id="pwa-install" hidden style="margin:0 0 8px">Install now</button>
-          <p class="pwa-ios" hidden>On iPhone (Safari): tap <b>Share</b> ⬆️ → <b>Add to Home Screen</b>.</p>
-          <p class="pwa-other">On Android / desktop Chrome: open the <b>⋮ menu</b> → <b>Install app</b>.</p>
+      <div class="hero-tools">
+        <div class="pwa-hint" id="pwa-hint" hidden>
+          <button type="button" class="pwa-chip" id="pwa-chip">📱 Add to your phone</button>
+          <div class="pwa-pop" id="pwa-pop" hidden>
+            <p><b>Install BullDozer as an app.</b> It opens from your home screen and works offline.</p>
+            <button type="button" class="ghost-btn" id="pwa-install" hidden style="margin:0 0 8px">Install now</button>
+            <p class="pwa-ios" hidden>On iPhone (Safari): tap <b>Share</b> ⬆️ → <b>Add to Home Screen</b>.</p>
+            <p class="pwa-other">On Android / desktop Chrome: open the <b>⋮ menu</b> → <b>Install app</b>.</p>
+          </div>
         </div>
+        <button type="button" class="pwa-chip" id="theme-toggle">☀️ Light theme</button>
       </div>
       <span class="kicker">Marketing Analytics &amp; Research</span>
       <h1>Bulldoze the noise. <span class="hl">Mine the signal.</span></h1>
@@ -70,6 +73,22 @@ const browse = [
       installBtn.addEventListener('click', async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; installBtn.hidden = true; pop.hidden = true; });
       document.addEventListener('click', (e) => { if (!hint.contains(e.target)) pop.hidden = true; });
       window.addEventListener('appinstalled', () => { hint.hidden = true; });
+    })();
+
+    (function () {
+      const btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+      const isLight = () => document.documentElement.getAttribute('data-theme') === 'light';
+      const label = () => { btn.textContent = isLight() ? '🌙 Dark theme' : '☀️ Light theme'; };
+      btn.addEventListener('click', () => {
+        const next = isLight() ? 'dark' : 'light';
+        if (next === 'light') document.documentElement.setAttribute('data-theme', 'light');
+        else document.documentElement.removeAttribute('data-theme');
+        try { localStorage.setItem('bd-theme', next); } catch (e) { /* ignore */ }
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f7f6f2' : '#0e0f11');
+        label();
+      });
+      label();
     })();
   </script>
 

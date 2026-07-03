@@ -194,7 +194,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
     });
     const bar = diverging
       ? 'linear-gradient(90deg,#f87171,#464a52,#34d399)'
-      : 'linear-gradient(90deg,#1c1f23,var(--accent))';
+      : 'linear-gradient(90deg,var(--bg-card),var(--accent))';
     el('map-legend').innerHTML = `<span>${isFinite(min) ? fmtNum(min) : '—'}${unit}</span><span class="legend-bar" style="background:${bar}"></span><span>${isFinite(max) ? fmtNum(max) : '—'}${unit}</span><span class="legend-label">${m.valueLabel} · ${state.period}${diverging ? ' · 0-centred' : ''}</span>`;
   }
 

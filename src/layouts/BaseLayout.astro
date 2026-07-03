@@ -32,6 +32,15 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <link rel="manifest" href={`${base}/manifest.webmanifest`} />
     <meta name="theme-color" content="#0e0f11" />
+    <script is:inline>
+      // Apply the saved theme before first paint to avoid a flash (default: dark).
+      try {
+        if (localStorage.getItem('bd-theme') === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f6f2');
+        }
+      } catch (e) { /* private mode etc. */ }
+    </script>
     <link rel="apple-touch-icon" href={`${base}/icon-192.png`} />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

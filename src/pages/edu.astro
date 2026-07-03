@@ -47,19 +47,21 @@ const DASH_TYPES = [
   },
 ];
 
+// demo: a live, no-login example of the tool's interface — with an indicator we
+// also track (happiness, life expectancy, surveys) where a public one exists.
 const BI_TOOLS = [
-  { name: 'Tableau', url: 'https://www.tableau.com/', kind: 'Commercial', best: 'Deep visual exploration; the analyst drag-and-drop standard. Free publishing via Tableau Public.', note: 'Desktop app; steep licence, gentle learning curve' },
-  { name: 'Power BI', url: 'https://www.microsoft.com/power-platform/products/power-bi', kind: 'Commercial', best: 'Corporate reporting in Microsoft shops; tight Excel/Azure integration, DAX for modelling.', note: 'Cheap per seat; Windows-centric' },
-  { name: 'Apache Superset', url: 'https://superset.apache.org/', kind: 'Open source', best: 'Self-hosted BI over SQL databases; dashboards, SQL Lab, row-level security. The main OSS Tableau alternative.', note: 'Needs a server and some ops' },
-  { name: 'Grafana', url: 'https://grafana.com/', kind: 'Open source', best: 'Time series and monitoring: metrics, logs, alerting. Less suited to ad-hoc table analytics.', note: 'Try live demos at play.grafana.org' },
-  { name: 'Metabase', url: 'https://www.metabase.com/', kind: 'Open source', best: 'The fastest "questions over a database" tool for non-analysts; five-minute setup.', note: 'Simpler charts than Superset' },
-  { name: 'Looker Studio', url: 'https://lookerstudio.google.com/', kind: 'Free (Google)', best: 'Free shareable dashboards over Google Analytics, Sheets and BigQuery.', note: 'Weak outside the Google ecosystem' },
-  { name: 'Plotly / Dash', url: 'https://dash.plotly.com/', kind: 'Open source', best: 'Analytical web apps in pure Python — full control over interactivity and layout.', note: 'You write code, not drag charts' },
-  { name: 'Streamlit', url: 'https://streamlit.io/', kind: 'Open source', best: 'Turning a Python script into an interactive app in an afternoon; ideal for prototypes and ML demos.', note: 'Reruns whole script per interaction' },
-  { name: 'Observable', url: 'https://observablehq.com/', kind: 'Freemium', best: 'JavaScript notebooks for bespoke D3 visuals; home of Observable Plot.', note: 'For people who like code' },
-  { name: 'Datawrapper', url: 'https://www.datawrapper.de/', kind: 'Freemium', best: 'Newsroom-grade single charts and maps with zero code; excellent defaults.', note: 'Charts, not full dashboards' },
-  { name: 'Flourish', url: 'https://flourish.studio/', kind: 'Freemium', best: 'Animated templates — bar chart races, scrollytelling — publishable in minutes.', note: 'Template-bound' },
-  { name: 'D3 / hand-written SVG', url: 'https://d3js.org/', kind: 'Open source', best: 'Total control, zero dependencies, any design. Everything on BullDozer is built this way.', note: 'Slowest to build, most durable' },
+  { name: 'Tableau', url: 'https://www.tableau.com/', kind: 'Commercial', best: 'Deep visual exploration; the analyst drag-and-drop standard. Free publishing via Tableau Public.', note: 'Desktop app; steep licence, gentle learning curve', demo: { url: 'https://public.tableau.com/app/profile/worldhappinessreport/viz/WorldHappinessReport2023/Figure2_1', label: 'the World Happiness Report’s own viz' } },
+  { name: 'Power BI', url: 'https://www.microsoft.com/power-platform/products/power-bi', kind: 'Commercial', best: 'Corporate reporting in Microsoft shops; tight Excel/Azure integration, DAX for modelling.', note: 'Cheap per seat; Windows-centric', demo: { url: 'https://playground.powerbi.com/en-us/explore-features', label: 'Microsoft’s interactive sample report' } },
+  { name: 'Apache Superset', url: 'https://superset.apache.org/', kind: 'Open source', best: 'Self-hosted BI over SQL databases; dashboards, SQL Lab, row-level security. The main OSS Tableau alternative.', note: 'Needs a server and some ops', demo: { url: 'https://superset.apache.org/docs/using-superset/creating-your-first-dashboard', label: 'dashboard walkthrough with the real UI' } },
+  { name: 'Grafana', url: 'https://grafana.com/', kind: 'Open source', best: 'Time series and monitoring: metrics, logs, alerting. Less suited to ad-hoc table analytics.', note: 'Try live demos at play.grafana.org', demo: { url: 'https://play.grafana.org/d/000000016/time-series-graphs', label: 'live time-series dashboard on Grafana Play' } },
+  { name: 'Metabase', url: 'https://www.metabase.com/', kind: 'Open source', best: 'The fastest "questions over a database" tool for non-analysts; five-minute setup.', note: 'Simpler charts than Superset', demo: { url: 'https://www.metabase.com/examples/community-survey-dashboard', label: 'a live survey dashboard' } },
+  { name: 'Looker Studio', url: 'https://lookerstudio.google.com/', kind: 'Free (Google)', best: 'Free shareable dashboards over Google Analytics, Sheets and BigQuery.', note: 'Weak outside the Google ecosystem', demo: { url: 'https://lookerstudio.google.com/gallery', label: 'the report gallery — every report opens live' } },
+  { name: 'Plotly / Dash', url: 'https://dash.plotly.com/', kind: 'Open source', best: 'Analytical web apps in pure Python — full control over interactivity and layout.', note: 'You write code, not drag charts', demo: { url: 'https://dash.gallery/Portal/', label: 'the Dash app gallery, apps run live' } },
+  { name: 'Streamlit', url: 'https://streamlit.io/', kind: 'Open source', best: 'Turning a Python script into an interactive app in an afternoon; ideal for prototypes and ML demos.', note: 'Reruns whole script per interaction', demo: { url: 'https://streamlit.io/gallery', label: 'the app gallery, apps run live' } },
+  { name: 'Observable', url: 'https://observablehq.com/', kind: 'Freemium', best: 'JavaScript notebooks for bespoke D3 visuals; home of Observable Plot.', note: 'For people who like code', demo: { url: 'https://observablehq.com/@huw/whr', label: 'a World Happiness Report notebook' } },
+  { name: 'Datawrapper', url: 'https://www.datawrapper.de/', kind: 'Freemium', best: 'Newsroom-grade single charts and maps with zero code; excellent defaults.', note: 'Charts, not full dashboards', demo: { url: 'https://www.datawrapper.de/blog/', label: 'Weekly Charts — live charts by their team' } },
+  { name: 'Flourish', url: 'https://flourish.studio/', kind: 'Freemium', best: 'Animated templates — bar chart races, scrollytelling — publishable in minutes.', note: 'Template-bound', demo: { url: 'https://flourish.studio/examples/', label: 'the template gallery, all interactive' } },
+  { name: 'D3 / hand-written SVG', url: 'https://d3js.org/', kind: 'Open source', best: 'Total control, zero dependencies, any design. Everything on BullDozer is built this way.', note: 'Slowest to build, most durable', demo: { url: `${base}/stories/happiest-countries`, label: 'our happiness story — this site is the demo' } },
 ];
 
 const RESOURCES = [
@@ -156,7 +158,10 @@ const RESOURCES = [
               <tr>
                 <td style="white-space:nowrap"><a href={t.url} target="_blank" rel="noopener">{t.name} ↗</a></td>
                 <td style="white-space:nowrap">{t.kind}</td>
-                <td>{t.best}</td>
+                <td>
+                  {t.best}
+                  <br /><a class="bi-demo" href={t.demo.url} target="_blank" rel="noopener">👀 See it live: {t.demo.label} ↗</a>
+                </td>
                 <td>{t.note}</td>
               </tr>
             ))}
