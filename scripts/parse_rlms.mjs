@@ -15,7 +15,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const SRC = join(homedir(), 'Documents', 'tableau_data', 'surveys', 'rlms_internet_demo.csv');
 
 const ageBucket = (a) => { a = parseFloat(a); if (!a) return null; if (a < 25) return '16–24'; if (a < 35) return '25–34'; if (a < 50) return '35–49'; if (a < 65) return '50–64'; return '65+'; };
-const settle = (s) => { s = (s || '').toLowerCase(); if (s.includes('city') || s.includes('город')) return 'City'; if (s.includes('pgt') || s.includes('town')) return 'Town (PGT)'; if (s.includes('selo') || s.includes('village') || s.includes('село')) return 'Village'; return null; };
+// \u escapes match Russian settlement labels in the source file (repo policy: ASCII-only sources)
+const settle = (s) => { s = (s || '').toLowerCase(); if (s.includes('city') || s.includes('\u0433\u043e\u0440\u043e\u0434')) return 'City'; if (s.includes('pgt') || s.includes('town')) return 'Town (PGT)'; if (s.includes('selo') || s.includes('village') || s.includes('\u0441\u0435\u043b\u043e')) return 'Village'; return null; };
 const pct = (o) => o.w ? Math.round((1000 * o.u) / o.w) / 10 : null;
 
 async function main() {

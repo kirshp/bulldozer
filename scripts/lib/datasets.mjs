@@ -6,15 +6,17 @@ import { dirname, join } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const ROOT = join(__dirname, '..', '..');
 
-/** Russian → English region labels used across the tidy macro/survey files. */
+/** Russian → English region labels used across the tidy macro/survey files.
+ *  Keys stay as \u escapes on purpose (repo policy: ASCII-only sources) —
+ *  don't unescape them back to readable Cyrillic. */
 export const REGION_RU_EN = {
-  'Америка': 'Americas',
-  'Африка южнее Сахары': 'Sub-Saharan Africa',
-  'Бл.Восток/Сев.Афр.': 'Middle East & North Africa',
-  'Ближн.Восток/Сев.Афр.': 'Middle East & North Africa',
-  'Вост.Азия/Тихоокеан.': 'East Asia & Pacific',
-  'Европа/Центр.Азия': 'Europe & Central Asia',
-  'Южная Азия': 'South Asia',
+  '\u0410\u043c\u0435\u0440\u0438\u043a\u0430': 'Americas',
+  '\u0410\u0444\u0440\u0438\u043a\u0430 \u044e\u0436\u043d\u0435\u0435 \u0421\u0430\u0445\u0430\u0440\u044b': 'Sub-Saharan Africa',
+  '\u0411\u043b.\u0412\u043e\u0441\u0442\u043e\u043a/\u0421\u0435\u0432.\u0410\u0444\u0440.': 'Middle East & North Africa',
+  '\u0411\u043b\u0438\u0436\u043d.\u0412\u043e\u0441\u0442\u043e\u043a/\u0421\u0435\u0432.\u0410\u0444\u0440.': 'Middle East & North Africa',
+  '\u0412\u043e\u0441\u0442.\u0410\u0437\u0438\u044f/\u0422\u0438\u0445\u043e\u043e\u043a\u0435\u0430\u043d.': 'East Asia & Pacific',
+  '\u0415\u0432\u0440\u043e\u043f\u0430/\u0426\u0435\u043d\u0442\u0440.\u0410\u0437\u0438\u044f': 'Europe & Central Asia',
+  '\u042e\u0436\u043d\u0430\u044f \u0410\u0437\u0438\u044f': 'South Asia',
   '—': 'Advanced / other',
 };
 

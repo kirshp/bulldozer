@@ -34,12 +34,22 @@ export const sources: Source[] = [
     description: 'Credit to the private non-financial sector, households and government as a share of GDP, from the Bank for International Settlements.' },
   { name: 'Our World in Data', url: 'https://ourworldindata.org/', status: 'live', category: 'Macro & economics', match: 'Our World in Data',
     description: 'Open research and data on development, health, energy, education and more — schooling, poverty, electricity, renewables, military spending and beyond.' },
+  { name: 'World Bank — Global Findex', url: 'https://www.worldbank.org/en/publication/globalfindex', status: 'live', category: 'Macro & economics', match: 'Global Findex',
+    description: 'The reference survey of financial inclusion — account ownership and digital payments in ~140 economies, waves 2011–2024. Via the open World Bank API.' },
+  { name: 'The Economist — Big Mac Index', url: 'https://github.com/TheEconomist/big-mac-data', status: 'live', category: 'Macro & economics', match: 'Big Mac',
+    description: 'The famous burger-nomics gauge of currency valuation and price levels, published since 1986. Semiannual data from The Economist’s open GitHub repo.' },
 
   // ── Governance & democracy ─────────────────────────────────────────
   { name: 'V-Dem — Varieties of Democracy', url: 'https://www.v-dem.net/data/the-v-dem-dataset/', status: 'live', category: 'Governance & democracy', match: 'V-Dem', dash: 'vdem',
     description: 'Expert-coded indices of electoral, liberal, participatory, deliberative and egalitarian democracy, 1900–present.' },
   { name: 'Quality of Government (QoG)', url: 'https://www.gu.se/en/quality-government/qog-data', status: 'live', category: 'Governance & democracy', match: 'Quality of Government', dash: 'qog',
     description: 'University of Gothenburg compilation harmonising governance, corruption, rule-of-law and institutional indicators.' },
+  { name: 'Transparency International — CPI', url: 'https://www.transparency.org/en/cpi', status: 'live', category: 'Governance & democracy', match: 'Transparency International',
+    description: 'The Corruption Perceptions Index — perceived public-sector corruption in 180 countries, scored 0–100 from expert assessments and business surveys.' },
+  { name: 'Freedom House — Freedom in the World', url: 'https://freedomhouse.org/report/freedom-world', status: 'live', category: 'Governance & democracy', match: 'Freedom House',
+    description: 'Annual assessment of political rights and civil liberties in 195 countries and 15 territories, aggregated to a 0–100 freedom score.' },
+  { name: 'RSF — World Press Freedom Index', url: 'https://rsf.org/en/index', status: 'live', category: 'Governance & democracy', match: 'RSF World Press Freedom',
+    description: 'Reporters Without Borders’ ranking of media freedom in 180 countries across political, economic, legal, social and safety contexts.' },
 
   // ── Wellbeing & values ─────────────────────────────────────────────
   { name: 'World Happiness Report', url: 'https://worldhappiness.report/', status: 'live', category: 'Wellbeing & values', match: 'World Happiness Report', dash: 'whr',
@@ -54,6 +64,10 @@ export const sources: Source[] = [
     description: 'Large-scale, repeated survey of human values across Europe; integrated dataset available via GESIS.' },
   { name: 'Wellcome Global Monitor', url: 'https://wellcome.org/reports/wellcome-global-monitor', status: 'live', category: 'Wellbeing & values', match: 'Wellcome Global Monitor', dash: 'wellcome',
     description: 'Gallup study of how people worldwide think and feel about science and health. We aggregated 2018: trust in science and scientists, vaccine safety and effectiveness.' },
+  // ── Education & skills ─────────────────────────────────────────────
+  { name: 'PISA — Programme for International Student Assessment', url: 'https://www.oecd.org/en/about/programmes/pisa.html', status: 'live', category: 'Education & skills', match: 'PISA international student assessment',
+    description: 'Triennial assessment of 15-year-olds in mathematics, science and reading across 80+ education systems, 2000–2022.' },
+
   { name: 'World Risk Poll', url: 'https://wrp.lrfoundation.org.uk/', status: 'live', category: 'Risk & resilience', match: 'World Risk Poll', dash: 'wrp',
     description: 'Lloyd’s Register Foundation / Gallup global study of how people experience and cope with risk — the Resilience Index.' },
   { name: 'WorldRiskIndex', url: 'https://weltrisikobericht.de/en/', status: 'live', category: 'Risk & resilience', match: 'WorldRiskIndex',
@@ -100,12 +114,15 @@ export const sources: Source[] = [
     description: 'Longitudinal study of family dynamics, fertility and relationships across generations.' },
   { name: 'IPUMS International', url: 'https://international.ipums.org/', status: 'catalog', category: 'Health & demography',
     description: 'The world’s largest collection of harmonised census microdata, covering hundreds of censuses across nations.' },
+  { name: 'UNHCR Refugee Data Finder', url: 'https://www.unhcr.org/refugee-statistics/', status: 'live', category: 'Health & demography', match: 'UNHCR',
+    description: 'Refugees and internally displaced people by country of origin, 2000–present, from the UN Refugee Agency’s open statistics API.' },
 ];
 
 export const sourceCategories = [
   'Macro & economics',
   'Governance & democracy',
   'Wellbeing & values',
+  'Education & skills',
   'Risk & resilience',
   'Public opinion barometers',
   'Health & demography',

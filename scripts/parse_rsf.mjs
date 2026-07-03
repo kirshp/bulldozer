@@ -1,0 +1,61 @@
+/**
+ * RSF (Reporters Without Borders) — World Press Freedom Index.
+ *   node scripts/parse_rsf.mjs
+ * Official per-year CSVs from rsf.org. Semicolon-separated with decimal
+ * commas, no quoting; the score column is named `Score` or `Score <year>`
+ * depending on the edition. RSF's methodology changed in 2022, so we start
+ * there to keep scores comparable.
+ */
+import { readFile } from 'node:fs/promises';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+import { parseCsvObjects } from './lib/csv.mjs';
+import { REGION_4, writeDataset, round } from './lib/datasets.mjs';
+
+const GAP = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs', 'BK', 'Opros', 'Inter_survey', 'Gapminder', 'ddf--entities--geo--country.csv');
+const YEARS = ['2022', '2023', '2024', '2025', '2026'];
+
+async function iso3Region() {
+  const m = new Map();
+  for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+    const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
+    if (a3) m.set(a3, REGION_4[r.world_4region] || 'Other');
+  }
+  return m;
+}
+
+async function main() {
+  console.log('RSF World Press Freedom Index →');
+  const region = await iso3Region();
+  const data = [];
+  for (const year of YEARS) {
+    const res = await fetch(`https://rsf.org/sites/default/files/import_classement/${year}.csv`);
+    if (!res.ok) { console.warn(`– ${year}: fetch failed (${res.status})`); continue; }
+    const lines = (await res.text()).replace(/^﻿/, '').split(/\r?\n/).filter(Boolean);
+    const header = lines[0].split(';');
+    const iScore = header.findIndex((h) => /^Score( \d{4})?$/.test(h.trim()));
+    const iIso = header.findIndex((h) => h.trim() === 'ISO');
+    const iName = header.findIndex((h) => h.trim() === 'Country_EN');
+    if (iScore < 0 || iIso < 0 || iName < 0) { console.warn(`– ${year}: unexpected header`); continue; }
+    let n = 0;
+    for (const line of lines.slice(1)) {
+      const f = line.split(';');
+      const iso = (f[iIso] || '').trim().toUpperCase();
+      if (!region.has(iso)) continue;
+      const v = Number((f[iScore] || '').replace(',', '.'));
+      if (Number.isNaN(v)) continue;
+      data.push({ entity: f[iName].trim(), group: region.get(iso), period: year, value: round(v, 1), iso });
+      n++;
+    }
+    console.log(`  ${year}: ${n} countries`);
+  }
+  if (data.length < 400) throw new Error(`only ${data.length} rows`);
+  await writeDataset('macro', 'rsf-press-freedom', {
+    title: 'Press Freedom Index', unit: 'score 0–100 (100 = most free)', valueLabel: 'Press freedom score',
+    changeMode: 'pp', topic: 'media',
+    summary: 'Media freedom scored across political, economic, legal, social and safety contexts in 180 countries. Current RSF methodology (2022+).',
+    source: 'RSF World Press Freedom Index', license: 'Open data (RSF)',
+    url: 'https://rsf.org/en/index', parsedAt: new Date().toISOString().slice(0, 10),
+  }, data);
+}
+main().catch((e) => { console.error('✗ parse_rsf failed:', e.message); process.exit(1); });
