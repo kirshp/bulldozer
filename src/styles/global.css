@@ -371,14 +371,23 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* "See it live" demo links in the Edu BI-tools table */
 .bi-demo { display: inline-block; margin-top: 6px; font-size: 13px; color: var(--accent); }
 
-/* Quiz promo row (home page, under the feature story) */
+/* Quiz box (home page): promo header + the live game in one framed window */
+.quiz-box {
+  margin-top: 16px;
+  background: linear-gradient(120deg, rgba(255, 176, 0, 0.13), rgba(217, 95, 0, 0.04) 55%, transparent) var(--bg-card);
+  border: 1px solid rgba(255, 176, 0, 0.4); border-radius: var(--radius);
+  box-shadow: 0 6px 32px rgba(255, 176, 0, 0.09);
+}
+.quiz-box:hover { border-color: var(--accent); }
 .quiz-row {
   display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap;
-  margin-top: 16px; padding: 14px 18px;
-  background: linear-gradient(120deg, rgba(255, 176, 0, 0.13), rgba(217, 95, 0, 0.05) 55%, transparent) var(--bg-card);
-  border: 1px solid rgba(255, 176, 0, 0.4); border-radius: var(--radius);
+  padding: 14px 18px; border-bottom: 1px dashed rgba(255, 176, 0, 0.45);
 }
-.quiz-row:hover { border-color: var(--accent); }
+.quiz-box .q-card {
+  max-width: none; margin-top: 0; padding: 16px 18px 22px;
+  border: 0; border-radius: 0; background: none; box-shadow: none;
+}
+@media (min-width: 900px) { .quiz-box .q-options { grid-template-columns: repeat(4, 1fr); } }
 .quiz-blurb { font-size: 14px; color: var(--text-dim); }
 .quiz-blurb b { color: var(--text); }
 .quiz-blurb .q-emo { display: inline-block; animation: q-wiggle 2.4s ease-in-out infinite; }

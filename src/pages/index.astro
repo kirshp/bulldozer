@@ -122,15 +122,16 @@ const browse = [
         <p class="meta" style="color:var(--accent)">Read the story · happiest countries {happyLatest} →</p>
       </a>
 
-      <div class="quiz-row">
-        <span class="quiz-blurb"><span class="q-emo">🎯</span> <b>Country Quiz</b> — one mystery country, five real statistics. Most people lose to a chimp. Will you?</span>
-        <span class="quiz-btns">
-          <a class="quiz-play" id="quiz-play" href={`${base}/quiz`}>New game 🎲</a>
-          <a class="ghost-btn" href={`${base}/explore`} style="margin:0">Try other charts →</a>
-        </span>
+      <div class="quiz-box">
+        <div class="quiz-row">
+          <span class="quiz-blurb"><span class="q-emo">🎯</span> <b>Country Quiz</b> — one mystery country, five real statistics. Most people lose to a chimp. Will you?</span>
+          <span class="quiz-btns">
+            <a class="quiz-play" id="quiz-play" href={`${base}/quiz`}>New game 🎲</a>
+            <a class="ghost-btn" href={`${base}/explore`} style="margin:0">Try other charts →</a>
+          </span>
+        </div>
+        <QuizGame autostart />
       </div>
-
-      <QuizGame autostart />
       <script>
         // The game auto-starts below; this button restarts it. The href to /quiz
         // stays as the no-JS fallback.
