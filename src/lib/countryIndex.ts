@@ -5,6 +5,9 @@
  */
 import { datasets } from '@data/datasets';
 import { bestCountryName } from '@lib/geo';
+import countryNames from '@data/country-names.json';
+
+const NAMES: Record<string, { common: string; official: string }> = countryNames;
 
 export interface CountryItem {
   slug: string;
@@ -21,6 +24,8 @@ export interface CountryItem {
 export interface CountryProfile {
   iso: string;
   name: string;
+  /** Official Latin name (e.g. "Republic of Korea"), when known. */
+  official?: string;
   region: string;
   items: CountryItem[];
 }
@@ -52,7 +57,11 @@ export function buildCountryIndex(): CountryProfile[] {
   }
 
   for (const c of Object.values(byIso)) {
-    c.name = bestCountryName(nameVotes[c.iso]);
+    // Prefer the canonical international name; fall back to a voted source name
+    // for non-standard codes (survey sub-entities like Zanzibar/Somaliland).
+    const canon = NAMES[c.iso];
+    c.name = canon?.common ?? bestCountryName(nameVotes[c.iso]);
+    if (canon && canon.official !== canon.common) c.official = canon.official;
     c.items.sort((a, b) => (a.kind === b.kind ? a.title.localeCompare(b.title) : a.kind < b.kind ? 1 : -1));
   }
 

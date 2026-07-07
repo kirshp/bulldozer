@@ -29,6 +29,8 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     <div class="cc-info">
       <img id="cc-coa" class="cc-coa" alt="" hidden />
       <h3 id="cc-name">—</h3>
+      <p class="cc-official" id="cc-official"></p>
+      <div class="cc-codes" id="cc-codes"></div>
       <p class="cc-extract" id="cc-extract"></p>
       <p class="country-desc" id="country-desc"></p>
     </div>
@@ -63,6 +65,8 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
   const itemsEl = document.getElementById('country-items');
   const mapEl = document.getElementById('country-map');
   const nameEl = document.getElementById('cc-name');
+  const officialEl = document.getElementById('cc-official');
+  const codesEl = document.getElementById('cc-codes');
   const extractEl = document.getElementById('cc-extract');
   const coaEl = document.getElementById('cc-coa');
   const ciSearch = document.getElementById('ci-search');
@@ -212,6 +216,10 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     const c = countries.find((x) => x.iso === sel.value);
     if (!c) return;
     nameEl.textContent = flag(c.iso) + c.name;
+    officialEl.textContent = c.official && c.official !== c.name ? c.official : '';
+    const a2 = isoAlpha2[c.iso.toUpperCase()];
+    codesEl.innerHTML = `<span class="cc-code" title="ISO 3166-1 alpha-3">${c.iso}</span>` +
+      (a2 ? `<span class="cc-code" title="ISO 3166-1 alpha-2">${a2}</span>` : '');
     descEl.textContent = describe(c);
     renderItems(c);
     highlight(c);

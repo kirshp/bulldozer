@@ -464,7 +464,11 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 
 /* Country profile */
 .country-card { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-top: 14px; }
-.cc-info h3 { font-size: 26px; margin: 0 0 10px; letter-spacing: -0.5px; }
+.cc-info h3 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.5px; }
+.cc-official { font-size: 13.5px; color: var(--text-dim); margin: 0 0 8px; font-style: italic; }
+.cc-official:empty { display: none; }
+.cc-codes { display: flex; gap: 6px; margin: 0 0 12px; }
+.cc-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: var(--accent); background: var(--bg-elev); border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px; }
 .cc-extract { font-size: 14px; color: var(--text-dim); line-height: 1.6; margin: 0 0 12px; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
 .country-desc { font-size: 14px; color: var(--text); border-left: 3px solid var(--accent); padding-left: 12px; margin: 0; }
 .cc-map { min-width: 0; }
