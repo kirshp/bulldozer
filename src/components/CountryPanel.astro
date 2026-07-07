@@ -168,6 +168,14 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     { label: 'Exchange rate', slugs: ['wb-exchange-rate'] },
     { label: 'Population', slugs: ['imf-population', 'gapminder-population'] },
   ];
+  // Indicators to feature (in order) when a topic group is collapsed; expanding
+  // reveals the full list alphabetically. Each slot is a list of fallback slugs
+  // — the first available fills the slot, so one GDP / Big Mac / payments row
+  // each (not two GDPs), and countries missing a series fall back gracefully.
+  const PRIORITY = {
+    economy: [['imf-gdp-usd', 'imf-gdp-ppp'], ['bigmac-dollar-price'], ['findex-digital-payments', 'wb-digital-payments']],
+    demographics: [['gapminder-population', 'imf-population'], ['gapminder-median-age'], ['wb-sp-dyn-tfrt-in']],
+  };
   const kval = (v) => v.toLocaleString('en-US', { maximumFractionDigits: 1 });
   // Two big blocks so opinion surveys always sit below the hard statistics.
   const SECTIONS = [{ kind: 'macro', label: 'Statistics', icon: '📊' }, { kind: 'survey', label: 'Public-opinion surveys', icon: '🗣️' }];
@@ -215,16 +223,24 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
       return;
     }
     // group by topic within each kind, statistics first then surveys. In the
-    // overview each group shows the first few rows with a toggle for the rest.
+    // overview each group shows a curated top-3, expanding to the full list
+    // sorted alphabetically.
     const collapse = !q && !ciState.topic;
+    const tbl = (arr, cls) => `<div class="${cls}"><table class="data"><tbody>${arr.map((it) => row(it)).join('')}</tbody></table></div>`;
     const block = (arr, id) => {
       const rows = arr.filter((it) => it.topic === id).sort((a, b) => a.title.localeCompare(b.title));
       if (!rows.length) return '';
       const head = `<h3 style="font-size:13px;margin:14px 0 6px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">${TICON[id]} ${TLABEL[id]}</h3>`;
-      const body = rows.map((it, i) => row(it, collapse && i >= COLLAPSE_AT ? 'ci-extra' : '')).join('');
-      const more = collapse && rows.length > COLLAPSE_AT
-        ? `<button type="button" class="ci-more">▾ Show all ${rows.length}</button>` : '';
-      return `<div class="ci-group">${head}<table class="data"><tbody>${body}</tbody></table>${more}</div>`;
+      if (!collapse || rows.length <= COLLAPSE_AT) return `<div class="ci-group">${head}${tbl(rows, 'ci-full')}</div>`;
+      // featured = one row per priority slot (first available), padded from top
+      const bySlug = new Map(rows.map((it) => [it.slug, it]));
+      const featured = [];
+      for (const slot of (PRIORITY[id] || [])) {
+        for (const s of slot) { const it = bySlug.get(s); if (it && !featured.includes(it)) { featured.push(it); break; } }
+      }
+      for (const it of rows) { if (featured.length >= COLLAPSE_AT) break; if (!featured.includes(it)) featured.push(it); }
+      return `<div class="ci-group">${head}${tbl(featured.slice(0, COLLAPSE_AT), 'ci-collapsed')}${tbl(rows, 'ci-full')}` +
+        `<button type="button" class="ci-more">▾ Show all ${rows.length}</button></div>`;
     };
     let html = headline;
     for (const sec of SECTIONS) {
@@ -241,7 +257,7 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     if (!btn) return;
     const group = btn.closest('.ci-group');
     const open = group.classList.toggle('expanded');
-    btn.textContent = open ? '▴ Show less' : `▾ Show all ${group.querySelectorAll('tbody tr').length}`;
+    btn.textContent = open ? '▴ Show less' : `▾ Show all ${group.querySelectorAll('.ci-full tbody tr').length}`;
   });
 
   function highlight(c) {

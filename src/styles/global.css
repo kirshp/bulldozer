@@ -478,8 +478,9 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .kpi-unit { font-size: 11px; color: var(--text-dim); }
 .kpi-rank { font-size: 11px; color: var(--accent); margin-top: 2px; }
 .ci-section { font-size: 15px; margin: 22px 0 2px; padding-bottom: 6px; border-bottom: 1px solid var(--border); color: var(--text); }
-.ci-group tr.ci-extra { display: none; }
-.ci-group.expanded tr.ci-extra { display: table-row; }
+.ci-group .ci-full { display: none; }
+.ci-group.expanded .ci-collapsed { display: none; }
+.ci-group.expanded .ci-full { display: block; }
 .ci-more { background: none; border: 0; color: var(--accent); font-size: 12px; font-weight: 600; cursor: pointer; padding: 5px 0 2px; }
 .ci-more:hover { text-decoration: underline; }
 .cc-extract { font-size: 14px; color: var(--text-dim); line-height: 1.6; margin: 0 0 12px; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
