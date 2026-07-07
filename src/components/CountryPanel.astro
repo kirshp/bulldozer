@@ -153,9 +153,10 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     return `${c.region || 'World'}. ${bits.join(' · ')}.`;
   }
 
-  const row = (it) => `<tr><td><span class="ind-ic">${TICON[it.topic] || ''}</span><a href="${base}/dataset/${it.slug}">${it.title}</a></td>` +
+  const row = (it, cls = '') => `<tr${cls ? ` class="${cls}"` : ''}><td><span class="ind-ic">${TICON[it.topic] || ''}</span><a href="${base}/dataset/${it.slug}">${it.title}</a></td>` +
     `<td class="num">${fmt(it.value, it.unit)}</td>` +
     `<td class="num" style="color:var(--text-dim)">#${it.rank}/${it.total}</td></tr>`;
+  const COLLAPSE_AT = 3;
 
   // Headline economic KPIs pinned above everything, in this order. Each entry
   // lists fallback slugs so a country missing the preferred series still shows.
@@ -213,11 +214,17 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
       itemsEl.innerHTML = headline + `<table class="data"><tbody>${sorted.map(row).join('')}</tbody></table>`;
       return;
     }
-    // group by topic within each kind, statistics first then surveys
+    // group by topic within each kind, statistics first then surveys. In the
+    // overview each group shows the first few rows with a toggle for the rest.
+    const collapse = !q && !ciState.topic;
     const block = (arr, id) => {
       const rows = arr.filter((it) => it.topic === id).sort((a, b) => a.title.localeCompare(b.title));
-      return rows.length ? `<h3 style="font-size:13px;margin:14px 0 6px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">${TICON[id]} ${TLABEL[id]}</h3>` +
-        `<table class="data"><tbody>${rows.map(row).join('')}</tbody></table>` : '';
+      if (!rows.length) return '';
+      const head = `<h3 style="font-size:13px;margin:14px 0 6px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">${TICON[id]} ${TLABEL[id]}</h3>`;
+      const body = rows.map((it, i) => row(it, collapse && i >= COLLAPSE_AT ? 'ci-extra' : '')).join('');
+      const more = collapse && rows.length > COLLAPSE_AT
+        ? `<button type="button" class="ci-more">▾ Show all ${rows.length}</button>` : '';
+      return `<div class="ci-group">${head}<table class="data"><tbody>${body}</tbody></table>${more}</div>`;
     };
     let html = headline;
     for (const sec of SECTIONS) {
@@ -227,6 +234,15 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     }
     itemsEl.innerHTML = html;
   }
+
+  // Expand/collapse a topic group's extra rows (delegated — survives re-render).
+  itemsEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.ci-more');
+    if (!btn) return;
+    const group = btn.closest('.ci-group');
+    const open = group.classList.toggle('expanded');
+    btn.textContent = open ? '▴ Show less' : `▾ Show all ${group.querySelectorAll('tbody tr').length}`;
+  });
 
   function highlight(c) {
     const num = numByIso[c.iso];
