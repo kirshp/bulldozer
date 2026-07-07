@@ -38,7 +38,8 @@ const projectRing = (ring) => {
 
 const countries = [];
 for (const f of fc.features) {
-  const iso = isoNumeric[String(f.id)];
+  // world-atlas ids are zero-padded ("032"); iso-numeric keys are unpadded ("32").
+  const iso = isoNumeric[String(parseInt(f.id, 10))];
   if (!iso) continue;
   const g = f.geometry;
   const polys = [];
