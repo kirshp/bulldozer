@@ -469,6 +469,14 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .cc-official:empty { display: none; }
 .cc-codes { display: flex; gap: 6px; margin: 0 0 12px; }
 .cc-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: var(--accent); background: var(--bg-elev); border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 10px; margin: 6px 0 20px; }
+.kpi-card { display: flex; flex-direction: column; gap: 2px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 11px 13px; text-decoration: none; transition: transform 0.12s, border-color 0.12s; }
+.kpi-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); }
+.kpi-val { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; line-height: 1.15; }
+.kpi-unit { font-size: 11px; color: var(--text-dim); }
+.kpi-rank { font-size: 11px; color: var(--accent); margin-top: 2px; }
+.ci-section { font-size: 15px; margin: 22px 0 2px; padding-bottom: 6px; border-bottom: 1px solid var(--border); color: var(--text); }
 .cc-extract { font-size: 14px; color: var(--text-dim); line-height: 1.6; margin: 0 0 12px; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
 .country-desc { font-size: 14px; color: var(--text); border-left: 3px solid var(--accent); padding-left: 12px; margin: 0; }
 .cc-map { min-width: 0; }

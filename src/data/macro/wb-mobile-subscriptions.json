@@ -9,7 +9,7 @@
     "source": "World Bank Open Data",
     "license": "CC BY 4.0",
     "url": "https://data.worldbank.org/",
-    "parsedAt": "2026-06-28",
+    "parsedAt": "2026-07-07",
     "kind": "macro"
   },
   "data": [
@@ -719,6 +719,13 @@
       "period": "2022",
       "value": 148.68,
       "iso": "KOR"
+    },
+    {
+      "entity": "XKX",
+      "group": "Other",
+      "period": "2022",
+      "value": 34.54,
+      "iso": "XKX"
     },
     {
       "entity": "Kuwait",

@@ -154,6 +154,36 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     `<td class="num">${fmt(it.value, it.unit)}</td>` +
     `<td class="num" style="color:var(--text-dim)">#${it.rank}/${it.total}</td></tr>`;
 
+  // Headline economic KPIs pinned above everything, in this order. Each entry
+  // lists fallback slugs so a country missing the preferred series still shows.
+  const HEADLINE = [
+    { label: 'GDP per capita', slugs: ['imf-gdp-per-capita-ppp', 'imf-gdp-per-capita', 'gapminder-income'] },
+    { label: 'GDP growth', slugs: ['imf-gdp-growth', 'gapminder-gdp-growth'] },
+    { label: 'Inflation', slugs: ['imf-inflation'] },
+    { label: 'Unemployment', slugs: ['imf-unemployment'] },
+    { label: 'Exchange rate', slugs: ['wb-exchange-rate'] },
+    { label: 'Population', slugs: ['imf-population', 'gapminder-population'] },
+  ];
+  const kval = (v) => v.toLocaleString('en-US', { maximumFractionDigits: 1 });
+  // Two big blocks so opinion surveys always sit below the hard statistics.
+  const SECTIONS = [{ kind: 'macro', label: 'Statistics', icon: '📊' }, { kind: 'survey', label: 'Public-opinion surveys', icon: '🗣️' }];
+  let headlineSlugs = new Set();
+
+  function renderHeadline(c) {
+    headlineSlugs = new Set();
+    const cards = [];
+    for (const h of HEADLINE) {
+      let it;
+      for (const s of h.slugs) { it = find(c, s); if (it) break; }
+      if (!it) continue;
+      headlineSlugs.add(it.slug);
+      cards.push(`<a class="kpi-card" href="${base}/dataset/${it.slug}"><div class="kpi-label">${h.label}</div>` +
+        `<div class="kpi-val">${kval(it.value)}</div><div class="kpi-unit">${it.unit}</div>` +
+        `<div class="kpi-rank">#${it.rank} of ${it.total}</div></a>`);
+    }
+    return cards.length ? `<div class="kpi-grid">${cards.join('')}</div>` : '';
+  }
+
   function renderItems(c) {
     currentC = c;
     // keep the topic filter in sync with the topics this country actually has
@@ -166,22 +196,30 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
       ciTopic.value = ciState.topic;
     }
     const q = ciState.q.toLowerCase();
-    let items = c.items.filter((it) => (!q || it.title.toLowerCase().includes(q)) && (!ciState.topic || it.topic === ciState.topic));
-    if (!items.length) { itemsEl.innerHTML = '<p class="sub">No indicators match.</p>'; return; }
+    // headline only in the unfiltered overview, so search/topic views stay literal
+    const headline = (!q && !ciState.topic) ? renderHeadline(c) : (headlineSlugs = new Set(), '');
+    let items = c.items.filter((it) => (!q || it.title.toLowerCase().includes(q)) && (!ciState.topic || it.topic === ciState.topic) && !headlineSlugs.has(it.slug));
+    if (!items.length && !headline) { itemsEl.innerHTML = '<p class="sub">No indicators match.</p>'; return; }
 
     if (ciState.sort === 'rank' || ciState.sort === 'rankw') {
       const dir = ciState.sort === 'rank' ? 1 : -1;        // rank percentile, best first
-      items = [...items].sort((a, b) => dir * (a.rank / a.total - b.rank / b.total));
-      itemsEl.innerHTML = `<table class="data"><tbody>${items.map(row).join('')}</tbody></table>`;
+      const sorted = [...items].sort((a, b) => dir * (a.rank / a.total - b.rank / b.total));
+      itemsEl.innerHTML = headline + `<table class="data"><tbody>${sorted.map(row).join('')}</tbody></table>`;
       return;
     }
-    // group by topic
-    const block = (id) => {
-      const arr = items.filter((it) => it.topic === id).sort((a, b) => a.title.localeCompare(b.title));
-      return arr.length ? `<h3 style="font-size:13px;margin:14px 0 6px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">${TICON[id]} ${TLABEL[id]}</h3>` +
-        `<table class="data"><tbody>${arr.map(row).join('')}</tbody></table>` : '';
+    // group by topic within each kind, statistics first then surveys
+    const block = (arr, id) => {
+      const rows = arr.filter((it) => it.topic === id).sort((a, b) => a.title.localeCompare(b.title));
+      return rows.length ? `<h3 style="font-size:13px;margin:14px 0 6px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">${TICON[id]} ${TLABEL[id]}</h3>` +
+        `<table class="data"><tbody>${rows.map(row).join('')}</tbody></table>` : '';
     };
-    itemsEl.innerHTML = TORDER.map(block).join('');
+    let html = headline;
+    for (const sec of SECTIONS) {
+      const secItems = items.filter((it) => it.kind === sec.kind);
+      if (!secItems.length) continue;
+      html += `<h2 class="ci-section">${sec.icon} ${sec.label}</h2>` + TORDER.map((id) => block(secItems, id)).join('');
+    }
+    itemsEl.innerHTML = html;
   }
 
   function highlight(c) {

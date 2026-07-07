@@ -65,6 +65,11 @@ async function emit(slug, code, meta, ctx, maxYear) {
 
 async function main() {
   const ctx = await geoAndCountries();
+  // Nominal exchange rate — local currency per US$ (period average).
+  await emit('wb-exchange-rate', 'PA.NUS.FCRF', {
+    title: 'Exchange Rate (per US$)', valueLabel: 'Local currency units per US$ (period average)', unit: 'LCU per US$', changeMode: 'pct', topic: 'economy',
+    summary: 'Nominal official exchange rate — units of local currency per US dollar, annual average. World Bank / IMF.', ...WB,
+  }, ctx);
   await emit('wb-account-ownership', 'FX.OWN.TOTL.ZS', {
     title: 'Bank Account Ownership', valueLabel: 'Adults (15+) with a financial account', unit: '%', changeMode: 'pp', topic: 'economy',
     summary: 'Share of adults (15+) with an account at a financial institution or mobile-money provider. World Bank Global Findex.', ...WB,
