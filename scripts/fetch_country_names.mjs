@@ -23,12 +23,10 @@ for (const c of rows) {
   if (iso.length !== 3) continue;
   names[iso] = { common: c.name.common, official: c.name.official };
   const code = Object.keys(c.currencies || {})[0];
-  if (code) {
-    // drop Cyrillic-script symbols (лв, дин.) — the public site is ASCII-only;
-    // the name + ISO code still identify the currency
-    const sym = c.currencies[code].symbol || '';
-    currency[iso] = { code, name: c.currencies[code].name, symbol: /[Ѐ-ӿ]/.test(sym) ? '' : sym };
-  }
+  // currency symbols are legitimate reference data (лв, дин., ₽) — kept as-is;
+  // the no-Cyrillic rule targets Russian-language content, not other countries'
+  // native currency marks
+  if (code) currency[iso] = { code, name: c.currencies[code].name, symbol: c.currencies[code].symbol || '' };
 }
 
 // mledoze codes Kosovo as UNK; our datasets (World Bank, OWID) use XKX.

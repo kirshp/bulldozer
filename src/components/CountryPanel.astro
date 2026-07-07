@@ -248,8 +248,14 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     const num = numByIso[c.iso];
     mapEl.querySelectorAll('.country').forEach((p) => {
       const on = p.getAttribute('data-num') === num;
-      p.setAttribute('fill', on ? 'var(--accent)' : 'var(--bg-elev)');
-      p.style.opacity = on ? '1' : '0.4';
+      p.style.opacity = '1';
+      // neighbours stay a visible grey (map context); the selected country is
+      // amber with a crisp white outline so it pops on the dark card
+      p.setAttribute('fill', on ? 'var(--accent)' : '#333a44');
+      p.setAttribute('stroke', on ? '#ffffff' : 'var(--bg)');
+      p.setAttribute('stroke-width', on ? '2' : '0.4');
+      if (on) p.setAttribute('vector-effect', 'non-scaling-stroke');
+      else p.removeAttribute('vector-effect');
     });
   }
 
