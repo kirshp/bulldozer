@@ -4,6 +4,7 @@ import { buildCountryIndex, countrySlug, similarCountries } from '@lib/countryIn
 import { flagFor } from '@lib/flags';
 import { TOPICS, TOPIC_ORDER } from '@lib/topics';
 import isoAlpha2 from '@data/iso-alpha2.json';
+import countryCurrency from '@data/country-currency.json';
 
 export function getStaticPaths() {
   return buildCountryIndex().map((c) => ({ params: { slug: countrySlug(c.name) }, props: { iso: c.iso } }));
@@ -15,6 +16,7 @@ const c = all.find((x) => x.iso === iso)!;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const flag = flagFor(c.iso);
 const alpha2 = (isoAlpha2 as Record<string, string>)[c.iso.toUpperCase()];
+const cur = (countryCurrency as Record<string, { code: string; name: string; symbol: string }>)[c.iso];
 
 const fmt = (v: number, unit: string) =>
   `${v.toLocaleString('en-US', { maximumFractionDigits: 1 })}${unit && unit.includes('%') ? '%' : ''}`;
@@ -61,6 +63,7 @@ const jsonLd = {
       <div class="cc-codes">
         <span class="cc-code" title="ISO 3166-1 alpha-3">{c.iso}</span>
         {alpha2 && <span class="cc-code" title="ISO 3166-1 alpha-2">{alpha2}</span>}
+        {cur && <span class="cc-code cc-cur" title="Currency">{cur.symbol ? `${cur.symbol} ` : ''}{cur.name} ({cur.code})</span>}
       </div>
       <p class="sub">
         Every statistic we track for {c.name} — {c.items.length} indicators, each with its latest value and world rank.

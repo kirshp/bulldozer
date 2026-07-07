@@ -469,6 +469,7 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .cc-official:empty { display: none; }
 .cc-codes { display: flex; gap: 6px; margin: 0 0 12px; }
 .cc-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: var(--accent); background: var(--bg-elev); border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px; }
+.cc-cur { font-family: inherit; letter-spacing: normal; text-transform: none; color: var(--text-dim); }
 .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 10px; margin: 6px 0 20px; }
 .kpi-card { display: flex; flex-direction: column; gap: 2px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 11px 13px; text-decoration: none; transition: transform 0.12s, border-color 0.12s; }
 .kpi-card:hover { transform: translateY(-2px); border-color: var(--accent); }

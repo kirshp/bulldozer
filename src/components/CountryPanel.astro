@@ -3,6 +3,7 @@ import WorldMap from '@components/WorldMap.astro';
 import isoNumeric from '@data/iso-numeric.json';
 import isoAlpha2 from '@data/iso-alpha2.json';
 import countryMeta from '@data/country-meta.json';
+import countryCurrency from '@data/country-currency.json';
 import { TOPICS, TOPIC_ORDER } from '@lib/topics';
 import { feature } from 'topojson-client';
 import { geoNaturalEarth1 } from 'd3-geo';
@@ -52,10 +53,12 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
 <script type="application/json" id="cp-iso" set:html={JSON.stringify(isoNumeric)}></script>
 <script type="application/json" id="cp-a2" set:html={JSON.stringify(isoAlpha2)}></script>
 <script type="application/json" id="cp-meta" set:html={JSON.stringify(countryMeta)}></script>
+<script type="application/json" id="cp-cur" set:html={JSON.stringify(countryCurrency)}></script>
 <script define:vars={{ base, projParams, topicMeta }}>
   const isoNumeric = JSON.parse(document.getElementById('cp-iso').textContent);
   const isoAlpha2 = JSON.parse(document.getElementById('cp-a2').textContent);
   const META = JSON.parse(document.getElementById('cp-meta').textContent);
+  const CUR = JSON.parse(document.getElementById('cp-cur').textContent);
   const flag = (iso) => { const a2 = iso && isoAlpha2[iso.toUpperCase()]; return a2 ? String.fromCodePoint(...[...a2].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) + ' ' : ''; };
   // world-atlas tags paths with zero-padded 3-digit ids ("076"), but our
   // iso-numeric map keys them unpadded ("76") — pad so the lookups match.
@@ -172,13 +175,16 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
   function renderHeadline(c) {
     headlineSlugs = new Set();
     const cards = [];
+    const cur = CUR[c.iso];
     for (const h of HEADLINE) {
       let it;
       for (const s of h.slugs) { it = find(c, s); if (it) break; }
       if (!it) continue;
       headlineSlugs.add(it.slug);
+      // show the real currency code on the exchange-rate card instead of "LCU"
+      const unit = it.slug === 'wb-exchange-rate' && cur ? `${cur.code} per US$` : it.unit;
       cards.push(`<a class="kpi-card" href="${base}/dataset/${it.slug}"><div class="kpi-label">${h.label}</div>` +
-        `<div class="kpi-val">${kval(it.value)}</div><div class="kpi-unit">${it.unit}</div>` +
+        `<div class="kpi-val">${kval(it.value)}</div><div class="kpi-unit">${unit}</div>` +
         `<div class="kpi-rank">#${it.rank} of ${it.total}</div></a>`);
     }
     return cards.length ? `<div class="kpi-grid">${cards.join('')}</div>` : '';
@@ -256,8 +262,10 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     nameEl.textContent = flag(c.iso) + c.name;
     officialEl.textContent = c.official && c.official !== c.name ? c.official : '';
     const a2 = isoAlpha2[c.iso.toUpperCase()];
+    const cur = CUR[c.iso];
     codesEl.innerHTML = `<span class="cc-code" title="ISO 3166-1 alpha-3">${c.iso}</span>` +
-      (a2 ? `<span class="cc-code" title="ISO 3166-1 alpha-2">${a2}</span>` : '');
+      (a2 ? `<span class="cc-code" title="ISO 3166-1 alpha-2">${a2}</span>` : '') +
+      (cur ? `<span class="cc-code cc-cur" title="Currency">${cur.symbol ? cur.symbol + ' ' : ''}${cur.name} (${cur.code})</span>` : '');
     descEl.textContent = describe(c);
     renderItems(c);
     highlight(c);
