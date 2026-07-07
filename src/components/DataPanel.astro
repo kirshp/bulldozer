@@ -187,7 +187,8 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, datasets: indicators };
       ? (v < 0 ? mix(GREY, RED, v / min) : mix(GREY, GREEN, v / max))
       : mix(DARK, AMBER, (v - min) / span);
     el('view-map').querySelectorAll('.country').forEach((p) => {
-      const iso = isoNumeric[p.getAttribute('data-num')];
+      // data-num is zero-padded ("076"); iso-numeric keys are unpadded ("76")
+      const iso = isoNumeric[String(Number(p.getAttribute('data-num')))];
       const v = iso != null ? byIso.get(iso) : undefined;
       if (v == null) { p.setAttribute('fill', 'var(--bg-elev)'); p.style.opacity = '0.5'; }
       else { p.setAttribute('fill', colorFor(v)); p.style.opacity = '1'; }

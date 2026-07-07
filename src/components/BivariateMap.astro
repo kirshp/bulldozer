@@ -25,7 +25,8 @@ const yT = terciles(common.map((iso) => yByIso.get(iso)!));
 
 const num2iso = isoNumeric as Record<string, string>;
 const fillFor = (num: string) => {
-  const iso = num2iso[num];
+  // geometry ids are zero-padded ("076"); iso-numeric keys are unpadded ("76")
+  const iso = num2iso[String(Number(num))];
   if (!iso || !xByIso.has(iso) || !yByIso.has(iso)) return null;
   return bivColor(classify(xByIso.get(iso)!, xT), classify(yByIso.get(iso)!, yT));
 };

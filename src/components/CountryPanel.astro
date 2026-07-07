@@ -55,7 +55,9 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
   const isoAlpha2 = JSON.parse(document.getElementById('cp-a2').textContent);
   const META = JSON.parse(document.getElementById('cp-meta').textContent);
   const flag = (iso) => { const a2 = iso && isoAlpha2[iso.toUpperCase()]; return a2 ? String.fromCodePoint(...[...a2].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) + ' ' : ''; };
-  const numByIso = Object.fromEntries(Object.entries(isoNumeric).map(([n, a]) => [a, n]));
+  // world-atlas tags paths with zero-padded 3-digit ids ("076"), but our
+  // iso-numeric map keys them unpadded ("76") — pad so the lookups match.
+  const numByIso = Object.fromEntries(Object.entries(isoNumeric).map(([n, a]) => [a, String(n).padStart(3, '0')]));
   const sel = document.getElementById('country-sel');
   const descEl = document.getElementById('country-desc');
   const itemsEl = document.getElementById('country-items');

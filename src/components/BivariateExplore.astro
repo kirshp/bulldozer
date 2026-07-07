@@ -77,7 +77,8 @@ const config = { base, indicators, topicMeta };
     const common = [...xMap.keys()].filter((iso) => yMap.has(iso));
     const xt = terc(common.map((i) => xMap.get(i))), yt = terc(common.map((i) => yMap.get(i)));
     document.querySelectorAll('#biv-map .country').forEach((p) => {
-      const iso = isoNumeric[p.getAttribute('data-num')];
+      // data-num is zero-padded ("076"); iso-numeric keys are unpadded ("76")
+      const iso = isoNumeric[String(Number(p.getAttribute('data-num')))];
       if (iso && xMap.has(iso) && yMap.has(iso)) { p.setAttribute('fill', bivColor(cls(xMap.get(iso), xt), cls(yMap.get(iso), yt))); p.style.opacity = '1'; }
       else { p.setAttribute('fill', 'var(--bg-elev)'); p.style.opacity = '0.45'; }
     });
