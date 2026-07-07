@@ -31,7 +31,14 @@ async function main() {
   for (const year of YEARS) {
     const res = await fetch(`https://rsf.org/sites/default/files/import_classement/${year}.csv`);
     if (!res.ok) { console.warn(`– ${year}: fetch failed (${res.status})`); continue; }
-    const lines = (await res.text()).replace(/^﻿/, '').split(/\r?\n/).filter(Boolean);
+    // Encoding varies by edition — recent files are Windows-1252, older ones
+    // UTF-8. Decoding the wrong one mangles accents (Côte d'Ivoire, Türkiye),
+    // so try strict UTF-8 first and fall back to Windows-1252.
+    const buf = await res.arrayBuffer();
+    let text;
+    try { text = new TextDecoder('utf-8', { fatal: true }).decode(buf); }
+    catch { text = new TextDecoder('windows-1252').decode(buf); }
+    const lines = text.replace(/^﻿/, '').split(/\r?\n/).filter(Boolean);
     const header = lines[0].split(';');
     const iScore = header.findIndex((h) => /^Score( \d{4})?$/.test(h.trim()));
     const iIso = header.findIndex((h) => h.trim() === 'ISO');

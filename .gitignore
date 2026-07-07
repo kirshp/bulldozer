@@ -10,3 +10,6 @@ dist/
 !.env.example
 # logs
 npm-debug.log*
+
+# Hosted app build (deployed via dist→shpara1, not tracked in source)
+public/downloads/*.apk

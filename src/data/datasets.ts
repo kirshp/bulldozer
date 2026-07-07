@@ -7,6 +7,7 @@
 import type { Observation } from '@lib/analytics';
 import { isOpinionSurvey, topicFor, topicOverride } from '@lib/topics';
 import { methodologyFor } from '@data/methodology';
+import { canonIso } from '@lib/geo';
 
 export type DatasetKind = 'survey' | 'macro';
 export type ChangeMode = 'pct' | 'pp';
@@ -62,7 +63,11 @@ function build(modules: Record<string, { default: RawDataset }>): Dataset[] {
       topic: topicOverride(slug) ?? raw.meta.topic ?? topicFor(slug),
       changeMode: raw.meta.changeMode ?? deriveChangeMode(raw.meta.unit),
       ...methodologyFor(slug),
-      data: raw.data,
+      // fold alternate ISO codes (IMF's UVK/WBG) onto the canonical spelling
+      data: raw.data.map((o) => {
+        const iso = canonIso(o.iso);
+        return iso === o.iso ? o : { ...o, iso };
+      }),
     };
   });
 }

@@ -4,6 +4,7 @@
  * and the static /country/[slug] SEO pages.
  */
 import { datasets } from '@data/datasets';
+import { bestCountryName } from '@lib/geo';
 
 export interface CountryItem {
   slug: string;
@@ -29,6 +30,8 @@ let cache: CountryProfile[] | null = null;
 export function buildCountryIndex(): CountryProfile[] {
   if (cache) return cache;
   const byIso: Record<string, CountryProfile> = {};
+  // sources spell the same country differently; vote on a clean display name
+  const nameVotes: Record<string, Map<string, number>> = {};
 
   for (const ds of datasets) {
     const periods = [...new Set(ds.data.map((o) => o.period))].sort();
@@ -39,6 +42,8 @@ export function buildCountryIndex(): CountryProfile[] {
     ranked.forEach((o, i) => {
       const iso = o.iso!;
       if (!byIso[iso]) byIso[iso] = { iso, name: o.entity, region: o.group ?? '', items: [] };
+      const votes = (nameVotes[iso] ??= new Map());
+      votes.set(o.entity, (votes.get(o.entity) ?? 0) + 1);
       byIso[iso].items.push({
         slug: ds.slug, title: ds.title, kind: ds.kind, topic: ds.topic, unit: ds.unit,
         value: o.value, period, rank: i + 1, total,
@@ -47,6 +52,7 @@ export function buildCountryIndex(): CountryProfile[] {
   }
 
   for (const c of Object.values(byIso)) {
+    c.name = bestCountryName(nameVotes[c.iso]);
     c.items.sort((a, b) => (a.kind === b.kind ? a.title.localeCompare(b.title) : a.kind < b.kind ? 1 : -1));
   }
 
