@@ -171,10 +171,20 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
   // Indicators to feature (in order) when a topic group is collapsed; expanding
   // reveals the full list alphabetically. Each slot is a list of fallback slugs
   // — the first available fills the slot, so one GDP / Big Mac / payments row
-  // each (not two GDPs), and countries missing a series fall back gracefully.
+  // each (not two GDPs). The top three fill the collapsed view; the remaining
+  // slots are the next-most-important indicators, used when a country is
+  // missing one of the leaders (e.g. no Big Mac for euro-area members), so the
+  // fallback is economically meaningful rather than just alphabetical.
   const PRIORITY = {
-    economy: [['imf-gdp-usd', 'imf-gdp-ppp'], ['bigmac-dollar-price'], ['findex-digital-payments', 'wb-digital-payments']],
-    demographics: [['gapminder-population', 'imf-population'], ['gapminder-median-age'], ['wb-sp-dyn-tfrt-in']],
+    economy: [
+      ['imf-gdp-usd', 'imf-gdp-ppp'], ['bigmac-dollar-price'], ['findex-digital-payments', 'wb-digital-payments'],
+      ['imf-govt-debt'], ['imf-current-account'], ['imf-fiscal-balance'], ['gapminder-gini'],
+      ['findex-account-ownership', 'wb-account-ownership'], ['imf-world-gdp-share'], ['owid-extreme-poverty'],
+    ],
+    demographics: [
+      ['gapminder-population', 'imf-population'], ['gapminder-median-age'], ['wb-sp-dyn-tfrt-in'],
+      ['gapminder-urban'], ['gapminder-density'], ['unhcr-refugees'],
+    ],
   };
   const kval = (v) => v.toLocaleString('en-US', { maximumFractionDigits: 1 });
   // Two big blocks so opinion surveys always sit below the hard statistics.
