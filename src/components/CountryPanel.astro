@@ -185,6 +185,21 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
       ['gapminder-population', 'imf-population'], ['gapminder-median-age'], ['wb-sp-dyn-tfrt-in'],
       ['gapminder-urban'], ['gapminder-density'], ['unhcr-refugees'],
     ],
+    // Remaining topics: top-3 by prominence in the research literature.
+    connectivity: [['gapminder-internet'], ['wb-mobile-subscriptions'], ['owid-electricity']],
+    health: [
+      ['gapminder-life-expectancy'], ['owid-child-mortality', 'qog-wdi-mortinf'], ['qog-wdi-chexppgdp'],
+      ['who-obesity'], ['who-uhc'],
+    ],
+    education: [['owid-schooling'], ['gapminder-literacy'], ['pisa-mathematics', 'qog-wdi-expedu']],
+    environment: [['wb-en-ghg-co2-pc-ce-ar5'], ['owid-renewables'], ['gapminder-energy']],
+    governance: [
+      ['v-dem-v2x-polyarchy'], ['cpi-corruption-perceptions', 'qog-ti-cpi'], ['v-dem-v2x-rule'],
+      ['v-dem-v2x-libdem'], ['fiw-freedom-score', 'qog-fh-status'],
+    ],
+    safety: [['gapminder-homicide'], ['who-road-deaths']],
+    risk: [['inform-risk'], ['wri-risk'], ['wri-exposure']],
+    wellbeing: [['gapminder-hdi'], ['whr-happiness']],
   };
   const kval = (v) => v.toLocaleString('en-US', { maximumFractionDigits: 1 });
   // Two big blocks so opinion surveys always sit below the hard statistics.
