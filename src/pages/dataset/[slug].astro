@@ -44,6 +44,11 @@ const single = isSinglePeriod(ds.data);
 const periodCount = new Set(ds.data.map((o) => o.period)).size;
 const pairing = PAIRINGS[ds.slug];
 const related = datasets.filter((d) => d.topic === ds.topic && d.slug !== ds.slug).slice(0, 6);
+// prev/next within the same section + topic, alphabetical — matches list order
+const siblings = datasets.filter((d) => d.kind === ds.kind && d.topic === ds.topic).sort((a, b) => a.title.localeCompare(b.title));
+const sidx = siblings.findIndex((d) => d.slug === ds.slug);
+const prevDs = sidx > 0 ? siblings[sidx - 1] : null;
+const nextDs = sidx < siblings.length - 1 ? siblings[sidx + 1] : null;
 const pctUnit = ds.unit === '%' ? '%' : '';
 const panelIndicator = [{
   slug: ds.slug, title: ds.title, kind: ds.kind, unit: ds.unit, valueLabel: ds.valueLabel,
@@ -74,7 +79,13 @@ const jsonLd = {
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <section class="section">
     <div class="container">
-      <a class="back-link" href={backHref}>← {ds.kind === 'survey' ? 'Polls' : 'Macro'}</a>
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href={backHref}>{ds.kind === 'survey' ? 'Polls' : 'Macro'}</a>
+        <span aria-hidden="true">›</span>
+        <a href={backHref}>{TOPICS[ds.topic]?.icon} {TOPICS[ds.topic]?.label ?? ds.topic}</a>
+        <span aria-hidden="true">›</span>
+        <span class="crumb-here">{ds.title}</span>
+      </nav>
       <h2><span class="ind-ic" aria-hidden="true">{TOPICS[ds.topic]?.icon}</span>{ds.title}</h2>
       <p class="sub">{ds.summary}</p>
       <Provenance meta={ds} />
@@ -175,6 +186,12 @@ const jsonLd = {
             </a>
           ))}
         </div>
+        {(prevDs || nextDs) && (
+          <div class="pager">
+            {prevDs ? <a class="ghost-btn" href={`${base}/dataset/${prevDs.slug}`}>← {prevDs.title}</a> : <span />}
+            {nextDs ? <a class="ghost-btn" href={`${base}/dataset/${nextDs.slug}`}>{nextDs.title} →</a> : <span />}
+          </div>
+        )}
       </div>
     </section>
   )}

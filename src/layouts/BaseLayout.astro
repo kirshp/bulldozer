@@ -99,6 +99,7 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
           ))}
         </nav>
         <div class="header-tools">
+          <button type="button" class="hdr-icon" id="hdr-search" aria-label="Search datasets and countries (Cmd+K)">🔍</button>
           <button type="button" class="hdr-icon" id="hdr-theme" aria-label="Toggle light/dark theme">☀️</button>
           <div class="burger-wrap">
             <button type="button" class="hdr-icon" id="hdr-burger" aria-label="More sections" aria-expanded="false" aria-controls="burger-menu">☰</button>
@@ -111,6 +112,12 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
         </div>
       </div>
     </header>
+    <div class="srch-overlay" id="srch-overlay" hidden>
+      <div class="srch-box" role="dialog" aria-label="Search">
+        <input type="search" id="srch-input" placeholder="Search 130+ datasets and 230 countries…" autocomplete="off" />
+        <div class="srch-results" id="srch-results"></div>
+      </div>
+    </div>
     <script is:inline>
       (() => {
         // Theme toggle — same storage/flag the homepage toggle uses.
@@ -136,6 +143,47 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
         });
         document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target)) close(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+      })();
+    </script>
+    <script is:inline define:vars={{ base }}>
+      (() => {
+        // Global search: 🔍 or Cmd/Ctrl+K → overlay over datasets + countries.
+        const overlay = document.getElementById('srch-overlay');
+        const input = document.getElementById('srch-input');
+        const list = document.getElementById('srch-results');
+        let index = null, sel = 0, rows = [];
+        const open = async () => {
+          overlay.hidden = false; input.value = ''; input.focus(); paint([]);
+          if (!index) { try { index = await (await fetch(`${base}/data/search.json`)).json(); } catch (e) { index = []; } }
+        };
+        const close = () => { overlay.hidden = true; };
+        const paint = (r) => {
+          rows = r; sel = 0;
+          list.innerHTML = r.length
+            ? r.map(([ic, label, href], i) => `<a class="srch-item${i === 0 ? ' sel' : ''}" href="${base}${href}">${ic} ${label}</a>`).join('')
+            : `<p class="srch-empty">${input.value ? 'Nothing found.' : 'Type to search — e.g. “inflation” or “Brazil”.'}</p>`;
+        };
+        const rank = (q) => {
+          q = q.toLowerCase();
+          return index
+            .map((it) => { const l = it[1].toLowerCase(); const p = l.startsWith(q) ? 0 : l.includes(q) ? 1 : -1; return p < 0 ? null : [p, it]; })
+            .filter(Boolean).sort((a, b) => a[0] - b[0] || a[1][1].localeCompare(b[1][1])).slice(0, 12).map((x) => x[1]);
+        };
+        input.addEventListener('input', () => paint(input.value.trim() && index ? rank(input.value.trim()) : []));
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            sel = Math.max(0, Math.min(rows.length - 1, sel + (e.key === 'ArrowDown' ? 1 : -1)));
+            [...list.children].forEach((el, i) => el.classList && el.classList.toggle('sel', i === sel));
+            list.children[sel]?.scrollIntoView({ block: 'nearest' });
+          } else if (e.key === 'Enter' && rows[sel]) location.href = base + rows[sel][2];
+        });
+        document.getElementById('hdr-search').addEventListener('click', open);
+        document.addEventListener('keydown', (e) => {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); overlay.hidden ? open() : close(); }
+          else if (e.key === 'Escape') close();
+        });
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
       })();
     </script>
 

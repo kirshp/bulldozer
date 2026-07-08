@@ -47,7 +47,11 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
     </select>
     <select id="ci-topic"><option value="">All topics</option></select>
   </div>
-  <div id="country-items" style="margin-top:8px"></div>
+  <div id="country-items" style="margin-top:8px">
+    <!-- skeleton shown until country-index.json arrives; replaced by render() -->
+    <div class="skeleton" style="width:38%;height:15px"></div>
+    {[92, 84, 88, 78, 90].map((w) => <div class="skeleton" style={`width:${w}%;height:13px`} />)}
+  </div>
 </div>
 
 <script type="application/json" id="cp-iso" set:html={JSON.stringify(isoNumeric)}></script>
@@ -340,12 +344,14 @@ const topicMeta = TOPIC_ORDER.map((id) => ({ id, label: TOPICS[id].label, icon: 
   fetch(`${base}/data/country-index.json`).then((r) => r.json()).then((data) => {
     countries = data;
     sel.innerHTML = data.map((c) => `<option value="${c.iso}">${flag(c.iso)}${c.name}</option>`).join('');
-    const want = new URLSearchParams(location.search).get('c');
+    // URL param wins; else the country picked last visit (saved below)
+    let saved = null; try { saved = localStorage.getItem('bd-geo-c'); } catch (e) {}
+    const want = new URLSearchParams(location.search).get('c') || saved;
     const def = data.find((c) => c.iso === want) || data.find((c) => c.iso === 'FIN') || data[0];
     if (def) sel.value = def.iso;
     render();
   });
-  sel.addEventListener('change', () => { render(); syncUrl(); });
+  sel.addEventListener('change', () => { render(); syncUrl(); try { localStorage.setItem('bd-geo-c', sel.value); } catch (e) {} });
   // Export every indicator for the selected country as a CSV.
   function exportCsv() {
     if (!currentC) return;
