@@ -88,6 +88,14 @@ a:hover { text-decoration: underline; }
 .burger-menu a { color: var(--text); font-size: 15px; font-weight: 500; padding: 9px 12px; border-radius: 8px; white-space: nowrap; }
 .burger-menu a:hover { background: var(--bg-elev); text-decoration: none; }
 .burger-menu a.active { background: var(--accent); color: #1a1300; font-weight: 700; }
+/* Search/theme live as icons on desktop, as burger items on mobile */
+.bm-tool { display: none; text-align: left; background: transparent; border: 0; cursor: pointer; color: var(--text); font: 500 15px var(--font); padding: 9px 12px; border-radius: 8px; white-space: nowrap; }
+.bm-tool:hover { background: var(--bg-elev); }
+@media (max-width: 560px) {
+  #hdr-search, #hdr-theme { display: none; }
+  .bm-tool { display: block; }
+  .bm-tool:last-of-type { border-bottom: 1px solid var(--border); border-radius: 8px 8px 0 0; margin-bottom: 4px; }
+}
 @media (max-width: 560px) {
   .site-header .container { gap: 8px; padding: 0 10px; }
   .brand { gap: 6px; flex: 0 0 auto; }

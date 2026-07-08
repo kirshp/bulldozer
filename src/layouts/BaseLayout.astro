@@ -105,6 +105,9 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
           <div class="burger-wrap">
             <button type="button" class="hdr-icon" id="hdr-burger" aria-label="More sections" aria-expanded="false" aria-controls="burger-menu">☰</button>
             <nav class="burger-menu" id="burger-menu" hidden>
+              <!-- mobile-only: header icons don't fit next to the tabs -->
+              <button type="button" class="bm-tool" id="bm-search">🔍 Search</button>
+              <button type="button" class="bm-tool" id="bm-theme">☀️ Light theme</button>
               {burger.map((n) => (
                 <a href={n.href} class={active === n.id ? 'active' : ''}>{n.label}</a>
               ))}
@@ -133,6 +136,11 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
           icon();
         });
         icon();
+        // burger copies of the header tools (shown on mobile only)
+        const bmTheme = document.getElementById('bm-theme');
+        const bmLabel = () => { bmTheme.textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '🌙 Dark theme' : '☀️ Light theme'; };
+        bmTheme.addEventListener('click', () => { tBtn.click(); bmLabel(); });
+        bmLabel();
 
         const bBtn = document.getElementById('hdr-burger');
         const menu = document.getElementById('burger-menu');
@@ -180,6 +188,7 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
           } else if (e.key === 'Enter' && rows[sel]) location.href = base + rows[sel][2];
         });
         document.getElementById('hdr-search').addEventListener('click', open);
+        document.getElementById('bm-search').addEventListener('click', () => { document.getElementById('burger-menu').hidden = true; open(); });
         document.addEventListener('keydown', (e) => {
           if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); overlay.hidden ? open() : close(); }
           else if (e.key === 'Escape') close();
