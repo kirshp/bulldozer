@@ -10,14 +10,22 @@ interface Props {
 }
 const { title, description, active, ogPath } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Primary data sections stay as tabs; the rest lives in the burger menu
+// (same pattern as the Ativa app: switcher + burger on the right edge).
 const nav = [
   { id: 'news', label: 'New', href: `${base}/` },
   { id: 'explore', label: 'Top', href: `${base}/explore` },
   { id: 'macro', label: 'Macro', href: `${base}/macro` },
-  { id: 'markets', label: 'Biz', href: `${base}/markets` },
   { id: 'surveys', label: 'Polls', href: `${base}/surveys` },
   { id: 'geo', label: 'Geo', href: `${base}/geo` },
-  { id: 'edu', label: 'Edu', href: `${base}/edu` },
+];
+const burger = [
+  { id: 'markets', label: '💼 Business', href: `${base}/markets` },
+  { id: 'edu', label: '🎓 Edu', href: `${base}/edu` },
+  { id: 'quiz', label: '🎲 Country quiz', href: `${base}/quiz` },
+  { id: 'glossary', label: '📖 Glossary', href: `${base}/glossary` },
+  { id: 'about', label: 'ℹ️ About', href: `${base}/about` },
+  { id: 'contact', label: '✉️ Contact', href: 'mailto:azenha.agent@gmail.com' },
 ];
 const fullTitle = title ? `${title} · BullDozer` : 'BullDozer — Marketing Analytics & Research';
 const desc = description ?? 'Bulldoze the noise. Mine the signal. 136 public, parsed datasets — surveys, IMF & World Bank macro, markets and people. Every number sourced.';
@@ -90,8 +98,46 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
             <a href={n.href} class={active === n.id ? 'active' : ''}>{n.label}</a>
           ))}
         </nav>
+        <div class="header-tools">
+          <button type="button" class="hdr-icon" id="hdr-theme" aria-label="Toggle light/dark theme">☀️</button>
+          <div class="burger-wrap">
+            <button type="button" class="hdr-icon" id="hdr-burger" aria-label="More sections" aria-expanded="false" aria-controls="burger-menu">☰</button>
+            <nav class="burger-menu" id="burger-menu" hidden>
+              {burger.map((n) => (
+                <a href={n.href} class={active === n.id ? 'active' : ''}>{n.label}</a>
+              ))}
+            </nav>
+          </div>
+        </div>
       </div>
     </header>
+    <script is:inline>
+      (() => {
+        // Theme toggle — same storage/flag the homepage toggle uses.
+        const tBtn = document.getElementById('hdr-theme');
+        const icon = () => { tBtn.textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '🌙' : '☀️'; };
+        tBtn.addEventListener('click', () => {
+          const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+          if (next === 'light') document.documentElement.setAttribute('data-theme', 'light');
+          else document.documentElement.removeAttribute('data-theme');
+          try { localStorage.setItem('bd-theme', next); } catch (e) { /* ignore */ }
+          document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f7f6f2' : '#0e0f11');
+          icon();
+        });
+        icon();
+
+        const bBtn = document.getElementById('hdr-burger');
+        const menu = document.getElementById('burger-menu');
+        const close = () => { menu.hidden = true; bBtn.setAttribute('aria-expanded', 'false'); };
+        bBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menu.hidden = !menu.hidden;
+          bBtn.setAttribute('aria-expanded', String(!menu.hidden));
+        });
+        document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target)) close(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+      })();
+    </script>
 
     <main>
       <slot />

@@ -76,6 +76,18 @@ a:hover { text-decoration: underline; }
 /* Active tab: amber pill, Forbes-style */
 .nav a.active { background: var(--accent); color: #1a1300; font-weight: 700; text-decoration: none; }
 .nav a.active:hover { color: #1a1300; }
+/* Right-edge tools: theme toggle + burger (Ativa-app pattern) */
+.header-tools { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+.hdr-icon { width: 34px; height: 34px; display: grid; place-items: center; font-size: 17px; line-height: 1; background: transparent; border: 1px solid transparent; border-radius: 8px; color: var(--text); cursor: pointer; padding: 0; }
+.hdr-icon:hover { background: var(--bg-elev); border-color: var(--border); }
+.burger-wrap { position: relative; }
+.burger-menu { position: absolute; right: 0; top: calc(100% + 10px); min-width: 200px; display: flex; flex-direction: column; padding: 6px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.35); z-index: 60; }
+/* display:flex above would override the hidden attribute's UA display:none —
+   without this the menu renders open on load and won't close. */
+.burger-menu[hidden] { display: none; }
+.burger-menu a { color: var(--text); font-size: 15px; font-weight: 500; padding: 9px 12px; border-radius: 8px; white-space: nowrap; }
+.burger-menu a:hover { background: var(--bg-elev); text-decoration: none; }
+.burger-menu a.active { background: var(--accent); color: #1a1300; font-weight: 700; }
 @media (max-width: 560px) {
   .site-header .container { gap: 8px; padding: 0 10px; }
   .brand { gap: 6px; flex: 0 0 auto; }
