@@ -98,6 +98,9 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
           {nav.map((n) => (
             <a href={n.href} class={active === n.id ? 'active' : ''}>{n.label}</a>
           ))}
+          <!-- mobile-only tabs: on desktop these live in the burger -->
+          <a href={`${base}/markets`} class={`nav-extra ${active === 'markets' ? 'active' : ''}`}>Biz</a>
+          <a href={`${base}/edu`} class={`nav-extra ${active === 'edu' ? 'active' : ''}`}>Edu</a>
         </nav>
         <div class="header-tools">
           <button type="button" class="hdr-icon" id="hdr-search" aria-label="Search datasets and countries (Cmd+K)">🔍</button>
@@ -109,7 +112,7 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
               <button type="button" class="bm-tool" id="bm-search">🔍 Search</button>
               <button type="button" class="bm-tool" id="bm-theme">☀️ Light theme</button>
               {burger.map((n) => (
-                <a href={n.href} class={active === n.id ? 'active' : ''}>{n.label}</a>
+                <a href={n.href} class={`bm-${n.id} ${active === n.id ? 'active' : ''}`}>{n.label}</a>
               ))}
             </nav>
           </div>

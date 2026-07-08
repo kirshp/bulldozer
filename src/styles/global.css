@@ -91,10 +91,14 @@ a:hover { text-decoration: underline; }
 /* Search/theme live as icons on desktop, as burger items on mobile */
 .bm-tool { display: none; text-align: left; background: transparent; border: 0; cursor: pointer; color: var(--text); font: 500 15px var(--font); padding: 9px 12px; border-radius: 8px; white-space: nowrap; }
 .bm-tool:hover { background: var(--bg-elev); }
+/* Biz/Edu: tabs on mobile (where they fit again), burger items on desktop */
+.nav-extra { display: none; }
 @media (max-width: 560px) {
   #hdr-search, #hdr-theme { display: none; }
   .bm-tool { display: block; }
   .bm-tool:last-of-type { border-bottom: 1px solid var(--border); border-radius: 8px 8px 0 0; margin-bottom: 4px; }
+  .nav-extra { display: inline-block; }
+  .burger-menu .bm-markets, .burger-menu .bm-edu { display: none; }
 }
 @media (max-width: 560px) {
   .site-header .container { gap: 8px; padding: 0 10px; }
