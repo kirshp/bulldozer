@@ -11,8 +11,10 @@ https://claude.ai/code/artifact/6b4e25d1-b0b7-4e31-9c00-3fce677632c4
 
 ## What it does
 
-- **Island map** — schematic Madeira with a pin per shelter; pin colour = coverage
-  (red = no volunteers, amber = thin, green = covered). Tap a pin to open its rota.
+- **Island map** — the real coastline of Ilha da Madeira (OpenStreetMap relation
+  1715038, simplified to an inline SVG path; no external tiles) with a pin per shelter
+  placed by an equirectangular lat/lng projection. Pin colour = coverage (red = no
+  volunteers, amber = thin, green = covered). Click a pin for an on-map popover card.
 - **Sign-up** — tap a day in the shelter card (mobile-friendly) or a cell in the
   21-day grid (desktop overview) to add/remove your shift.
 - **Reminders** — export your shifts as a calendar file (`.ics`) → Google/Apple/Outlook.
