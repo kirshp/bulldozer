@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import EuropeMap from '@components/EuropeMap.astro';
 import cities from '@data/cities.json';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const desc = `The best cities to live in across Europe — a livability ranking over ${cities.metrics[0].data.length} cities from the open EU quality-of-life survey, ${cities.year}.`;
@@ -18,6 +19,16 @@ const desc = `The best cities to live in across Europe — a livability ranking 
         openly-licensed city ranking (Mercer, EIU and the Economist’s indices are proprietary).
       </p>
 
+      <h3 style="margin:22px 0 2px">Happiness across Europe — countries and their cities</h3>
+      <p class="sub" style="margin:0 0 6px">
+        Countries shaded by the World Happiness Report life-evaluation score; each dot is a city, sized by its
+        rating on the metric you pick and coloured by whether it ranks <b>above</b> or <b>below</b> its own country.
+        Two scales (a 0–10 ladder for countries, “% satisfied” for cities), so they stay on separate encodings —
+        but city satisfaction tracks national happiness closely (r ≈ 0.69).
+      </p>
+      <EuropeMap />
+
+      <h3 style="margin:30px 0 2px">City rankings</h3>
       <div class="ci-controls" style="margin-bottom:6px">
         <div id="city-metrics" class="fchips"></div>
         <select id="city-country"><option value="">All countries</option></select>

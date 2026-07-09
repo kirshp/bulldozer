@@ -1,0 +1,239 @@
+---
+/**
+ * Europe happiness map: country choropleth shaded by the World Happiness
+ * Report life-evaluation score, with a city dot for each Eurostat perception
+ * survey city. Dot size = the city's rating on the selected metric; dot colour
+ * = the city's standing among cities MINUS its country's standing among these
+ * European countries (warm = the city punches above its country, cool = below).
+ * Two different scales stay honest by living on two encodings (fill vs dots).
+ */
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { feature } from 'topojson-client';
+import { geoConicConformal, geoPath, geoCentroid } from 'd3-geo';
+import cities from '@data/cities.json';
+import whr from '@data/surveys/whr-happiness.json';
+import isoNumeric from '@data/iso-numeric.json';
+
+const require = createRequire(import.meta.url);
+const topo = JSON.parse(readFileSync(require.resolve('world-atlas/countries-110m.json'), 'utf8'));
+const fc: any = feature(topo, (topo as any).objects.countries);
+
+const W = 720, H = 640, PAD = 42;
+// Frame the map to the cities themselves (a spherical bbox polygon fits
+// unreliably under a conic projection); surrounding countries spill past the
+// city cloud and are clipped by the viewBox, which is what we want.
+const cityPoints = {
+  type: 'MultiPoint',
+  coordinates: cities.metrics[0].data.filter((d: any) => d.lon != null).map((d: any) => [d.lon, d.lat]),
+} as any;
+const projection = geoConicConformal().parallels([43, 62]).rotate([-13, 0]);
+projection.fitExtent([[PAD, PAD], [W - PAD, H - PAD]], cityPoints);
+const pathGen = geoPath(projection);
+// Europe bbox only used to pick the Europe-relative happiness reference set.
+const BBOX = { lon0: -25, lon1: 45, lat0: 34, lat1: 72 };
+
+// WHR: latest period, alpha3 → life-evaluation score, plus name → score.
+const wPeriods = [...new Set(whr.data.map((o: any) => o.period))].sort();
+const wP = wPeriods[wPeriods.length - 1];
+const whrByIso = new Map<string, number>();
+const whrByName = new Map<string, number>();
+for (const o of whr.data.filter((o: any) => o.period === wP)) {
+  if (o.iso) whrByIso.set(o.iso, o.value);
+  whrByName.set(o.entity, o.value);
+}
+const NAME_FIX: Record<string, string> = { 'Türkiye': 'Turkey' };
+const countryWhr = (name: string) => whrByName.get(name) ?? whrByName.get(NAME_FIX[name] ?? '');
+
+// 0–100 percentile rank of v within vals (ties share the mean rank).
+function pct(vals: number[]) {
+  const n = vals.length;
+  return (v: number) => {
+    if (n <= 1) return 100;
+    const below = vals.filter((x) => x < v).length;
+    const equal = vals.filter((x) => x === v).length;
+    return ((below + (equal - 1) / 2) / (n - 1)) * 100;
+  };
+}
+
+// Country paths + which are in the European frame (for a Europe-relative ramp).
+const inBox = ([lon, lat]: number[]) =>
+  lon >= BBOX.lon0 && lon <= BBOX.lon1 && lat >= BBOX.lat0 && lat <= BBOX.lat1;
+const countries = fc.features.map((f: any) => {
+  const alpha3 = (isoNumeric as any)[String(Number(f.id))];
+  const whrV = alpha3 ? whrByIso.get(alpha3) : undefined;
+  return { name: f.properties.name, d: pathGen(f), whr: whrV, inView: inBox(geoCentroid(f)) };
+});
+const euRef = countries.filter((c: any) => c.inView && c.whr != null).map((c: any) => c.whr);
+const euPct = pct(euRef);
+const euMin = euRef.length ? Math.min(...euRef) : 0;
+const euMax = euRef.length ? Math.max(...euRef) : 10;
+// Country fill: fixed happiness-blue, opacity scaled by Europe-relative rank.
+const fillFor = (v?: number) =>
+  v == null ? { fill: 'var(--bg-elev)', op: 0.5 } : { fill: '#3b82f6', op: 0.16 + (euPct(v) / 100) * 0.72 };
+
+// Percentile of each country's WHR among the distinct city-countries shown.
+const cityCountries = [...new Set(cities.metrics[0].data.map((d: any) => d.country))];
+const countryPctFn = pct(cityCountries.map((c) => countryWhr(c) ?? euMin));
+const countryPctOf = (name: string) => countryPctFn(countryWhr(name) ?? euMin);
+
+// City dots: project once; carry every metric's value + within-cities percentile.
+const metrics = cities.metrics as any[];
+const pctByMetric = new Map<string, (v: number) => number>(
+  metrics.map((m) => [m.key, pct(m.data.map((d: any) => d.value))]),
+);
+const dots = metrics[0].data
+  .filter((d: any) => d.lon != null && d.lat != null)
+  .map((d: any) => {
+    const xy = projection([d.lon, d.lat]);
+    const cPct = countryPctOf(d.country);
+    const vals: Record<string, { v: number; d: number }> = {};
+    for (const m of metrics) {
+      const row = m.data.find((r: any) => r.city === d.city);
+      if (!row) continue;
+      const cityPct = pctByMetric.get(m.key)!(row.value);
+      vals[m.key] = { v: row.value, d: Math.round((cityPct - cPct) * 10) / 10 };
+    }
+    return { city: d.city, cc: d.cc, country: d.country, x: xy ? Math.round(xy[0] * 10) / 10 : null,
+      y: xy ? Math.round(xy[1] * 10) / 10 : null, whr: countryWhr(d.country) ?? null, vals };
+  })
+  .filter((d: any) => d.x != null);
+
+const metricLabels = metrics.map((m) => ({ key: m.key, label: m.label, unit: m.unit }));
+---
+<div class="eumap">
+  <div id="eumap-metrics" class="fchips" style="margin-bottom:10px"></div>
+  <div class="eumap-wrap">
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Happiness across Europe: countries and cities" preserveAspectRatio="xMidYMid meet">
+      {countries.map((c: any) => {
+        const f = fillFor(c.whr);
+        return <path class="eu-country" d={c.d} fill={f.fill} fill-opacity={f.op} stroke="var(--bg)" stroke-width="0.5"><title>{c.name}{c.whr != null ? ` · ${c.whr.toFixed(2)}` : ''}</title></path>;
+      })}
+      <g id="eumap-dots">
+        {dots.map((d: any) => (
+          <circle class="eu-dot" cx={d.x} cy={d.y} r="5"
+            data-city={d.city} data-cc={d.cc} data-country={d.country}
+            data-whr={d.whr == null ? '' : d.whr} data-vals={JSON.stringify(d.vals)} />
+        ))}
+      </g>
+    </svg>
+    <div id="eumap-tip" class="eumap-tip" hidden></div>
+  </div>
+  <div class="eumap-legends">
+    <div class="eumap-leg">
+      <span class="eumap-leg-t">Country happiness</span>
+      <span class="eumap-ramp"></span>
+      <span class="eumap-leg-s">{euMin.toFixed(1)}</span><span class="eumap-leg-s">{euMax.toFixed(1)} <em>WHR 0–10 · {wP}</em></span>
+    </div>
+    <div class="eumap-leg">
+      <span class="eumap-leg-t">City vs its country</span>
+      <span class="eumap-dotkey"><i class="dk dk-lo"></i> below</span>
+      <span class="eumap-dotkey"><i class="dk dk-mid"></i> on par</span>
+      <span class="eumap-dotkey"><i class="dk dk-hi"></i> above</span>
+      <span class="eumap-leg-s"><em>size = city rating</em></span>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="eumap-metric-defs" set:html={JSON.stringify(metricLabels)}></script>
+<script is:inline>
+  (() => {
+    const defs = JSON.parse(document.getElementById('eumap-metric-defs').textContent);
+    const chipsEl = document.getElementById('eumap-metrics');
+    const dotsEl = document.getElementById('eumap-dots');
+    const tip = document.getElementById('eumap-tip');
+    const wrap = tip.parentElement;
+    const dots = [...dotsEl.querySelectorAll('.eu-dot')];
+    let key = defs[0].key;
+
+    chipsEl.innerHTML = defs.map((m, i) =>
+      `<button type="button" class="fchip${i === 0 ? ' active' : ''}" data-k="${m.key}">${m.label}</button>`).join('');
+
+    // Warm (above its country) ↔ cool (below), by percentile-gap magnitude.
+    const lerp = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+    const rgb = (a) => `rgb(${a[0]},${a[1]},${a[2]})`;
+    // amber = above, magenta = below (kept off-blue so it reads on the blue basemap)
+    const NEUT = [148, 163, 184], HI = [245, 158, 11], LO = [219, 39, 119];
+    function dotColor(delta) {
+      const t = Math.min(Math.abs(delta) / 40, 1);
+      return rgb(lerp(NEUT, delta >= 0 ? HI : LO, t));
+    }
+
+    function apply() {
+      // size by within-cities spread: bigger dot = higher rating on this metric
+      const vs = dots.map((el) => JSON.parse(el.dataset.vals)[key]?.v).filter((v) => v != null);
+      const min = Math.min(...vs), max = Math.max(...vs);
+      for (const el of dots) {
+        const rec = JSON.parse(el.dataset.vals)[key];
+        if (!rec) { el.style.display = 'none'; continue; }
+        el.style.display = '';
+        const t = max > min ? (rec.v - min) / (max - min) : 0.5;
+        el.setAttribute('r', (3.4 + t * 6.6).toFixed(1));
+        el.setAttribute('fill', dotColor(rec.d));
+        el.setAttribute('fill-opacity', '0.92');
+        el.setAttribute('stroke', 'var(--bg)');
+        el.setAttribute('stroke-width', '0.8');
+      }
+    }
+
+    chipsEl.addEventListener('click', (e) => {
+      const b = e.target.closest('.fchip'); if (!b) return;
+      key = b.dataset.k;
+      [...chipsEl.children].forEach((c) => c.classList.toggle('active', c === b));
+      apply();
+    });
+
+    function showTip(el, ev) {
+      const rec = JSON.parse(el.dataset.vals)[key]; if (!rec) return;
+      const def = defs.find((d) => d.key === key);
+      const u = def.unit === '%' ? '%' : '';
+      const whr = el.dataset.whr;
+      const dv = rec.d;
+      const verdict = Math.abs(dv) < 6 ? 'on par with' : dv > 0 ? 'happier than' : 'below';
+      tip.innerHTML =
+        `<b>${el.dataset.city}</b> <span class="tct">${el.dataset.country}</span>` +
+        `<div class="tr"><span>${def.label}</span><b>${rec.v}${u}</b></div>` +
+        (whr ? `<div class="tr"><span>Country (WHR)</span><b>${(+whr).toFixed(2)}</b></div>` : '') +
+        `<div class="tv">${verdict} its country</div>`;
+      tip.hidden = false;
+      const r = wrap.getBoundingClientRect();
+      const x = ev.clientX - r.left, y = ev.clientY - r.top;
+      tip.style.left = Math.min(x + 14, r.width - tip.offsetWidth - 6) + 'px';
+      tip.style.top = Math.max(y - tip.offsetHeight - 12, 6) + 'px';
+    }
+    dotsEl.addEventListener('mousemove', (e) => {
+      const el = e.target.closest('.eu-dot'); if (!el) { tip.hidden = true; return; }
+      el.setAttribute('stroke', 'var(--text)'); showTip(el, e);
+    });
+    dotsEl.addEventListener('mouseleave', () => { tip.hidden = true; dots.forEach((d) => d.setAttribute('stroke', 'var(--bg)')); });
+
+    apply();
+  })();
+</script>
+
+<style>
+  .eumap { margin-top: 8px; }
+  .eumap-wrap { position: relative; }
+  .eumap svg { width: 100%; height: auto; display: block; max-width: 720px; margin: 0 auto; }
+  .eu-country { transition: fill-opacity 0.2s ease; }
+  .eu-dot { cursor: pointer; transition: r 0.18s ease; }
+  .eu-dot:hover { fill-opacity: 1 !important; }
+  .eumap-tip {
+    position: absolute; z-index: 5; pointer-events: none; min-width: 172px;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font-size: 12.5px; color: var(--text); box-shadow: 0 6px 24px rgba(0,0,0,0.28);
+  }
+  .eumap-tip .tct { color: var(--text-dim); font-size: 11.5px; }
+  .eumap-tip .tr { display: flex; justify-content: space-between; gap: 14px; margin-top: 4px; color: var(--text-dim); }
+  .eumap-tip .tr b { color: var(--text); font-family: var(--mono); }
+  .eumap-tip .tv { margin-top: 5px; font-size: 11.5px; color: var(--accent); }
+  .eumap-legends { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 12px; font-size: 12px; color: var(--text-dim); }
+  .eumap-leg { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .eumap-leg-t { color: var(--text); font-weight: 600; }
+  .eumap-leg-s { font-family: var(--mono); }
+  .eumap-leg-s em { font-style: normal; opacity: 0.7; }
+  .eumap-ramp { width: 120px; height: 11px; border-radius: 6px; background: linear-gradient(90deg, rgba(59,130,246,0.16), rgba(59,130,246,0.88)); border: 1px solid var(--border); }
+  .eumap-dotkey { display: inline-flex; align-items: center; gap: 5px; }
+  .eumap-dotkey .dk { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .dk-lo { background: rgb(219,39,119); } .dk-mid { background: rgb(148,163,184); } .dk-hi { background: rgb(245,158,11); }
+</style>
