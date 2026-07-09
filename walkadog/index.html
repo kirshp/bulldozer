@@ -49,7 +49,7 @@
   }
 
   * { box-sizing:border-box; }
-  html,body{ margin:0; }
+  html,body{ margin:0; overflow-x:hidden; max-width:100%; }
   body{
     font-family:var(--font-body);
     background:var(--ground); color:var(--ink);
@@ -59,7 +59,8 @@
 
   /* header */
   header.top{ display:flex; flex-wrap:wrap; align-items:flex-end; gap:16px 22px; margin-bottom:20px; }
-  .brand{ display:flex; align-items:center; gap:13px; }
+  .brand{ display:flex; align-items:center; gap:13px; min-width:0; }
+  .brand > div{ min-width:0; }
   .mark{ width:44px; height:44px; flex:0 0 auto; border-radius:12px;
     background:linear-gradient(150deg,var(--accent),var(--sea)); display:grid; place-items:center; box-shadow:var(--shadow); }
   .mark svg{ width:26px; height:26px; }
@@ -94,6 +95,7 @@
 
   /* main layout */
   .grid-main{ display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:18px; align-items:start; }
+  .grid-main > *{ min-width:0; }
   @media (max-width:880px){ .grid-main{ grid-template-columns:1fr; } }
   .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); }
   .card h2{ font-family:var(--font-display); font-weight:600; font-size:1.02rem; margin:0; padding:15px 18px 0; letter-spacing:-.01em; }
@@ -122,9 +124,15 @@
     border:1px solid transparent; }
   .chip.sea{ background:transparent; border-color:var(--line); color:var(--muted); }
   .info p.desc{ font-size:.88rem; color:var(--ink); margin:0 0 12px; }
-  .upcoming{ display:flex; flex-direction:column; gap:6px; }
-  .up-row{ display:flex; align-items:center; gap:10px; font-size:.85rem; }
-  .up-date{ width:112px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .upcoming{ display:flex; flex-direction:column; gap:5px; max-height:352px; overflow-y:auto; padding-right:2px; }
+  .up-row{ display:flex; align-items:center; gap:10px; font-size:.85rem; width:100%; text-align:left; font-family:inherit;
+    background:var(--panel-2); border:1px solid var(--line); border-radius:9px; padding:7px 10px; cursor:pointer; color:var(--ink); }
+  .up-row:hover{ border-color:var(--accent); }
+  .up-row.mine{ background:var(--accent-soft); border-color:var(--accent); }
+  .up-tick{ width:20px; height:20px; flex:0 0 auto; border-radius:6px; display:grid; place-items:center; font-size:.82rem;
+    background:var(--line); color:var(--muted); }
+  .up-row.mine .up-tick{ background:var(--accent); color:#fff; }
+  .up-date{ width:96px; color:var(--muted); font-variant-numeric:tabular-nums; }
   .up-bar{ flex:1; height:8px; border-radius:6px; background:var(--line); overflow:hidden; }
   .up-bar i{ display:block; height:100%; border-radius:6px; }
   .up-n{ width:58px; text-align:right; font-variant-numeric:tabular-nums; font-size:.8rem; color:var(--muted); }
@@ -172,6 +180,21 @@
   .vol-item .vc{ width:28px; text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
   .vol-item.you .vn{ color:var(--accent-ink); font-weight:600; }
 
+  @media (max-width:560px){
+    .wrap{ padding-top:16px; }
+    header.top{ flex-direction:column; align-items:stretch; gap:12px; }
+    .controls{ margin-left:0; justify-content:space-between; width:100%; }
+    .who{ flex:1 1 100%; }
+    .who input{ width:100%; }
+    h1{ font-size:1.5rem; }
+    .tagline{ font-size:.82rem; }
+    .tiles{ grid-template-columns:repeat(2,1fr); }
+    .tile .v{ font-size:1.5rem; }
+    .card h2{ font-size:.98rem; }
+    .sh-name{ min-width:130px; }
+    .sh-name .council{ display:none; }
+    .cell button{ min-width:34px; height:36px; }
+  }
   footer.note{ margin-top:26px; font-size:.76rem; color:var(--muted); line-height:1.55; }
   footer.note strong{ color:var(--ink); font-weight:600; }
   .toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--ground);
@@ -324,11 +347,11 @@ const I18N = {
     btnIcs:"Exportar os meus turnos (.ics)", btnReset:"Repor demonstração",
     noteH:"Protótipo.",
     noteBody:"Os dados de refúgios (localidade, foco, necessidade) são exemplos para demonstração e devem ser confirmados com cada associação. As marcações ficam guardadas apenas neste navegador (localStorage) — a versão partilhada, com conta comum e lembretes automáticos, precisa de um backend. As camadas de leitura/gravação de dados estão isoladas para essa ligação futura.",
-    tCovered:"Cobertura", tGaps:"Dias por cobrir", tMine:"Os meus turnos", tVols:"Voluntários", tSlots:"Turnos marcados",
+    tCovered:"Cobertura", tGaps:"Dias por cobrir", tMine:"Os meus turnos", tVols:"Voluntários", tSlots:"Turnos marcados", of:"de",
     ofNeed:"do necessário", perDay:"por dia", need:"Precisa de", vols:"voluntários", noGaps:"Tudo coberto 🎉",
     pickShelter:"Escolhe um refúgio no mapa.", added:"Turno marcado", removed:"Turno removido",
     setName:"Escreve o teu nome primeiro.", icsEmpty:"Ainda não tens turnos marcados.", icsOk:"Ficheiro de calendário criado.",
-    reset:"Demonstração reposta.", coast:{N:"Costa norte",S:"Costa sul",E:"Leste",W:"Oeste"}, upcoming:"Próximos dias", yourName:"o teu nome" },
+    reset:"Demonstração reposta.", coast:{N:"Costa norte",S:"Costa sul",E:"Leste",W:"Oeste"}, upcoming:"Próximos dias", yourName:"o teu nome", tapToBook:"toca para marcar" },
   en:{ tagline:"Walk and care for Madeira's shelter dogs — mark your days, see the island's coverage.", you:"I am",
     mapTitle:"Island map", mapSub:"Tap a shelter to see details and its rota.",
     lgGap:"No volunteers", lgThin:"Thin coverage", lgFull:"Covered",
@@ -338,11 +361,11 @@ const I18N = {
     btnIcs:"Export my shifts (.ics)", btnReset:"Reset demo",
     noteH:"Prototype.",
     noteBody:"Shelter data (location, focus, need) are sample values for the demo and should be confirmed with each association. Sign-ups are saved only in this browser (localStorage) — the shared version, with a common account and automatic reminders, needs a backend. The data read/write layers are isolated for that future connection.",
-    tCovered:"Coverage", tGaps:"Days to cover", tMine:"My shifts", tVols:"Volunteers", tSlots:"Shifts booked",
+    tCovered:"Coverage", tGaps:"Days to cover", tMine:"My shifts", tVols:"Volunteers", tSlots:"Shifts booked", of:"of",
     ofNeed:"of target", perDay:"per day", need:"Needs", vols:"volunteers", noGaps:"All covered 🎉",
     pickShelter:"Pick a shelter on the map.", added:"Shift added", removed:"Shift removed",
     setName:"Type your name first.", icsEmpty:"You have no shifts yet.", icsOk:"Calendar file created.",
-    reset:"Demo reset.", coast:{N:"North coast",S:"South coast",E:"East",W:"West"}, upcoming:"Upcoming days", yourName:"your name" },
+    reset:"Demo reset.", coast:{N:"North coast",S:"South coast",E:"East",W:"West"}, upcoming:"Upcoming days", yourName:"your name", tapToBook:"tap to book" },
 };
 const LOCALE = { pt:"pt-PT", en:"en-GB" };
 let lang = "pt";
@@ -385,7 +408,7 @@ function renderTiles(){
   const covCls = cov>=80?"good":cov>=50?"warn":"gap";
   const tiles=[
     {cls:covCls, k:t("tCovered"), v:cov+"%", s:t("ofNeed")},
-    {cls:"gap",  k:t("tGaps"),    v:gapDays, s:SHELTERS.length*DAYS+" "+t("tSlots").toLowerCase()},
+    {cls:"gap",  k:t("tGaps"),    v:gapDays, s:t("of")+" "+(SHELTERS.length*DAYS)},
     {cls:"",     k:t("tMine"),    v:mine,   s:state.me? state.me : "—"},
     {cls:"",     k:t("tVols"),    v:vols.size, s:""},
   ];
@@ -473,20 +496,24 @@ function renderSchedule(){
 function renderInfo(){
   const s = SHELTERS.find(x=>x.id===selected);
   if(!s){ $("#info").innerHTML = `<p class="desc">${t("pickShelter")}</p>`; return; }
-  const rows = dates.slice(0,7).map((d,i)=>{
-    const iso=dateKeys[i]; const n=signupsFor(s.id,iso).length; const frac=Math.min(n/s.need,1);
+  const rows = dates.map((d,i)=>{
+    const iso=dateKeys[i]; const list=signupsFor(s.id,iso); const n=list.length; const frac=Math.min(n/s.need,1);
     const col = n===0?"var(--gap)": n<s.need?"var(--warn)":"var(--good)";
-    return `<div class="up-row"><span class="up-date">${fmtDate(d,{weekday:"short",day:"numeric",month:"short"})}</span>
+    const mine = state.me && list.includes(state.me);
+    return `<button class="up-row${mine?" mine":""}" data-id="${s.id}" data-iso="${iso}">
+      <span class="up-tick">${mine?"✓":"+"}</span>
+      <span class="up-date">${fmtDate(d,{weekday:"short",day:"numeric",month:"short"})}</span>
       <span class="up-bar"><i style="width:${Math.max(frac*100,n?8:0)}%;background:${col}"></i></span>
-      <span class="up-n">${n}/${s.need}</span></div>`;
+      <span class="up-n">${n}/${s.need}</span></button>`;
   }).join("");
   $("#info").innerHTML = `
     <div class="name">${s.name}</div>
     <div class="meta"><span class="chip">${s.council}</span><span class="chip sea">${t("coast")[s.coast]}</span>
       <span class="chip sea">${t("need")} ${s.need} ${t("vols")}/${t("perDay")}</span></div>
     <p class="desc">${s.focus[lang]}</p>
-    <div class="rep-h">${t("upcoming")}</div>
+    <div class="rep-h">${t("upcoming")} · <span style="text-transform:none;letter-spacing:0">${t("tapToBook")}</span></div>
     <div class="upcoming">${rows}</div>`;
+  $("#info").querySelectorAll(".up-row").forEach(b=> b.addEventListener("click", ()=> toggleSlot(b.getAttribute("data-id"), b.getAttribute("data-iso"))));
 }
 
 function renderReport(){
