@@ -1,0 +1,578 @@
+<title>Walkadog — voluntariado nos refúgios da Madeira</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Walkadog: mapa dos refúgios de animais da Madeira e escala de voluntariado. Marca os dias em que podes passear e cuidar dos cães, vê a cobertura da ilha, recebe lembretes e relatórios." />
+<style>
+  :root {
+    --ground:#F4F7F4; --panel:#FFFFFF; --panel-2:#FBFDFB;
+    --ink:#16211B; --muted:#5C6B63; --line:#DBE4DD;
+    --accent:#1E6B45; --accent-ink:#0F4A2E; --accent-soft:#E4F0E8;
+    --sea:#0E7C86;
+    --good:#2F8F5B; --good-soft:#E1F1E6;
+    --warn:#B8791F; --warn-soft:#F6ECD8;
+    --gap:#C6482F; --gap-soft:#F7E2DC;
+    --shadow: 0 1px 2px rgba(20,40,30,.06), 0 8px 24px rgba(20,40,30,.06);
+    --r:14px; --r-sm:9px;
+    --font-display: ui-serif, "Iowan Old Style", Georgia, "Times New Roman", serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground:#0F130F; --panel:#161C17; --panel-2:#12170F;
+      --ink:#E7EEE7; --muted:#93A398; --line:#26302A;
+      --accent:#5BB07C; --accent-ink:#8FCda4; --accent-soft:#19271E;
+      --sea:#3FA9B2;
+      --good:#5BB07C; --good-soft:#16261B;
+      --warn:#D6A24A; --warn-soft:#2A2314;
+      --gap:#E27A63; --gap-soft:#2E1B16;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0F130F; --panel:#161C17; --panel-2:#12170F;
+    --ink:#E7EEE7; --muted:#93A398; --line:#26302A;
+    --accent:#5BB07C; --accent-ink:#8FCda4; --accent-soft:#19271E;
+    --sea:#3FA9B2;
+    --good:#5BB07C; --good-soft:#16261B;
+    --warn:#D6A24A; --warn-soft:#2A2314;
+    --gap:#E27A63; --gap-soft:#2E1B16;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    --ground:#F4F7F4; --panel:#FFFFFF; --panel-2:#FBFDFB;
+    --ink:#16211B; --muted:#5C6B63; --line:#DBE4DD;
+    --accent:#1E6B45; --accent-ink:#0F4A2E; --accent-soft:#E4F0E8;
+    --sea:#0E7C86;
+    --good:#2F8F5B; --good-soft:#E1F1E6;
+    --warn:#B8791F; --warn-soft:#F6ECD8;
+    --gap:#C6482F; --gap-soft:#F7E2DC;
+    --shadow: 0 1px 2px rgba(20,40,30,.06), 0 8px 24px rgba(20,40,30,.06);
+  }
+
+  * { box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{
+    font-family:var(--font-body);
+    background:var(--ground); color:var(--ink);
+    line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; padding:22px clamp(14px,3vw,30px) 64px; }
+
+  /* header */
+  header.top{ display:flex; flex-wrap:wrap; align-items:flex-end; gap:16px 22px; margin-bottom:20px; }
+  .brand{ display:flex; align-items:center; gap:13px; }
+  .mark{ width:44px; height:44px; flex:0 0 auto; border-radius:12px;
+    background:linear-gradient(150deg,var(--accent),var(--sea)); display:grid; place-items:center; box-shadow:var(--shadow); }
+  .mark svg{ width:26px; height:26px; }
+  h1{ font-family:var(--font-display); font-weight:600; font-size:clamp(1.35rem,3vw,1.9rem);
+    letter-spacing:-.01em; margin:0; line-height:1.05; }
+  .tagline{ color:var(--muted); font-size:.86rem; margin-top:3px; }
+  .controls{ margin-left:auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .who{ display:flex; align-items:center; gap:7px; background:var(--panel); border:1px solid var(--line);
+    border-radius:999px; padding:5px 6px 5px 13px; box-shadow:var(--shadow); }
+  .who label{ font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  .who input{ border:0; background:transparent; color:var(--ink); font:inherit; font-size:.9rem; width:9.5ch; padding:3px 6px;
+    border-radius:7px; }
+  .who input:focus{ outline:2px solid var(--accent); }
+  .seg{ display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:3px; box-shadow:var(--shadow); }
+  .seg button{ border:0; background:transparent; color:var(--muted); font:inherit; font-size:.78rem; font-weight:600;
+    padding:5px 10px; border-radius:999px; cursor:pointer; }
+  .seg button[aria-pressed="true"]{ background:var(--accent-soft); color:var(--accent-ink); }
+  .icon-btn{ width:38px; height:36px; border-radius:999px; border:1px solid var(--line); background:var(--panel);
+    color:var(--ink); cursor:pointer; box-shadow:var(--shadow); font-size:1rem; display:grid; place-items:center; }
+  .icon-btn:hover{ border-color:var(--accent); }
+
+  /* summary tiles */
+  .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:12px; margin-bottom:20px; }
+  .tile{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:14px 16px; box-shadow:var(--shadow);
+    position:relative; overflow:hidden; }
+  .tile .k{ font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
+  .tile .v{ font-family:var(--font-display); font-size:1.85rem; font-weight:600; letter-spacing:-.02em; margin-top:4px;
+    font-variant-numeric:tabular-nums; }
+  .tile .s{ font-size:.78rem; color:var(--muted); margin-top:1px; }
+  .tile .rail{ position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--accent); }
+  .tile.good .rail{ background:var(--good); } .tile.warn .rail{ background:var(--warn); } .tile.gap .rail{ background:var(--gap); }
+
+  /* main layout */
+  .grid-main{ display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:18px; align-items:start; }
+  @media (max-width:880px){ .grid-main{ grid-template-columns:1fr; } }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); }
+  .card h2{ font-family:var(--font-display); font-weight:600; font-size:1.02rem; margin:0; padding:15px 18px 0; letter-spacing:-.01em; }
+  .card .sub{ color:var(--muted); font-size:.8rem; padding:2px 18px 0; }
+
+  /* map */
+  .map-wrap{ padding:12px 14px 16px; }
+  svg.island{ width:100%; height:auto; display:block; }
+  .isle-fill{ fill:var(--accent-soft); stroke:var(--accent); stroke-width:2.4; }
+  .isle-ridge{ fill:none; stroke:var(--accent); stroke-width:1.4; opacity:.32; stroke-linecap:round; }
+  .isle-label{ fill:var(--muted); font-size:12px; font-family:var(--font-body); opacity:.7; }
+  .pin{ cursor:pointer; }
+  .pin circle.dot{ stroke:var(--panel); stroke-width:2; transition:r .12s ease; }
+  .pin:hover circle.dot{ r:11; }
+  .pin.sel circle.halo{ opacity:1; }
+  .pin circle.halo{ fill:none; stroke:var(--ink); stroke-width:2; opacity:0; }
+  .legend{ display:flex; flex-wrap:wrap; gap:12px 18px; padding:4px 18px 14px; font-size:.76rem; color:var(--muted); }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .swatch{ width:12px; height:12px; border-radius:4px; display:inline-block; }
+
+  /* shelter info panel */
+  .info{ padding:6px 18px 18px; }
+  .info .name{ font-family:var(--font-display); font-size:1.12rem; font-weight:600; letter-spacing:-.01em; }
+  .info .meta{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 10px; }
+  .chip{ font-size:.74rem; padding:3px 9px; border-radius:999px; background:var(--accent-soft); color:var(--accent-ink);
+    border:1px solid transparent; }
+  .chip.sea{ background:transparent; border-color:var(--line); color:var(--muted); }
+  .info p.desc{ font-size:.88rem; color:var(--ink); margin:0 0 12px; }
+  .upcoming{ display:flex; flex-direction:column; gap:6px; }
+  .up-row{ display:flex; align-items:center; gap:10px; font-size:.85rem; }
+  .up-date{ width:112px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .up-bar{ flex:1; height:8px; border-radius:6px; background:var(--line); overflow:hidden; }
+  .up-bar i{ display:block; height:100%; border-radius:6px; }
+  .up-n{ width:58px; text-align:right; font-variant-numeric:tabular-nums; font-size:.8rem; color:var(--muted); }
+  .btn{ display:inline-flex; align-items:center; gap:7px; border:1px solid var(--accent); background:var(--accent); color:#fff;
+    font:inherit; font-weight:600; font-size:.86rem; padding:9px 15px; border-radius:10px; cursor:pointer; }
+  .btn:hover{ filter:brightness(1.06); }
+  .btn.ghost{ background:transparent; color:var(--accent-ink); }
+  .btn-row{ display:flex; flex-wrap:wrap; gap:9px; margin-top:14px; }
+
+  /* schedule grid */
+  .sched-scroll{ overflow-x:auto; padding:6px 6px 14px; }
+  table.sched{ border-collapse:separate; border-spacing:0; width:100%; }
+  table.sched th, table.sched td{ padding:0; }
+  .sh-name{ position:sticky; left:0; z-index:2; background:var(--panel); text-align:left; padding:8px 12px 8px 12px;
+    font-size:.82rem; font-weight:600; white-space:nowrap; border-bottom:1px solid var(--line); cursor:pointer; min-width:172px; }
+  .sh-name .council{ display:block; font-weight:400; color:var(--muted); font-size:.72rem; }
+  tr.selrow .sh-name{ box-shadow:inset 3px 0 0 var(--accent); }
+  .dhead{ padding:7px 4px !important; text-align:center; font-size:.68rem; color:var(--muted); border-bottom:1px solid var(--line);
+    font-weight:600; min-width:38px; }
+  .dhead.we{ color:var(--sea); }
+  .dhead small{ display:block; font-weight:400; font-size:.62rem; opacity:.8; }
+  .cell{ text-align:center; }
+  .cell button{ width:100%; min-width:38px; height:38px; border:0; border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--panel-2); font:inherit; font-size:.82rem; font-variant-numeric:tabular-nums; cursor:pointer; color:var(--muted);
+    position:relative; transition:background .1s; }
+  .cell button:hover{ outline:2px solid var(--accent); outline-offset:-2px; z-index:1; }
+  .cell button.c0{ background:var(--gap-soft); color:var(--gap); }
+  .cell button.cthin{ background:var(--warn-soft); color:var(--warn); }
+  .cell button.cfull{ background:var(--good-soft); color:var(--good); font-weight:700; }
+  .cell button.mine::after{ content:""; position:absolute; inset:4px; border:2px solid var(--accent); border-radius:7px; pointer-events:none; }
+  .cell button.we{ box-shadow:inset 0 0 0 999px rgba(14,124,134,.04); }
+
+  /* report card */
+  .report{ margin-top:18px; }
+  .rep-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; padding:8px 18px 18px; }
+  @media (max-width:620px){ .rep-grid{ grid-template-columns:1fr; } }
+  .rep-h{ font-size:.74rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin:6px 0 8px; }
+  .gap-list, .vol-list{ display:flex; flex-direction:column; gap:5px; max-height:230px; overflow-y:auto; }
+  .gap-item{ display:flex; align-items:center; gap:8px; font-size:.83rem; padding:5px 8px; border-radius:8px; background:var(--gap-soft); }
+  .gap-item .gd{ color:var(--gap); font-weight:600; }
+  .gap-item.ok{ background:var(--good-soft); color:var(--good); }
+  .vol-item{ display:flex; align-items:center; gap:10px; font-size:.85rem; padding:4px 2px; }
+  .vol-item .vn{ flex:1; }
+  .vol-item .vbar{ height:8px; border-radius:6px; background:var(--accent); }
+  .vol-item .vc{ width:28px; text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .vol-item.you .vn{ color:var(--accent-ink); font-weight:600; }
+
+  footer.note{ margin-top:26px; font-size:.76rem; color:var(--muted); line-height:1.55; }
+  footer.note strong{ color:var(--ink); font-weight:600; }
+  .toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--ground);
+    padding:11px 18px; border-radius:11px; font-size:.86rem; font-weight:500; box-shadow:var(--shadow); opacity:0; pointer-events:none;
+    transition:opacity .2s, transform .2s; z-index:50; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  @media (prefers-reduced-motion:reduce){ *{ transition:none !important; } }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-7-10a7 7 0 0 1 14 0c0 5.4-7 10-7 10Z" fill="#fff" opacity=".9"/><circle cx="12" cy="10.5" r="2.4" fill="#1E6B45"/></svg>
+      </div>
+      <div>
+        <h1>Walkadog</h1>
+        <div class="tagline" data-i="tagline">Passeia e cuida dos cães dos refúgios da Madeira — marca os teus dias, vê a cobertura da ilha.</div>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="who">
+        <label data-i="you">Sou</label>
+        <input id="me" maxlength="18" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="seg" role="group" aria-label="Idioma">
+        <button data-lang="pt" aria-pressed="true">PT</button>
+        <button data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="icon-btn" id="theme" title="Tema" aria-label="Tema">◐</button>
+    </div>
+  </header>
+
+  <section class="tiles" id="tiles" aria-live="polite"></section>
+
+  <div class="grid-main">
+    <div class="col-left" style="display:flex; flex-direction:column; gap:18px;">
+      <div class="card">
+        <h2 data-i="mapTitle">Mapa da ilha</h2>
+        <div class="sub" data-i="mapSub">Toca num refúgio para ver os detalhes e a agenda.</div>
+        <div class="map-wrap" id="mapWrap"></div>
+        <div class="legend">
+          <span><i class="swatch" style="background:var(--gap)"></i><span data-i="lgGap">Sem voluntários</span></span>
+          <span><i class="swatch" style="background:var(--warn)"></i><span data-i="lgThin">Cobertura fraca</span></span>
+          <span><i class="swatch" style="background:var(--good)"></i><span data-i="lgFull">Coberto</span></span>
+        </div>
+      </div>
+      <div class="card">
+        <h2 id="infoTitle" data-i="infoTitle">Detalhes do refúgio</h2>
+        <div class="info" id="info"></div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="card">
+        <h2 data-i="schedTitle">Agenda — próximos 21 dias</h2>
+        <div class="sub" data-i="schedSub">Clica numa célula para marcar (ou desmarcar) o teu turno.</div>
+        <div class="sched-scroll"><table class="sched" id="sched"></table></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card report">
+    <h2 data-i="repTitle">Relatório</h2>
+    <div class="rep-grid">
+      <div>
+        <div class="rep-h" data-i="repGaps">Dias por cobrir</div>
+        <div class="gap-list" id="gapList"></div>
+      </div>
+      <div>
+        <div class="rep-h" data-i="repVols">Voluntários</div>
+        <div class="vol-list" id="volList"></div>
+      </div>
+    </div>
+    <div class="btn-row" style="padding:0 18px 18px;">
+      <button class="btn" id="ics">📅 <span data-i="btnIcs">Exportar os meus turnos (.ics)</span></button>
+      <button class="btn ghost" id="reset" data-i="btnReset">Repor demonstração</button>
+    </div>
+  </div>
+
+  <footer class="note">
+    <strong data-i="noteH">Protótipo.</strong>
+    <span data-i="noteBody">Os dados de refúgios (localidade, foco, necessidade) são exemplos para demonstração e devem ser confirmados com cada associação. As marcações ficam guardadas apenas neste navegador (localStorage) — a versão partilhada, com conta comum e lembretes automáticos, precisa de um backend. As camadas de leitura/gravação de dados estão isoladas para essa ligação futura.</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- data model (swap points for a shared backend) ------------------ */
+const SHELTERS = [
+  { id:"milu",    name:"Cantinho da Milú",              council:"Santo da Serra · Santa Cruz", coast:"E", focus:{pt:"Cães e gatos · grande refúgio",en:"Dogs & cats · large shelter"}, need:4, x:690, y:242 },
+  { id:"companhia",name:"Companhia dos Animais",        council:"Funchal",                     coast:"S", focus:{pt:"Cães e gatos · adopção",en:"Dogs & cats · adoption"}, need:3, x:522, y:272 },
+  { id:"canil",   name:"Canil Municipal do Funchal",    council:"Funchal",                     coast:"S", focus:{pt:"Cães · passeios e cuidados",en:"Dogs · walks & care"}, need:5, x:548, y:260 },
+  { id:"patinhas",name:"Patinhas com Vida",             council:"Câmara de Lobos",             coast:"S", focus:{pt:"Gatos · colónias e FIV",en:"Cats · colonies & FIV"}, need:2, x:430, y:274 },
+  { id:"zoofila", name:"Associação Zoófila da Madeira", council:"Funchal",                     coast:"S", focus:{pt:"Cães e gatos · resgate",en:"Dogs & cats · rescue"}, need:3, x:500, y:286 },
+  { id:"petrescue",name:"Madeira Pet Rescue",           council:"Machico",                     coast:"E", focus:{pt:"Cães · reabilitação",en:"Dogs · rehabilitation"}, need:2, x:725, y:212 },
+  { id:"ribeira", name:"Refúgio da Ribeira Brava",      council:"Ribeira Brava",               coast:"S", focus:{pt:"Cães e gatos · rural",en:"Dogs & cats · rural"}, need:2, x:300, y:258 },
+  { id:"calheta", name:"Amigos dos Animais da Calheta", council:"Calheta",                     coast:"W", focus:{pt:"Cães · costa oeste",en:"Dogs · west coast"}, need:2, x:150, y:242 },
+  { id:"norte",   name:"Cantinho do Norte",             council:"São Vicente",                 coast:"N", focus:{pt:"Cães e gatos · costa norte",en:"Dogs & cats · north coast"}, need:2, x:360, y:152 },
+];
+
+const DAYS = 21;
+const SHIFT_START = 9, SHIFT_END = 13; // horário de turno para os lembretes
+const STORE_KEY = "walkadog-v1";
+
+/* storage layer — replace loadState/saveState with API calls for a shared backend */
+function loadState(){
+  try { const raw = localStorage.getItem(STORE_KEY); if(raw) return JSON.parse(raw); } catch(e){}
+  return null;
+}
+function saveState(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e){} }
+
+/* ---------- dates -------------------------------------------------------- */
+function isoOf(d){ return d.toISOString().slice(0,10); }
+const today = (()=>{ const d=new Date(); d.setHours(0,0,0,0); return d; })();
+const dates = Array.from({length:DAYS}, (_,i)=>{ const d=new Date(today); d.setDate(d.getDate()+i); return d; });
+const dateKeys = dates.map(isoOf);
+function isWeekend(d){ const w=d.getDay(); return w===0||w===6; }
+function slotKey(sid, iso){ return sid+"|"+iso; }
+
+/* ---------- seed demo signups (first run only) --------------------------- */
+function seed(){
+  const S = {}; const put=(sid,off,names)=>{ S[slotKey(sid,dateKeys[off])] = names.slice(); };
+  put("milu",0,["Ana","João","Sofia"]);      put("milu",1,["Ana","Beatriz"]);   put("milu",3,["Miguel"]);
+  put("milu",6,["Sofia","João","Ana","Rui"]); put("milu",7,["Beatriz"]);
+  put("companhia",0,["Rui","Sofia"]);         put("companhia",2,["Ana"]);        put("companhia",5,["João","Miguel","Sofia"]);
+  put("canil",1,["Miguel","Rui"]);            put("canil",4,["Ana","Sofia","João"]);
+  put("patinhas",0,["Beatriz","Sofia"]);      put("patinhas",8,["Ana"]);
+  put("zoofila",2,["João"]);                  put("zoofila",9,["Rui","Miguel","Beatriz"]);
+  put("petrescue",3,["Sofia"]);
+  put("ribeira",1,["Miguel"]);                put("ribeira",5,["Ana","Rui"]);
+  put("calheta",4,["João"]);
+  put("norte",6,["Beatriz","Sofia"]);
+  return S;
+}
+
+let state = loadState() || { me:"", signups: seed() };
+if(state.me) { /* keep */ }
+
+/* ---------- i18n --------------------------------------------------------- */
+const I18N = {
+  pt:{ tagline:"Passeia e cuida dos cães dos refúgios da Madeira — marca os teus dias, vê a cobertura da ilha.", you:"Sou",
+    mapTitle:"Mapa da ilha", mapSub:"Toca num refúgio para ver os detalhes e a agenda.",
+    lgGap:"Sem voluntários", lgThin:"Cobertura fraca", lgFull:"Coberto",
+    infoTitle:"Detalhes do refúgio", schedTitle:"Agenda — próximos 21 dias",
+    schedSub:"Clica numa célula para marcar (ou desmarcar) o teu turno.",
+    repTitle:"Relatório", repGaps:"Dias por cobrir", repVols:"Voluntários",
+    btnIcs:"Exportar os meus turnos (.ics)", btnReset:"Repor demonstração",
+    noteH:"Protótipo.",
+    noteBody:"Os dados de refúgios (localidade, foco, necessidade) são exemplos para demonstração e devem ser confirmados com cada associação. As marcações ficam guardadas apenas neste navegador (localStorage) — a versão partilhada, com conta comum e lembretes automáticos, precisa de um backend. As camadas de leitura/gravação de dados estão isoladas para essa ligação futura.",
+    tCovered:"Cobertura", tGaps:"Dias por cobrir", tMine:"Os meus turnos", tVols:"Voluntários", tSlots:"Turnos marcados",
+    ofNeed:"do necessário", perDay:"por dia", need:"Precisa de", vols:"voluntários", noGaps:"Tudo coberto 🎉",
+    pickShelter:"Escolhe um refúgio no mapa.", added:"Turno marcado", removed:"Turno removido",
+    setName:"Escreve o teu nome primeiro.", icsEmpty:"Ainda não tens turnos marcados.", icsOk:"Ficheiro de calendário criado.",
+    reset:"Demonstração reposta.", coast:{N:"Costa norte",S:"Costa sul",E:"Leste",W:"Oeste"}, upcoming:"Próximos dias", yourName:"o teu nome" },
+  en:{ tagline:"Walk and care for Madeira's shelter dogs — mark your days, see the island's coverage.", you:"I am",
+    mapTitle:"Island map", mapSub:"Tap a shelter to see details and its rota.",
+    lgGap:"No volunteers", lgThin:"Thin coverage", lgFull:"Covered",
+    infoTitle:"Shelter details", schedTitle:"Rota — next 21 days",
+    schedSub:"Click a cell to add (or remove) your shift.",
+    repTitle:"Report", repGaps:"Days to cover", repVols:"Volunteers",
+    btnIcs:"Export my shifts (.ics)", btnReset:"Reset demo",
+    noteH:"Prototype.",
+    noteBody:"Shelter data (location, focus, need) are sample values for the demo and should be confirmed with each association. Sign-ups are saved only in this browser (localStorage) — the shared version, with a common account and automatic reminders, needs a backend. The data read/write layers are isolated for that future connection.",
+    tCovered:"Coverage", tGaps:"Days to cover", tMine:"My shifts", tVols:"Volunteers", tSlots:"Shifts booked",
+    ofNeed:"of target", perDay:"per day", need:"Needs", vols:"volunteers", noGaps:"All covered 🎉",
+    pickShelter:"Pick a shelter on the map.", added:"Shift added", removed:"Shift removed",
+    setName:"Type your name first.", icsEmpty:"You have no shifts yet.", icsOk:"Calendar file created.",
+    reset:"Demo reset.", coast:{N:"North coast",S:"South coast",E:"East",W:"West"}, upcoming:"Upcoming days", yourName:"your name" },
+};
+const LOCALE = { pt:"pt-PT", en:"en-GB" };
+let lang = "pt";
+const t = k => I18N[lang][k];
+
+/* ---------- helpers ------------------------------------------------------ */
+function signupsFor(sid, iso){ return state.signups[slotKey(sid,iso)] || []; }
+function coverClass(n, need){ if(n===0) return "c0"; if(n<need) return "cthin"; return "cfull"; }
+function fmtDate(d, opts){ return new Intl.DateTimeFormat(LOCALE[lang], opts).format(d); }
+
+/* ---------- rendering ---------------------------------------------------- */
+let selected = SHELTERS[0].id;
+const $ = s => document.querySelector(s);
+
+function render(){
+  applyI18n();
+  renderTiles();
+  renderMap();
+  renderSchedule();
+  renderInfo();
+  renderReport();
+  saveState();
+}
+
+function applyI18n(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i]").forEach(el=>{ const k=el.getAttribute("data-i"); if(I18N[lang][k]!==undefined) el.textContent=I18N[lang][k]; });
+  $("#me").placeholder = t("yourName");
+}
+
+function renderTiles(){
+  let totalNeed=0, totalHave=0, gapDays=0, slots=0;
+  const vols=new Set();
+  for(const s of SHELTERS){ for(const iso of dateKeys){
+    const n=signupsFor(s.id,iso).length; totalNeed+=s.need; totalHave+=Math.min(n,s.need);
+    if(n===0) gapDays++; slots+=n; signupsFor(s.id,iso).forEach(v=>vols.add(v));
+  }}
+  const mine = countMine();
+  const cov = totalNeed? Math.round(totalHave/totalNeed*100):0;
+  const covCls = cov>=80?"good":cov>=50?"warn":"gap";
+  const tiles=[
+    {cls:covCls, k:t("tCovered"), v:cov+"%", s:t("ofNeed")},
+    {cls:"gap",  k:t("tGaps"),    v:gapDays, s:SHELTERS.length*DAYS+" "+t("tSlots").toLowerCase()},
+    {cls:"",     k:t("tMine"),    v:mine,   s:state.me? state.me : "—"},
+    {cls:"",     k:t("tVols"),    v:vols.size, s:""},
+  ];
+  $("#tiles").innerHTML = tiles.map(x=>`<div class="tile ${x.cls}"><div class="rail"></div><div class="k">${x.k}</div><div class="v">${x.v}</div><div class="s">${x.s}</div></div>`).join("");
+}
+
+function shelterCover(sid){ // over the whole window: fraction of need met
+  let need=0, have=0; const s=SHELTERS.find(x=>x.id===sid);
+  for(const iso of dateKeys){ const n=signupsFor(sid,iso).length; need+=s.need; have+=Math.min(n,s.need); }
+  return need? have/need : 0;
+}
+function shelterState(sid){ // worst-ish signal for the pin colour
+  let anyGap=false, anyThin=false, s=SHELTERS.find(x=>x.id===sid);
+  for(const iso of dateKeys){ const n=signupsFor(sid,iso).length; if(n===0) anyGap=true; else if(n<s.need) anyThin=true; }
+  return anyGap?"gap":anyThin?"thin":"full";
+}
+
+function renderMap(){
+  const colorOf = { gap:"var(--gap)", thin:"var(--warn)", full:"var(--good)" };
+  const pins = SHELTERS.map(s=>{
+    const st = shelterState(s.id); const c = colorOf[st];
+    const sel = s.id===selected ? " sel":"";
+    return `<g class="pin${sel}" data-id="${s.id}" tabindex="0" role="button" aria-label="${s.name}">
+      <circle class="halo" cx="${s.x}" cy="${s.y}" r="15"></circle>
+      <circle class="dot" cx="${s.x}" cy="${s.y}" r="8.5" fill="${c}"></circle>
+    </g>`;
+  }).join("");
+  $("#mapWrap").innerHTML = `
+  <svg class="island" viewBox="0 0 1000 380" role="img" aria-label="Mapa da Madeira">
+    <path class="isle-fill" d="M70 248
+      C 90 210, 150 196, 210 200
+      C 270 178, 330 150, 372 150
+      C 410 150, 430 176, 470 182
+      C 520 168, 560 158, 604 162
+      C 650 166, 690 176, 720 196
+      C 760 186, 820 176, 872 182
+      C 930 188, 968 176, 946 196
+      C 918 214, 872 214, 828 214
+      C 792 232, 760 236, 726 232
+      C 700 256, 666 268, 620 270
+      C 560 288, 520 296, 470 292
+      C 420 300, 372 296, 330 288
+      C 280 300, 220 300, 176 288
+      C 130 300, 86 288, 70 268 Z"></path>
+    <path class="isle-ridge" d="M150 236 C 300 210, 470 214, 604 210 C 700 208, 800 210, 872 202"></path>
+    <path class="isle-ridge" d="M300 250 C 420 244, 520 246, 620 244"></path>
+    <text class="isle-label" x="150" y="330" text-anchor="middle">Calheta</text>
+    <text class="isle-label" x="360" y="135" text-anchor="middle">São Vicente</text>
+    <text class="isle-label" x="540" y="316" text-anchor="middle">Funchal</text>
+    <text class="isle-label" x="740" y="255" text-anchor="middle">Santa Cruz</text>
+    <text class="isle-label" x="905" y="215" text-anchor="middle">S. Lourenço</text>
+    ${pins}
+  </svg>`;
+  $("#mapWrap").querySelectorAll(".pin").forEach(g=>{
+    const pick=()=>{ selected=g.getAttribute("data-id"); render(); };
+    g.addEventListener("click", pick);
+    g.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
+  });
+}
+
+function renderSchedule(){
+  const head = `<thead><tr><th class="sh-name" style="cursor:default">&nbsp;</th>${
+    dates.map(d=>{ const we=isWeekend(d)?" we":"";
+      return `<th class="dhead${we}">${fmtDate(d,{weekday:"short"})}<small>${fmtDate(d,{day:"2-digit",month:"2-digit"})}</small></th>`; }).join("")
+  }</tr></thead>`;
+  const body = SHELTERS.map(s=>{
+    const sel = s.id===selected?" selrow":"";
+    const cells = dates.map((d,i)=>{
+      const iso=dateKeys[i]; const list=signupsFor(s.id,iso); const n=list.length;
+      const cc=coverClass(n,s.need); const we=isWeekend(d)?" we":"";
+      const mine = state.me && list.includes(state.me) ? " mine":"";
+      return `<td class="cell"><button class="${cc}${we}${mine}" data-id="${s.id}" data-iso="${iso}" title="${s.name} · ${fmtDate(d,{weekday:"long",day:"numeric",month:"long"})} · ${n}/${s.need}">${n||""}</button></td>`;
+    }).join("");
+    return `<tr class="${sel}"><th class="sh-name" data-id="${s.id}">${s.name}<span class="council">${s.council}</span></th>${cells}</tr>`;
+  }).join("");
+  $("#sched").innerHTML = head + "<tbody>"+body+"</tbody>";
+  $("#sched").querySelectorAll(".cell button").forEach(b=>{
+    b.addEventListener("click", ()=> toggleSlot(b.getAttribute("data-id"), b.getAttribute("data-iso")));
+  });
+  $("#sched").querySelectorAll(".sh-name[data-id]").forEach(th=>{
+    th.addEventListener("click", ()=>{ selected=th.getAttribute("data-id"); render(); });
+  });
+}
+
+function renderInfo(){
+  const s = SHELTERS.find(x=>x.id===selected);
+  if(!s){ $("#info").innerHTML = `<p class="desc">${t("pickShelter")}</p>`; return; }
+  const rows = dates.slice(0,7).map((d,i)=>{
+    const iso=dateKeys[i]; const n=signupsFor(s.id,iso).length; const frac=Math.min(n/s.need,1);
+    const col = n===0?"var(--gap)": n<s.need?"var(--warn)":"var(--good)";
+    return `<div class="up-row"><span class="up-date">${fmtDate(d,{weekday:"short",day:"numeric",month:"short"})}</span>
+      <span class="up-bar"><i style="width:${Math.max(frac*100,n?8:0)}%;background:${col}"></i></span>
+      <span class="up-n">${n}/${s.need}</span></div>`;
+  }).join("");
+  $("#info").innerHTML = `
+    <div class="name">${s.name}</div>
+    <div class="meta"><span class="chip">${s.council}</span><span class="chip sea">${t("coast")[s.coast]}</span>
+      <span class="chip sea">${t("need")} ${s.need} ${t("vols")}/${t("perDay")}</span></div>
+    <p class="desc">${s.focus[lang]}</p>
+    <div class="rep-h">${t("upcoming")}</div>
+    <div class="upcoming">${rows}</div>`;
+}
+
+function renderReport(){
+  // gaps: soonest uncovered slots
+  const gaps=[];
+  for(let i=0;i<dateKeys.length;i++){ for(const s of SHELTERS){ if(signupsFor(s.id,dateKeys[i]).length===0) gaps.push({s,i}); } }
+  const gl=$("#gapList");
+  if(gaps.length===0){ gl.innerHTML = `<div class="gap-item ok">${t("noGaps")}</div>`; }
+  else{
+    gl.innerHTML = gaps.slice(0,40).map(g=>{
+      const d=dates[g.i];
+      return `<div class="gap-item"><span class="gd">●</span><span style="flex:1">${g.s.name}</span>
+        <span style="color:var(--muted)">${fmtDate(d,{weekday:"short",day:"numeric",month:"short"})}</span></div>`;
+    }).join("") + (gaps.length>40? `<div class="gap-item" style="background:transparent;color:var(--muted)">+${gaps.length-40}…</div>`:"");
+  }
+  // volunteers
+  const tally={};
+  for(const k in state.signups){ for(const v of state.signups[k]){ tally[v]=(tally[v]||0)+1; } }
+  const entries=Object.entries(tally).sort((a,b)=>b[1]-a[1]);
+  const max=entries.length? entries[0][1]:1;
+  $("#volList").innerHTML = entries.map(([v,c])=>{
+    const you = state.me && v===state.me ? " you":"";
+    return `<div class="vol-item${you}"><span class="vn">${v}${you?" ·":""}</span>
+      <span class="vbar" style="width:${8+Math.round(c/max*120)}px"></span><span class="vc">${c}</span></div>`;
+  }).join("") || `<div style="color:var(--muted);font-size:.85rem">—</div>`;
+}
+
+function countMine(){ if(!state.me) return 0; let n=0; for(const k in state.signups){ if(state.signups[k].includes(state.me)) n++; } return n; }
+
+/* ---------- actions ------------------------------------------------------ */
+function toggleSlot(sid, iso){
+  if(!state.me){ toast(t("setName")); $("#me").focus(); return; }
+  const k=slotKey(sid,iso); const list=state.signups[k] ? state.signups[k].slice():[];
+  const idx=list.indexOf(state.me);
+  if(idx>=0){ list.splice(idx,1); toast(t("removed")); } else { list.push(state.me); toast(t("added")); }
+  if(list.length) state.signups[k]=list; else delete state.signups[k];
+  selected=sid; render();
+}
+
+function toast(msg){ const el=$("#toast"); el.textContent=msg; el.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove("show"),1700); }
+
+function pad(n){ return String(n).padStart(2,"0"); }
+function icsStamp(d,h,m){ return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"T"+pad(h)+pad(m)+"00"; }
+function exportICS(){
+  if(!state.me){ toast(t("setName")); $("#me").focus(); return; }
+  const mine=[];
+  for(let i=0;i<dateKeys.length;i++){ for(const s of SHELTERS){ if(signupsFor(s.id,dateKeys[i]).includes(state.me)) mine.push({s,d:dates[i],iso:dateKeys[i]}); } }
+  if(mine.length===0){ toast(t("icsEmpty")); return; }
+  const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Walkadog//Madeira//PT","CALSCALE:GREGORIAN"];
+  mine.forEach((m,idx)=>{
+    lines.push("BEGIN:VEVENT",
+      "UID:"+m.iso+"-"+m.s.id+"-"+idx+"@refugios-madeira",
+      "DTSTART:"+icsStamp(m.d,SHIFT_START,0),
+      "DTEND:"+icsStamp(m.d,SHIFT_END,0),
+      "SUMMARY:"+ (lang==="en"?"Volunteering — ":"Voluntariado — ")+m.s.name,
+      "LOCATION:"+m.s.council,
+      "DESCRIPTION:"+m.s.focus[lang],
+      "END:VEVENT");
+  });
+  lines.push("END:VCALENDAR");
+  const blob=new Blob([lines.join("\r\n")],{type:"text/calendar"});
+  const url=URL.createObjectURL(blob); const a=document.createElement("a");
+  a.href=url; a.download="walkadog-madeira.ics"; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000); toast(t("icsOk"));
+}
+
+/* ---------- wiring ------------------------------------------------------- */
+$("#me").value = state.me || "";
+$("#me").addEventListener("input", e=>{ state.me=e.target.value.trim(); renderTiles(); renderReport(); saveState(); });
+$("#me").addEventListener("change", ()=> render());
+
+document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{
+  lang=b.getAttribute("data-lang");
+  document.querySelectorAll("[data-lang]").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+  render();
+}));
+
+$("#theme").addEventListener("click",()=>{
+  const cur=document.documentElement.getAttribute("data-theme");
+  const sysDark=matchMedia("(prefers-color-scheme:dark)").matches;
+  const next = cur ? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark");
+  document.documentElement.setAttribute("data-theme",next); renderMap();
+});
+
+$("#ics").addEventListener("click", exportICS);
+$("#reset").addEventListener("click", ()=>{ state={ me:state.me, signups:seed() }; selected=SHELTERS[0].id; render(); toast(t("reset")); });
+
+render();
+</script>

@@ -1,0 +1,14 @@
+{
+  "_note": "Sample data for the prototype — locality, focus and daily need are illustrative and must be confirmed with each association before real use. Coordinates (x,y) are positions on the schematic island SVG (viewBox 0 0 1000 380), not geographic lat/lng.",
+  "shelters": [
+    { "id": "milu",      "name": "Cantinho da Milú",              "council": "Santo da Serra · Santa Cruz", "coast": "E", "need": 4, "x": 690, "y": 242, "focus": { "pt": "Cães e gatos · grande refúgio", "en": "Dogs & cats · large shelter" } },
+    { "id": "companhia", "name": "Companhia dos Animais",        "council": "Funchal",                     "coast": "S", "need": 3, "x": 522, "y": 272, "focus": { "pt": "Cães e gatos · adopção", "en": "Dogs & cats · adoption" } },
+    { "id": "canil",     "name": "Canil Municipal do Funchal",    "council": "Funchal",                     "coast": "S", "need": 5, "x": 548, "y": 260, "focus": { "pt": "Cães · passeios e cuidados", "en": "Dogs · walks & care" } },
+    { "id": "patinhas",  "name": "Patinhas com Vida",             "council": "Câmara de Lobos",             "coast": "S", "need": 2, "x": 430, "y": 274, "focus": { "pt": "Gatos · colónias e FIV", "en": "Cats · colonies & FIV" } },
+    { "id": "zoofila",   "name": "Associação Zoófila da Madeira", "council": "Funchal",                     "coast": "S", "need": 3, "x": 500, "y": 286, "focus": { "pt": "Cães e gatos · resgate", "en": "Dogs & cats · rescue" } },
+    { "id": "petrescue", "name": "Madeira Pet Rescue",            "council": "Machico",                     "coast": "E", "need": 2, "x": 725, "y": 212, "focus": { "pt": "Cães · reabilitação", "en": "Dogs · rehabilitation" } },
+    { "id": "ribeira",   "name": "Refúgio da Ribeira Brava",      "council": "Ribeira Brava",               "coast": "S", "need": 2, "x": 300, "y": 258, "focus": { "pt": "Cães e gatos · rural", "en": "Dogs & cats · rural" } },
+    { "id": "calheta",   "name": "Amigos dos Animais da Calheta", "council": "Calheta",                     "coast": "W", "need": 2, "x": 150, "y": 242, "focus": { "pt": "Cães · costa oeste", "en": "Dogs · west coast" } },
+    { "id": "norte",     "name": "Cantinho do Norte",             "council": "São Vicente",                 "coast": "N", "need": 2, "x": 360, "y": 152, "focus": { "pt": "Cães e gatos · costa norte", "en": "Dogs & cats · north coast" } }
+  ]
+}
