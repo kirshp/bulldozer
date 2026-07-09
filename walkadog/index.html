@@ -180,8 +180,34 @@
   .vol-item .vc{ width:28px; text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
   .vol-item.you .vn{ color:var(--accent-ink); font-weight:600; }
 
+  .tabs{ display:flex; gap:2px; margin-bottom:20px; border-bottom:1px solid var(--line); overflow-x:auto; scrollbar-width:none; }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .tabs button{ border:0; background:transparent; color:var(--muted); font:inherit; font-weight:600; font-size:.94rem;
+    padding:11px 15px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; border-radius:8px 8px 0 0; }
+  .tabs button:hover{ color:var(--ink); }
+  .tabs button[aria-selected="true"]{ color:var(--accent-ink); border-bottom-color:var(--accent); }
+  .panel[hidden]{ display:none; }
+  .cov-list{ display:flex; flex-direction:column; gap:9px; padding:10px 18px 18px; }
+  .cov-row{ display:flex; align-items:center; gap:12px; font-size:.86rem; }
+  .cov-row .cn{ width:200px; flex:0 0 auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cov-row .cbar{ flex:1; height:9px; border-radius:6px; background:var(--line); overflow:hidden; }
+  .cov-row .cbar i{ display:block; height:100%; border-radius:6px; }
+  .cov-row .cp{ width:42px; text-align:right; font-variant-numeric:tabular-nums; color:var(--muted); }
+  .dir-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(238px,1fr)); gap:14px; }
+  .dir-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow);
+    padding:15px 16px; display:flex; flex-direction:column; gap:9px; }
+  .dir-card .dn{ font-family:var(--font-display); font-weight:600; font-size:1.02rem; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; }
+  .dir-card .dot-s{ width:9px; height:9px; border-radius:999px; flex:0 0 auto; }
+  .dir-card .dmeta{ display:flex; flex-wrap:wrap; gap:6px; }
+  .dir-card p{ margin:0; font-size:.85rem; color:var(--muted); }
+  .dir-card .dbar{ height:8px; border-radius:6px; background:var(--line); overflow:hidden; margin-top:2px; }
+  .dir-card .dbar i{ display:block; height:100%; border-radius:6px; }
+  .dir-card .drow{ display:flex; align-items:center; justify-content:space-between; font-size:.79rem; color:var(--muted); }
+  .dir-card .btn{ padding:7px 12px; font-size:.82rem; align-self:flex-start; }
   @media (max-width:560px){
     .wrap{ padding-top:16px; }
+    .cov-row .cn{ width:118px; }
+    .tabs button{ font-size:.9rem; padding:10px 13px; }
     header.top{ flex-direction:column; align-items:stretch; gap:12px; }
     .controls{ margin-left:0; justify-content:space-between; width:100%; }
     .who{ flex:1 1 100%; }
@@ -229,52 +255,72 @@
     </div>
   </header>
 
-  <section class="tiles" id="tiles" aria-live="polite"></section>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Secções">
+    <button role="tab" data-tab="mapa" aria-selected="true" data-i="tabMapa">Mapa</button>
+    <button role="tab" data-tab="agenda" aria-selected="false" data-i="tabAgenda">Agenda</button>
+    <button role="tab" data-tab="stats" aria-selected="false" data-i="tabStats">Estatística</button>
+    <button role="tab" data-tab="refugios" aria-selected="false" data-i="tabRefugios">Refúgios</button>
+  </nav>
 
-  <div class="grid-main">
-    <div class="col-left" style="display:flex; flex-direction:column; gap:18px;">
-      <div class="card">
-        <h2 data-i="mapTitle">Mapa da ilha</h2>
-        <div class="sub" data-i="mapSub">Toca num refúgio para ver os detalhes e a agenda.</div>
-        <div class="map-wrap" id="mapWrap"></div>
-        <div class="legend">
-          <span><i class="swatch" style="background:var(--gap)"></i><span data-i="lgGap">Sem voluntários</span></span>
-          <span><i class="swatch" style="background:var(--warn)"></i><span data-i="lgThin">Cobertura fraca</span></span>
-          <span><i class="swatch" style="background:var(--good)"></i><span data-i="lgFull">Coberto</span></span>
+  <section class="panel" id="panel-mapa" role="tabpanel">
+    <div class="grid-main">
+      <div class="col-left">
+        <div class="card">
+          <h2 data-i="mapTitle">Mapa da ilha</h2>
+          <div class="sub" data-i="mapSub">Toca num refúgio para ver os detalhes e a agenda.</div>
+          <div class="map-wrap" id="mapWrap"></div>
+          <div class="legend">
+            <span><i class="swatch" style="background:var(--gap)"></i><span data-i="lgGap">Sem voluntários</span></span>
+            <span><i class="swatch" style="background:var(--warn)"></i><span data-i="lgThin">Cobertura fraca</span></span>
+            <span><i class="swatch" style="background:var(--good)"></i><span data-i="lgFull">Coberto</span></span>
+          </div>
         </div>
       </div>
-      <div class="card">
-        <h2 id="infoTitle" data-i="infoTitle">Detalhes do refúgio</h2>
-        <div class="info" id="info"></div>
+      <div class="col-right">
+        <div class="card">
+          <h2 id="infoTitle" data-i="infoTitle">Detalhes do refúgio</h2>
+          <div class="info" id="info"></div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="col-right">
-      <div class="card">
-        <h2 data-i="schedTitle">Agenda — próximos 21 dias</h2>
-        <div class="sub" data-i="schedSub">Clica numa célula para marcar (ou desmarcar) o teu turno.</div>
-        <div class="sched-scroll"><table class="sched" id="sched"></table></div>
-      </div>
+  <section class="panel" id="panel-agenda" role="tabpanel" hidden>
+    <div class="card">
+      <h2 data-i="schedTitle">Agenda — próximos 21 dias</h2>
+      <div class="sub" data-i="schedSub">Clica numa célula para marcar (ou desmarcar) o teu turno.</div>
+      <div class="sched-scroll"><table class="sched" id="sched"></table></div>
     </div>
-  </div>
+  </section>
 
-  <div class="card report">
-    <h2 data-i="repTitle">Relatório</h2>
-    <div class="rep-grid">
-      <div>
-        <div class="rep-h" data-i="repGaps">Dias por cobrir</div>
-        <div class="gap-list" id="gapList"></div>
+  <section class="panel" id="panel-stats" role="tabpanel" hidden>
+    <section class="tiles" id="tiles" aria-live="polite"></section>
+    <div class="card report">
+      <h2 data-i="repTitle">Relatório</h2>
+      <div class="rep-grid">
+        <div>
+          <div class="rep-h" data-i="repGaps">Dias por cobrir</div>
+          <div class="gap-list" id="gapList"></div>
+        </div>
+        <div>
+          <div class="rep-h" data-i="repVols">Voluntários</div>
+          <div class="vol-list" id="volList"></div>
+        </div>
       </div>
-      <div>
-        <div class="rep-h" data-i="repVols">Voluntários</div>
-        <div class="vol-list" id="volList"></div>
+      <div class="btn-row" style="padding:0 18px 18px;">
+        <button class="btn" id="ics">📅 <span data-i="btnIcs">Exportar os meus turnos (.ics)</span></button>
+        <button class="btn ghost" id="reset" data-i="btnReset">Repor demonstração</button>
       </div>
     </div>
-    <div class="btn-row" style="padding:0 18px 18px;">
-      <button class="btn" id="ics">📅 <span data-i="btnIcs">Exportar os meus turnos (.ics)</span></button>
-      <button class="btn ghost" id="reset" data-i="btnReset">Repor demonstração</button>
+    <div class="card" style="margin-top:18px;">
+      <h2 data-i="repShelters">Cobertura por refúgio</h2>
+      <div class="cov-list" id="covList"></div>
     </div>
-  </div>
+  </section>
+
+  <section class="panel" id="panel-refugios" role="tabpanel" hidden>
+    <div class="dir-grid" id="dir"></div>
+  </section>
 
   <footer class="note">
     <strong data-i="noteH">Protótipo.</strong>
@@ -351,7 +397,8 @@ const I18N = {
     ofNeed:"do necessário", perDay:"por dia", need:"Precisa de", vols:"voluntários", noGaps:"Tudo coberto 🎉",
     pickShelter:"Escolhe um refúgio no mapa.", added:"Turno marcado", removed:"Turno removido",
     setName:"Escreve o teu nome primeiro.", icsEmpty:"Ainda não tens turnos marcados.", icsOk:"Ficheiro de calendário criado.",
-    reset:"Demonstração reposta.", coast:{N:"Costa norte",S:"Costa sul",E:"Leste",W:"Oeste"}, upcoming:"Próximos dias", yourName:"o teu nome", tapToBook:"toca para marcar" },
+    reset:"Demonstração reposta.", coast:{N:"Costa norte",S:"Costa sul",E:"Leste",W:"Oeste"}, upcoming:"Próximos dias", yourName:"o teu nome", tapToBook:"toca para marcar",
+    tabMapa:"Mapa", tabAgenda:"Agenda", tabStats:"Estatística", tabRefugios:"Refúgios", repShelters:"Cobertura por refúgio", seeRota:"Ver agenda", covered:"coberto" },
   en:{ tagline:"Walk and care for Madeira's shelter dogs — mark your days, see the island's coverage.", you:"I am",
     mapTitle:"Island map", mapSub:"Tap a shelter to see details and its rota.",
     lgGap:"No volunteers", lgThin:"Thin coverage", lgFull:"Covered",
@@ -365,7 +412,8 @@ const I18N = {
     ofNeed:"of target", perDay:"per day", need:"Needs", vols:"volunteers", noGaps:"All covered 🎉",
     pickShelter:"Pick a shelter on the map.", added:"Shift added", removed:"Shift removed",
     setName:"Type your name first.", icsEmpty:"You have no shifts yet.", icsOk:"Calendar file created.",
-    reset:"Demo reset.", coast:{N:"North coast",S:"South coast",E:"East",W:"West"}, upcoming:"Upcoming days", yourName:"your name", tapToBook:"tap to book" },
+    reset:"Demo reset.", coast:{N:"North coast",S:"South coast",E:"East",W:"West"}, upcoming:"Upcoming days", yourName:"your name", tapToBook:"tap to book",
+    tabMapa:"Map", tabAgenda:"Rota", tabStats:"Stats", tabRefugios:"Shelters", repShelters:"Coverage by shelter", seeRota:"View rota", covered:"covered" },
 };
 const LOCALE = { pt:"pt-PT", en:"en-GB" };
 let lang = "pt";
@@ -378,7 +426,17 @@ function fmtDate(d, opts){ return new Intl.DateTimeFormat(LOCALE[lang], opts).fo
 
 /* ---------- rendering ---------------------------------------------------- */
 let selected = SHELTERS[0].id;
+let currentTab = "mapa";
+const TABS = ["mapa","agenda","stats","refugios"];
 const $ = s => document.querySelector(s);
+
+function switchTab(name){
+  if(!TABS.includes(name)) name="mapa";
+  currentTab=name;
+  document.querySelectorAll("#tabs button").forEach(b=> b.setAttribute("aria-selected", b.getAttribute("data-tab")===name?"true":"false"));
+  TABS.forEach(tb=>{ const p=document.getElementById("panel-"+tb); if(p) p.hidden=(tb!==name); });
+  if(("#"+name)!==location.hash){ try{ history.replaceState(null,"","#"+name); }catch(e){} }
+}
 
 function render(){
   applyI18n();
@@ -387,6 +445,8 @@ function render(){
   renderSchedule();
   renderInfo();
   renderReport();
+  renderCoverage();
+  renderShelters();
   saveState();
 }
 
@@ -541,6 +601,32 @@ function renderReport(){
   }).join("") || `<div style="color:var(--muted);font-size:.85rem">—</div>`;
 }
 
+function renderCoverage(){
+  $("#covList").innerHTML = SHELTERS.map(s=>{
+    const pct=Math.round(shelterCover(s.id)*100);
+    const col = pct<50?"var(--gap)": pct<80?"var(--warn)":"var(--good)";
+    return `<div class="cov-row"><span class="cn">${s.name}</span>
+      <span class="cbar"><i style="width:${Math.max(pct,2)}%;background:${col}"></i></span>
+      <span class="cp">${pct}%</span></div>`;
+  }).join("");
+}
+
+function renderShelters(){
+  const colorOf={ gap:"var(--gap)", thin:"var(--warn)", full:"var(--good)" };
+  $("#dir").innerHTML = SHELTERS.map(s=>{
+    const st=shelterState(s.id); const col=colorOf[st]; const pct=Math.round(shelterCover(s.id)*100);
+    return `<div class="dir-card">
+      <div class="dn"><span class="dot-s" style="background:${col}"></span>${s.name}</div>
+      <div class="dmeta"><span class="chip">${s.council}</span><span class="chip sea">${t("coast")[s.coast]}</span></div>
+      <p>${s.focus[lang]}</p>
+      <div class="dbar"><i style="width:${Math.max(pct,2)}%;background:${col}"></i></div>
+      <div class="drow"><span>${t("need")} ${s.need}/${t("perDay")}</span><span>${pct}% ${t("covered")}</span></div>
+      <button class="btn ghost" data-goto="${s.id}">${t("seeRota")} →</button>
+    </div>`;
+  }).join("");
+  $("#dir").querySelectorAll("[data-goto]").forEach(b=> b.addEventListener("click", ()=>{ selected=b.getAttribute("data-goto"); switchTab("mapa"); render(); window.scrollTo(0,0); }));
+}
+
 function countMine(){ if(!state.me) return 0; let n=0; for(const k in state.signups){ if(state.signups[k].includes(state.me)) n++; } return n; }
 
 /* ---------- actions ------------------------------------------------------ */
@@ -601,5 +687,9 @@ $("#theme").addEventListener("click",()=>{
 $("#ics").addEventListener("click", exportICS);
 $("#reset").addEventListener("click", ()=>{ state={ me:state.me, signups:seed() }; selected=SHELTERS[0].id; render(); toast(t("reset")); });
 
+document.querySelectorAll("#tabs button").forEach(b=> b.addEventListener("click", ()=> switchTab(b.getAttribute("data-tab"))));
+window.addEventListener("hashchange", ()=> switchTab((location.hash||"").slice(1)));
+
 render();
+switchTab((location.hash||"").slice(1) || "mapa");
 </script>
