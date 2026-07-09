@@ -54,5 +54,9 @@ signup   key "<shelterId>|<YYYY-MM-DD>" → [ volunteerName, ... ]
 
 ## Status
 
-Prototype. Shelter localities, focus and daily need are **sample values** and must be
-confirmed with each association before real use.
+Prototype. The **shelters and locations are real** — sourced from official sites, town
+councils and MAPESS (see `data/shelters.json` for per-entry sources/precision). Pins use
+real lat/lng projected onto the schematic island. The **daily volunteer `need` is
+illustrative**, several associations are foster/colony networks without an on-site
+shelter, and the two north-coast entries (Santana, São Vicente) are placeholders to
+confirm. AAMA (Porto Santo) is a separate island, off this map.

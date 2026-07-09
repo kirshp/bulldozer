@@ -102,7 +102,21 @@
   .card .sub{ color:var(--muted); font-size:.8rem; padding:2px 18px 0; }
 
   /* map */
-  .map-wrap{ padding:12px 14px 16px; }
+  .map-wrap{ padding:12px 14px 16px; position:relative; }
+  .map-pop{ position:absolute; z-index:6; width:212px; background:var(--panel); border:1px solid var(--line);
+    border-radius:12px; box-shadow:var(--shadow); padding:11px 12px 12px; }
+  .map-pop[hidden]{ display:none; }
+  .map-pop::after{ content:""; position:absolute; left:50%; width:12px; height:12px; background:var(--panel); }
+  .map-pop:not(.below)::after{ bottom:-7px; transform:translateX(-50%) rotate(45deg); border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .map-pop.below::after{ top:-7px; transform:translateX(-50%) rotate(45deg); border-left:1px solid var(--line); border-top:1px solid var(--line); }
+  .map-pop .pn{ font-family:var(--font-display); font-weight:600; font-size:.95rem; letter-spacing:-.01em; padding-right:14px; line-height:1.2; }
+  .map-pop .pc{ color:var(--muted); font-size:.76rem; margin:3px 0 7px; }
+  .map-pop .pbar{ height:7px; border-radius:5px; background:var(--line); overflow:hidden; }
+  .map-pop .pbar i{ display:block; height:100%; border-radius:5px; }
+  .map-pop .prow{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:.74rem; color:var(--muted); margin:7px 0 9px; }
+  .map-pop .plink{ color:var(--accent-ink); text-decoration:none; font-weight:600; white-space:nowrap; }
+  .map-pop .pclose{ position:absolute; top:4px; right:7px; border:0; background:transparent; color:var(--muted); font-size:1.05rem; line-height:1; cursor:pointer; }
+  .map-pop .btn.pbook{ width:100%; justify-content:center; padding:7px 10px; font-size:.8rem; }
   svg.island{ width:100%; height:auto; display:block; }
   .isle-fill{ fill:var(--accent-soft); stroke:var(--accent); stroke-width:2.4; }
   .isle-ridge{ fill:none; stroke:var(--accent); stroke-width:1.4; opacity:.32; stroke-linecap:round; }
@@ -203,7 +217,9 @@
   .dir-card .dbar{ height:8px; border-radius:6px; background:var(--line); overflow:hidden; margin-top:2px; }
   .dir-card .dbar i{ display:block; height:100%; border-radius:6px; }
   .dir-card .drow{ display:flex; align-items:center; justify-content:space-between; font-size:.79rem; color:var(--muted); }
-  .dir-card .btn{ padding:7px 12px; font-size:.82rem; align-self:flex-start; }
+  .dir-card .btn{ padding:7px 12px; font-size:.82rem; }
+  .dir-card .drow2{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .dir-card .dlink{ color:var(--accent-ink); text-decoration:none; font-weight:600; font-size:.8rem; white-space:nowrap; }
   @media (max-width:560px){
     .wrap{ padding-top:16px; }
     .cov-row .cn{ width:118px; }
@@ -268,7 +284,7 @@
         <div class="card">
           <h2 data-i="mapTitle">Mapa da ilha</h2>
           <div class="sub" data-i="mapSub">Toca num refúgio para ver os detalhes e a agenda.</div>
-          <div class="map-wrap" id="mapWrap"></div>
+          <div class="map-wrap" id="mapWrap"><div id="mapSvgHost"></div><div class="map-pop" id="mapPop" hidden></div></div>
           <div class="legend">
             <span><i class="swatch" style="background:var(--gap)"></i><span data-i="lgGap">Sem voluntários</span></span>
             <span><i class="swatch" style="background:var(--warn)"></i><span data-i="lgThin">Cobertura fraca</span></span>
@@ -333,16 +349,24 @@
 <script>
 /* ---------- data model (swap points for a shared backend) ------------------ */
 const SHELTERS = [
-  { id:"milu",    name:"Cantinho da Milú",              council:"Santo da Serra · Santa Cruz", coast:"E", focus:{pt:"Cães e gatos · grande refúgio",en:"Dogs & cats · large shelter"}, need:4, x:690, y:242 },
-  { id:"companhia",name:"Companhia dos Animais",        council:"Funchal",                     coast:"S", focus:{pt:"Cães e gatos · adopção",en:"Dogs & cats · adoption"}, need:3, x:522, y:272 },
-  { id:"canil",   name:"Canil Municipal do Funchal",    council:"Funchal",                     coast:"S", focus:{pt:"Cães · passeios e cuidados",en:"Dogs · walks & care"}, need:5, x:548, y:260 },
-  { id:"patinhas",name:"Patinhas com Vida",             council:"Câmara de Lobos",             coast:"S", focus:{pt:"Gatos · colónias e FIV",en:"Cats · colonies & FIV"}, need:2, x:430, y:274 },
-  { id:"zoofila", name:"Associação Zoófila da Madeira", council:"Funchal",                     coast:"S", focus:{pt:"Cães e gatos · resgate",en:"Dogs & cats · rescue"}, need:3, x:500, y:286 },
-  { id:"petrescue",name:"Madeira Pet Rescue",           council:"Machico",                     coast:"E", focus:{pt:"Cães · reabilitação",en:"Dogs · rehabilitation"}, need:2, x:725, y:212 },
-  { id:"ribeira", name:"Refúgio da Ribeira Brava",      council:"Ribeira Brava",               coast:"S", focus:{pt:"Cães e gatos · rural",en:"Dogs & cats · rural"}, need:2, x:300, y:258 },
-  { id:"calheta", name:"Amigos dos Animais da Calheta", council:"Calheta",                     coast:"W", focus:{pt:"Cães · costa oeste",en:"Dogs · west coast"}, need:2, x:150, y:242 },
-  { id:"norte",   name:"Cantinho do Norte",             council:"São Vicente",                 coast:"N", focus:{pt:"Cães e gatos · costa norte",en:"Dogs & cats · north coast"}, need:2, x:360, y:152 },
+  { id:"spad",        name:"SPAD Funchal",                       council:"Funchal · Santa Luzia",             coast:"S", focus:{pt:"Cães e gatos · único abrigo licenciado da ilha",en:"Dogs & cats · island's only licensed shelter"}, physical:true,  need:4, lat:32.6554, lng:-16.9009, url:"https://spad.pt/" },
+  { id:"vascogil",    name:"Canil do Funchal (Vasco Gil)",       council:"Funchal · Santo António",           coast:"S", focus:{pt:"Canil municipal / CRO · cães e gatos",en:"Municipal shelter (CRO) · dogs & cats"}, physical:true,  need:4, lat:32.6916, lng:-16.9489, url:"https://canil.funchal.pt/" },
+  { id:"machico",     name:"Abrigo Municipal de Machico",        council:"Machico",                           coast:"E", focus:{pt:"Abrigo municipal · 80+ cães",en:"Municipal shelter · 80+ dogs"}, physical:true,  need:3, lat:32.7289, lng:-16.7734, url:"https://abrigomunicipal.cm-machico.pt/" },
+  { id:"camaralobos", name:"Canil de Câmara de Lobos",           council:"Câmara de Lobos",                   coast:"S", focus:{pt:"Canil municipal · tem voluntariado",en:"Municipal shelter · has volunteering"}, physical:true,  need:3, lat:32.6486, lng:-16.9785, url:"https://causaanimal.cm-camaradelobos.pt/" },
+  { id:"amaw",        name:"AMAW – Madeira Animal Welfare",      council:"Santa Cruz · Sto António da Serra", coast:"E", focus:{pt:"Esterilização de cães e gatos errantes",en:"Spay/neuter of stray dogs & cats"}, physical:false, need:1, lat:32.7163, lng:-16.8361, url:"https://www.madeiraanimalwelfare.org/" },
+  { id:"amais",       name:"AMAIS Madeira",                      council:"Funchal · São Roque",               coast:"S", focus:{pt:"Cães e gatos · adoção e resgate",en:"Dogs & cats · adoption & rescue"}, physical:false, need:2, lat:32.6948, lng:-16.9238, url:"https://www.facebook.com/AMAISmadeira/" },
+  { id:"refugio",     name:"O Nosso Refúgio",                    council:"Funchal",                           coast:"S", focus:{pt:"Rede de famílias de acolhimento",en:"Foster-family network"}, physical:false, need:1, lat:32.6485, lng:-16.9080, url:"https://nossorefugio.ong.pt/" },
+  { id:"animad",      name:"ANIMAD",                             council:"Santa Cruz · Caniço",               coast:"S", focus:{pt:"Cães e gatos · acolhimento e adoção",en:"Dogs & cats · fostering & adoption"}, physical:false, need:2, lat:32.6524, lng:-16.8410, url:"https://www.facebook.com/associacao.animad/" },
+  { id:"pata",        name:"PATA Madeira",                       council:"Santa Cruz · Camacha",              coast:"S", focus:{pt:"Cães e gatos · colónias e acolhimento",en:"Dogs & cats · colonies & fostering"}, physical:false, need:2, lat:32.6794, lng:-16.8449, url:"https://www.facebook.com/patamadeira/" },
+  { id:"vamosla",     name:"Vamos Lá Madeira",                   council:"Funchal · São Roque",               coast:"S", focus:{pt:"Colónias (CED) e adoção responsável",en:"TNR colonies & responsible adoption"}, physical:false, need:1, lat:32.7050, lng:-16.9450, url:"https://www.facebook.com/vamoslamadeira/" },
+  { id:"santana",     name:"Abrigo em Santana (a confirmar)",    council:"Santana",                           coast:"N", focus:{pt:"Abrigo semiprivado · a confirmar",en:"Semi-private shelter · to confirm"}, physical:true,  need:2, lat:32.7990, lng:-16.8810, url:null },
+  { id:"saovicente",  name:"Abrigo em São Vicente (a confirmar)",council:"São Vicente",                       coast:"N", focus:{pt:"Costa norte · a confirmar",en:"North coast · to confirm"}, physical:true,  need:2, lat:32.7950, lng:-16.9830, url:null },
 ];
+// map projection: real (lat,lng) → SVG viewBox coords, calibrated to the drawn island
+const GEO = { lngW:-17.27, lngE:-16.65, latN:32.88, latS:32.62, xL:70, xR:946, yT:150, yB:300 };
+const projX = lng => GEO.xL + (lng-GEO.lngW)/(GEO.lngE-GEO.lngW)*(GEO.xR-GEO.xL);
+const projY = lat => GEO.yT + (GEO.latN-lat)/(GEO.latN-GEO.latS)*(GEO.yB-GEO.yT);
+SHELTERS.forEach(s=>{ s.x=Math.round(projX(s.lng)); s.y=Math.round(projY(s.lat)); });
 
 const DAYS = 21;
 const SHIFT_START = 9, SHIFT_END = 13; // horário de turno para os lembretes
@@ -366,16 +390,19 @@ function slotKey(sid, iso){ return sid+"|"+iso; }
 /* ---------- seed demo signups (first run only) --------------------------- */
 function seed(){
   const S = {}; const put=(sid,off,names)=>{ S[slotKey(sid,dateKeys[off])] = names.slice(); };
-  put("milu",0,["Ana","João","Sofia"]);      put("milu",1,["Ana","Beatriz"]);   put("milu",3,["Miguel"]);
-  put("milu",6,["Sofia","João","Ana","Rui"]); put("milu",7,["Beatriz"]);
-  put("companhia",0,["Rui","Sofia"]);         put("companhia",2,["Ana"]);        put("companhia",5,["João","Miguel","Sofia"]);
-  put("canil",1,["Miguel","Rui"]);            put("canil",4,["Ana","Sofia","João"]);
-  put("patinhas",0,["Beatriz","Sofia"]);      put("patinhas",8,["Ana"]);
-  put("zoofila",2,["João"]);                  put("zoofila",9,["Rui","Miguel","Beatriz"]);
-  put("petrescue",3,["Sofia"]);
-  put("ribeira",1,["Miguel"]);                put("ribeira",5,["Ana","Rui"]);
-  put("calheta",4,["João"]);
-  put("norte",6,["Beatriz","Sofia"]);
+  put("spad",0,["Ana","João","Sofia"]);        put("spad",1,["Ana","Beatriz"]);   put("spad",3,["Miguel"]);
+  put("spad",6,["Sofia","João","Ana","Rui"]);  put("spad",7,["Beatriz"]);
+  put("vascogil",0,["Rui","Sofia"]);           put("vascogil",2,["Ana"]);         put("vascogil",5,["João","Miguel","Sofia"]);
+  put("vascogil",4,["Ana","Sofia"]);
+  put("machico",1,["Miguel","Rui"]);           put("machico",4,["Ana","Sofia","João"]); put("machico",8,["Rui"]);
+  put("camaralobos",0,["Beatriz","Sofia"]);    put("camaralobos",3,["Ana"]);      put("camaralobos",9,["Rui","Miguel"]);
+  put("amais",2,["João"]);                     put("amais",6,["Beatriz"]);
+  put("animad",2,["Sofia"]);                   put("animad",7,["Rui","Miguel"]);
+  put("pata",1,["Miguel"]);                    put("pata",5,["Ana","Rui"]);
+  put("amaw",4,["João"]);
+  put("refugio",3,["Beatriz"]);
+  put("santana",6,["Sofia"]);
+  put("saovicente",8,["Ana"]);
   return S;
 }
 
@@ -392,13 +419,14 @@ const I18N = {
     repTitle:"Relatório", repGaps:"Dias por cobrir", repVols:"Voluntários",
     btnIcs:"Exportar os meus turnos (.ics)", btnReset:"Repor demonstração",
     noteH:"Protótipo.",
-    noteBody:"Os dados de refúgios (localidade, foco, necessidade) são exemplos para demonstração e devem ser confirmados com cada associação. As marcações ficam guardadas apenas neste navegador (localStorage) — a versão partilhada, com conta comum e lembretes automáticos, precisa de um backend. As camadas de leitura/gravação de dados estão isoladas para essa ligação futura.",
+    noteBody:"Os refúgios e as localizações são reais (fontes públicas: sites oficiais, câmaras municipais, MAPESS). A necessidade diária de voluntários é ilustrativa, e várias associações funcionam por famílias de acolhimento/colónias, sem abrigo físico próprio — os dois refúgios do norte (Santana, São Vicente) estão por confirmar. Existe ainda a AAMA no Porto Santo (ilha separada, fora do mapa). As marcações ficam guardadas apenas neste navegador (localStorage); a versão partilhada, com conta comum e lembretes automáticos, precisa de um backend.",
     tCovered:"Cobertura", tGaps:"Dias por cobrir", tMine:"Os meus turnos", tVols:"Voluntários", tSlots:"Turnos marcados", of:"de",
     ofNeed:"do necessário", perDay:"por dia", need:"Precisa de", vols:"voluntários", noGaps:"Tudo coberto 🎉",
     pickShelter:"Escolhe um refúgio no mapa.", added:"Turno marcado", removed:"Turno removido",
     setName:"Escreve o teu nome primeiro.", icsEmpty:"Ainda não tens turnos marcados.", icsOk:"Ficheiro de calendário criado.",
     reset:"Demonstração reposta.", coast:{N:"Costa norte",S:"Costa sul",E:"Leste",W:"Oeste"}, upcoming:"Próximos dias", yourName:"o teu nome", tapToBook:"toca para marcar",
-    tabMapa:"Mapa", tabAgenda:"Agenda", tabStats:"Estatística", tabRefugios:"Refúgios", repShelters:"Cobertura por refúgio", seeRota:"Ver agenda", covered:"coberto" },
+    tabMapa:"Mapa", tabAgenda:"Agenda", tabStats:"Estatística", tabRefugios:"Refúgios", repShelters:"Cobertura por refúgio", seeRota:"Ver agenda", covered:"coberto",
+    siteLink:"Site", physicalChip:"Abrigo físico", fosterChip:"Rede de acolhimento" },
   en:{ tagline:"Walk and care for Madeira's shelter dogs — mark your days, see the island's coverage.", you:"I am",
     mapTitle:"Island map", mapSub:"Tap a shelter to see details and its rota.",
     lgGap:"No volunteers", lgThin:"Thin coverage", lgFull:"Covered",
@@ -407,13 +435,14 @@ const I18N = {
     repTitle:"Report", repGaps:"Days to cover", repVols:"Volunteers",
     btnIcs:"Export my shifts (.ics)", btnReset:"Reset demo",
     noteH:"Prototype.",
-    noteBody:"Shelter data (location, focus, need) are sample values for the demo and should be confirmed with each association. Sign-ups are saved only in this browser (localStorage) — the shared version, with a common account and automatic reminders, needs a backend. The data read/write layers are isolated for that future connection.",
+    noteBody:"Shelters and locations are real (public sources: official sites, town councils, MAPESS). The daily volunteer need is illustrative, and several associations run on foster families / colonies without their own physical shelter — the two north-coast shelters (Santana, São Vicente) are unconfirmed. There is also AAMA on Porto Santo (a separate island, off this map). Sign-ups are saved only in this browser (localStorage); the shared version, with a common account and automatic reminders, needs a backend.",
     tCovered:"Coverage", tGaps:"Days to cover", tMine:"My shifts", tVols:"Volunteers", tSlots:"Shifts booked", of:"of",
     ofNeed:"of target", perDay:"per day", need:"Needs", vols:"volunteers", noGaps:"All covered 🎉",
     pickShelter:"Pick a shelter on the map.", added:"Shift added", removed:"Shift removed",
     setName:"Type your name first.", icsEmpty:"You have no shifts yet.", icsOk:"Calendar file created.",
     reset:"Demo reset.", coast:{N:"North coast",S:"South coast",E:"East",W:"West"}, upcoming:"Upcoming days", yourName:"your name", tapToBook:"tap to book",
-    tabMapa:"Map", tabAgenda:"Rota", tabStats:"Stats", tabRefugios:"Shelters", repShelters:"Coverage by shelter", seeRota:"View rota", covered:"covered" },
+    tabMapa:"Map", tabAgenda:"Rota", tabStats:"Stats", tabRefugios:"Shelters", repShelters:"Coverage by shelter", seeRota:"View rota", covered:"covered",
+    siteLink:"Site", physicalChip:"Physical shelter", fosterChip:"Foster network" },
 };
 const LOCALE = { pt:"pt-PT", en:"en-GB" };
 let lang = "pt";
@@ -427,12 +456,14 @@ function fmtDate(d, opts){ return new Intl.DateTimeFormat(LOCALE[lang], opts).fo
 /* ---------- rendering ---------------------------------------------------- */
 let selected = SHELTERS[0].id;
 let currentTab = "mapa";
+let popOpenId = null;
 const TABS = ["mapa","agenda","stats","refugios"];
 const $ = s => document.querySelector(s);
 
 function switchTab(name){
   if(!TABS.includes(name)) name="mapa";
   currentTab=name;
+  if(name!=="mapa") closePop();
   document.querySelectorAll("#tabs button").forEach(b=> b.setAttribute("aria-selected", b.getAttribute("data-tab")===name?"true":"false"));
   TABS.forEach(tb=>{ const p=document.getElementById("panel-"+tb); if(p) p.hidden=(tb!==name); });
   if(("#"+name)!==location.hash){ try{ history.replaceState(null,"","#"+name); }catch(e){} }
@@ -496,7 +527,7 @@ function renderMap(){
       <circle class="dot" cx="${s.x}" cy="${s.y}" r="8.5" fill="${c}"></circle>
     </g>`;
   }).join("");
-  $("#mapWrap").innerHTML = `
+  $("#mapSvgHost").innerHTML = `
   <svg class="island" viewBox="0 0 1000 380" role="img" aria-label="Mapa da Madeira">
     <path class="isle-fill" d="M70 248
       C 90 210, 150 196, 210 200
@@ -522,12 +553,36 @@ function renderMap(){
     <text class="isle-label" x="905" y="215" text-anchor="middle">S. Lourenço</text>
     ${pins}
   </svg>`;
-  $("#mapWrap").querySelectorAll(".pin").forEach(g=>{
-    const pick=()=>{ selected=g.getAttribute("data-id"); render(); };
+  $("#mapSvgHost").querySelectorAll(".pin").forEach(g=>{
+    const pick=(e)=>{ if(e) e.stopPropagation(); selected=g.getAttribute("data-id"); popOpenId=selected; render(); };
     g.addEventListener("click", pick);
     g.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
   });
+  if(popOpenId) openPop(popOpenId);
 }
+
+function openPop(id){
+  const s=SHELTERS.find(x=>x.id===id); const host=$("#mapSvgHost"); const svg=host&&host.querySelector("svg"); const pop=$("#mapPop");
+  if(!s||!svg||!pop) return;
+  const w = svg.clientWidth || svg.getBoundingClientRect().width; if(!w){ return; }
+  const scale=w/1000; const px=s.x*scale, py=s.y*scale;
+  const st=shelterState(id); const col= st==="gap"?"var(--gap)": st==="thin"?"var(--warn)":"var(--good)";
+  const pct=Math.round(shelterCover(id)*100); const below = py<128;
+  pop.className="map-pop"+(below?" below":"");
+  pop.style.left=px+"px"; pop.style.top=py+"px";
+  pop.style.transform = below ? "translate(-50%,16px)" : "translate(-50%,calc(-100% - 16px))";
+  const link = s.url ? `<a class="plink" href="${s.url}" target="_blank" rel="noopener">${t("siteLink")} ↗</a>` : "";
+  pop.innerHTML = `<button class="pclose" aria-label="fechar">×</button>
+    <div class="pn">${s.name}</div>
+    <div class="pc">${s.council} · ${s.physical?t("physicalChip"):t("fosterChip")}</div>
+    <div class="pbar"><i style="width:${Math.max(pct,3)}%;background:${col}"></i></div>
+    <div class="prow"><span>${pct}% · ${t("need")} ${s.need}/${t("perDay")}</span>${link}</div>
+    <button class="btn pbook" data-book="${id}">${t("tapToBook")} ↓</button>`;
+  pop.hidden=false;
+  pop.querySelector(".pclose").onclick=(e)=>{ e.stopPropagation(); closePop(); };
+  pop.querySelector(".pbook").onclick=(e)=>{ e.stopPropagation(); const el=document.getElementById("infoTitle"); if(el) el.scrollIntoView({behavior:"smooth",block:"center"}); };
+}
+function closePop(){ popOpenId=null; const p=$("#mapPop"); if(p) p.hidden=true; }
 
 function renderSchedule(){
   const head = `<thead><tr><th class="sh-name" style="cursor:default">&nbsp;</th>${
@@ -569,8 +624,9 @@ function renderInfo(){
   $("#info").innerHTML = `
     <div class="name">${s.name}</div>
     <div class="meta"><span class="chip">${s.council}</span><span class="chip sea">${t("coast")[s.coast]}</span>
+      <span class="chip sea">${s.physical?t("physicalChip"):t("fosterChip")}</span>
       <span class="chip sea">${t("need")} ${s.need} ${t("vols")}/${t("perDay")}</span></div>
-    <p class="desc">${s.focus[lang]}</p>
+    <p class="desc">${s.focus[lang]}${s.url?` · <a href="${s.url}" target="_blank" rel="noopener" style="color:var(--accent-ink);font-weight:600;text-decoration:none">${t("siteLink")} ↗</a>`:""}</p>
     <div class="rep-h">${t("upcoming")} · <span style="text-transform:none;letter-spacing:0">${t("tapToBook")}</span></div>
     <div class="upcoming">${rows}</div>`;
   $("#info").querySelectorAll(".up-row").forEach(b=> b.addEventListener("click", ()=> toggleSlot(b.getAttribute("data-id"), b.getAttribute("data-iso"))));
@@ -617,11 +673,11 @@ function renderShelters(){
     const st=shelterState(s.id); const col=colorOf[st]; const pct=Math.round(shelterCover(s.id)*100);
     return `<div class="dir-card">
       <div class="dn"><span class="dot-s" style="background:${col}"></span>${s.name}</div>
-      <div class="dmeta"><span class="chip">${s.council}</span><span class="chip sea">${t("coast")[s.coast]}</span></div>
+      <div class="dmeta"><span class="chip">${s.council}</span><span class="chip sea">${t("coast")[s.coast]}</span><span class="chip sea">${s.physical?t("physicalChip"):t("fosterChip")}</span></div>
       <p>${s.focus[lang]}</p>
       <div class="dbar"><i style="width:${Math.max(pct,2)}%;background:${col}"></i></div>
       <div class="drow"><span>${t("need")} ${s.need}/${t("perDay")}</span><span>${pct}% ${t("covered")}</span></div>
-      <button class="btn ghost" data-goto="${s.id}">${t("seeRota")} →</button>
+      <div class="drow2"><button class="btn ghost" data-goto="${s.id}">${t("seeRota")} →</button>${s.url?`<a class="dlink" href="${s.url}" target="_blank" rel="noopener">${t("siteLink")} ↗</a>`:""}</div>
     </div>`;
   }).join("");
   $("#dir").querySelectorAll("[data-goto]").forEach(b=> b.addEventListener("click", ()=>{ selected=b.getAttribute("data-goto"); switchTab("mapa"); render(); window.scrollTo(0,0); }));
@@ -689,6 +745,8 @@ $("#reset").addEventListener("click", ()=>{ state={ me:state.me, signups:seed() 
 
 document.querySelectorAll("#tabs button").forEach(b=> b.addEventListener("click", ()=> switchTab(b.getAttribute("data-tab"))));
 window.addEventListener("hashchange", ()=> switchTab((location.hash||"").slice(1)));
+document.addEventListener("click", e=>{ if(popOpenId && !e.target.closest("#mapWrap")) closePop(); });
+window.addEventListener("resize", ()=>{ if(popOpenId) openPop(popOpenId); });
 
 render();
 switchTab((location.hash||"").slice(1) || "mapa");
