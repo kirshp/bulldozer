@@ -2,24 +2,29 @@
 
 **Bulldoze the noise. Mine the signal.**
 
-Marketing analytics & research site: **136 public, parsed datasets** — surveys, IMF & World Bank macro, markets and people. Every number sourced.
+Marketing analytics & research site: **164 public, parsed datasets** — surveys, IMF & World Bank macro, markets and people. Every number sourced.
 
 **Live: [shpara.com/bulldozer](https://shpara.com/bulldozer)**
 
 ![BullDozer](public/og.png)
 
+> **Where it lives** — source: this repo (`~/Projects/bulldozer`, [github.com/kirshp/bulldozer](https://github.com/kirshp/bulldozer)). Deployed: `npm run build` → `dist/` is rsynced into `~/shpara1/bulldozer/` and served at **shpara.com/bulldozer** via Cloudflare Pages. See [docs/OVERVIEW.md](docs/OVERVIEW.md) for the full map.
+
 ## What's inside
 
-| Section | What |
-|---|---|
-| [News](https://shpara.com/bulldozer) | Data stories, dashboards and release notes |
-| [Charts](https://shpara.com/bulldozer/explore) | Interactive explorer: bubble, correlations, beeswarm, heatmap, trajectories, index builder |
-| [Macro](https://shpara.com/bulldozer/macro) | 47 objective indicators — IMF WEO, World Bank WDI, OECD, BIS, WHO, OWID |
-| [Firms](https://shpara.com/bulldozer/markets) | Largest companies & most valuable brands with directories and metric switchers |
-| [Polls](https://shpara.com/bulldozer/surveys) | 89 opinion datasets — WVS, WHR, V-Dem, Afrobarometer, ESS, Hofstede and more |
-| [Geo](https://shpara.com/bulldozer/geo) | Country profiles, similar-country matching, side-by-side comparison |
+Header tabs: **New · Top · Macro · Polls · Geo · Biz · Edu**; a right-edge burger holds the rest (Quiz, Glossary, About, GitHub). Global search is on 🔍 / `Cmd-K`; light/dark toggle sits beside it.
 
-Plus **231 static country profiles** ([/country](https://shpara.com/bulldozer/country)), per-dataset dashboards with KPIs / movers / maps / trends, downloadable CSVs, a glossary, and detailed source-level results dashboards.
+| Tab | Route | What |
+|---|---|---|
+| New | `/` | Data stories, featured dashboards and release notes |
+| Top | `/explore` | Interactive explorer: bubble, correlations, beeswarm, heatmap, trajectories, index builder |
+| Macro | `/macro` | 104 objective statistics — IMF WEO, World Bank WDI/Findex, OECD, BIS, OWID, Maddison, Eurostat, TI CPI, Freedom House, RSF, PISA, UNHCR, Big Mac |
+| Polls | `/surveys` | 60 opinion datasets — WVS, WHR, V-Dem, Afrobarometer, Latinobarómetro, ESS, Reuters DNR, Hofstede and more |
+| Biz | `/markets` | Largest companies & most valuable brands, with directories and metric switchers |
+| Geo | `/geo` | Country profiles (name, official name, ISO codes, currency), similar-country matching, side-by-side comparison |
+| Edu | `/edu` | Field guide: dashboard types, BI tools, how the site parses its own data |
+
+Plus **232 static country profiles** ([/country](https://shpara.com/bulldozer/country)), per-dataset dashboards with KPIs / movers / maps / trends / breadcrumbs, downloadable CSVs, a glossary, and detailed source-level results dashboards.
 
 ## Highlights
 
@@ -29,7 +34,8 @@ Plus **231 static country profiles** ([/country](https://shpara.com/bulldozer/co
 - **Similar countries** — nearest-neighbour matching on global percentile profiles
 - **Country heatmap** — percentile grid with topic/region/search filters
 - **Cultural map of the world** — Inglehart-Welzel dimensions from WVS Wave 7
-- Every dataset page ships **schema.org/Dataset JSON-LD**, its own **OG image** and a **CSV download**
+- **Global search** (`Cmd-K`) across every dataset and country; **canonical country names** (common + official + ISO + currency) independent of source spelling
+- Every dataset page ships **schema.org/Dataset JSON-LD**, its own **OG image**, breadcrumbs, prev/next and a **CSV download**
 
 ## Principles
 
@@ -49,12 +55,12 @@ src/
     analytics.ts        # KPIs, movers, group rollups, period-over-period change
     countryIndex.ts     # per-country profiles: latest value + world rank per indicator
     topics.ts palette.ts worldgeo.ts …
-  components/           # 23 viz components (bubble, heatmap, matrix, maps, index builder…)
+  components/           # 25 viz components (bubble, heatmap, matrix, maps, index builder…)
   pages/                # index, explore, macro, markets, surveys, geo, country/[slug],
                         # dataset/[slug], stories/, glossary
 scripts/
   parse_*.mjs           # one parser per source family → normalised JSON
-  make_og_datasets.mjs  # 136 per-dataset OG images (sharp)
+  make_og_datasets.mjs  # per-dataset OG images (sharp)
 ```
 
 **Data model** — one long-format `Observation`: `{ entity, iso, period, value, group? }`.
