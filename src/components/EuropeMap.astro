@@ -38,12 +38,15 @@ const wPeriods = [...new Set(whr.data.map((o: any) => o.period))].sort();
 const wP = wPeriods[wPeriods.length - 1];
 const whrByIso = new Map<string, number>();
 const whrByName = new Map<string, number>();
+const isoByName = new Map<string, string>();
 for (const o of whr.data.filter((o: any) => o.period === wP)) {
   if (o.iso) whrByIso.set(o.iso, o.value);
   whrByName.set(o.entity, o.value);
+  if (o.iso) isoByName.set(o.entity, o.iso);
 }
 const NAME_FIX: Record<string, string> = { 'Türkiye': 'Turkey' };
 const countryWhr = (name: string) => whrByName.get(name) ?? whrByName.get(NAME_FIX[name] ?? '');
+const countryIso = (name: string) => isoByName.get(name) ?? isoByName.get(NAME_FIX[name] ?? '');
 
 // 0–100 percentile rank of v within vals (ties share the mean rank).
 function pct(vals: number[]) {
@@ -62,7 +65,7 @@ const inBox = ([lon, lat]: number[]) =>
 const countries = fc.features.map((f: any) => {
   const alpha3 = (isoNumeric as any)[String(Number(f.id))];
   const whrV = alpha3 ? whrByIso.get(alpha3) : undefined;
-  return { name: f.properties.name, d: pathGen(f), whr: whrV, inView: inBox(geoCentroid(f)) };
+  return { name: f.properties.name, a3: alpha3, d: pathGen(f), whr: whrV, inView: inBox(geoCentroid(f)) };
 });
 const euRef = countries.filter((c: any) => c.inView && c.whr != null).map((c: any) => c.whr);
 const euPct = pct(euRef);
@@ -94,7 +97,8 @@ const dots = metrics[0].data
       const cityPct = pctByMetric.get(m.key)!(row.value);
       vals[m.key] = { v: row.value, d: Math.round((cityPct - cPct) * 10) / 10 };
     }
-    return { city: d.city, cc: d.cc, country: d.country, x: xy ? Math.round(xy[0] * 10) / 10 : null,
+    return { city: d.city, cc: d.cc, country: d.country, a3: countryIso(d.country) ?? '',
+      x: xy ? Math.round(xy[0] * 10) / 10 : null,
       y: xy ? Math.round(xy[1] * 10) / 10 : null, whr: countryWhr(d.country) ?? null, vals };
   })
   .filter((d: any) => d.x != null);
@@ -105,14 +109,17 @@ const metricLabels = metrics.map((m) => ({ key: m.key, label: m.label, unit: m.u
   <div id="eumap-metrics" class="fchips" style="margin-bottom:10px"></div>
   <div class="eumap-wrap">
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Happiness across Europe: countries and cities" preserveAspectRatio="xMidYMid meet">
-      {countries.map((c: any) => {
-        const f = fillFor(c.whr);
-        return <path class="eu-country" d={c.d} fill={f.fill} fill-opacity={f.op} stroke="var(--bg)" stroke-width="0.5"><title>{c.name}{c.whr != null ? ` · ${c.whr.toFixed(2)}` : ''}</title></path>;
-      })}
+      <g id="eumap-countries">
+        {countries.map((c: any) => {
+          const f = fillFor(c.whr);
+          return <path class="eu-country" d={c.d} fill={f.fill} fill-opacity={f.op} stroke="var(--bg)" stroke-width="0.5"
+            data-country={c.name} data-a3={c.a3 ?? ''} data-whr={c.whr == null ? '' : c.whr} />;
+        })}
+      </g>
       <g id="eumap-dots">
         {dots.map((d: any) => (
           <circle class="eu-dot" cx={d.x} cy={d.y} r="5"
-            data-city={d.city} data-cc={d.cc} data-country={d.country}
+            data-city={d.city} data-cc={d.cc} data-country={d.country} data-a3={d.a3}
             data-whr={d.whr == null ? '' : d.whr} data-vals={JSON.stringify(d.vals)} />
         ))}
       </g>
@@ -141,10 +148,14 @@ const metricLabels = metrics.map((m) => ({ key: m.key, label: m.label, unit: m.u
     const defs = JSON.parse(document.getElementById('eumap-metric-defs').textContent);
     const chipsEl = document.getElementById('eumap-metrics');
     const dotsEl = document.getElementById('eumap-dots');
+    const countriesEl = document.getElementById('eumap-countries');
+    const svgEl = countriesEl.closest('svg');
     const tip = document.getElementById('eumap-tip');
     const wrap = tip.parentElement;
     const dots = [...dotsEl.querySelectorAll('.eu-dot')];
+    const countryEls = [...countriesEl.querySelectorAll('.eu-country')];
     let key = defs[0].key;
+    let activeA3 = null; // clicked country → highlight it and its cities
 
     chipsEl.innerHTML = defs.map((m, i) =>
       `<button type="button" class="fchip${i === 0 ? ' active' : ''}" data-k="${m.key}">${m.label}</button>`).join('');
@@ -174,6 +185,25 @@ const metricLabels = metrics.map((m) => ({ key: m.key, label: m.label, unit: m.u
         el.setAttribute('stroke', 'var(--bg)');
         el.setAttribute('stroke-width', '0.8');
       }
+      applyHighlight();
+    }
+
+    // Click a country → spotlight it and its cities; everything else fades.
+    function applyHighlight() {
+      for (const el of countryEls) {
+        const on = !activeA3 || el.dataset.a3 === activeA3;
+        el.style.opacity = on ? '' : '0.2';
+        const hot = activeA3 && el.dataset.a3 === activeA3;
+        el.style.stroke = hot ? 'var(--accent)' : '';
+        el.style.strokeWidth = hot ? '1.4' : '';
+      }
+      for (const el of dots) {
+        el.style.opacity = !activeA3 || el.dataset.a3 === activeA3 ? '' : '0.1';
+      }
+    }
+    function setActive(a3) {
+      activeA3 = a3 && a3 === activeA3 ? null : (a3 || null);
+      applyHighlight();
     }
 
     chipsEl.addEventListener('click', (e) => {
@@ -183,29 +213,61 @@ const metricLabels = metrics.map((m) => ({ key: m.key, label: m.label, unit: m.u
       apply();
     });
 
-    function showTip(el, ev) {
-      const rec = JSON.parse(el.dataset.vals)[key]; if (!rec) return;
-      const def = defs.find((d) => d.key === key);
-      const u = def.unit === '%' ? '%' : '';
-      const whr = el.dataset.whr;
-      const dv = rec.d;
-      const verdict = Math.abs(dv) < 6 ? 'on par with' : dv > 0 ? 'happier than' : 'below';
-      tip.innerHTML =
-        `<b>${el.dataset.city}</b> <span class="tct">${el.dataset.country}</span>` +
-        `<div class="tr"><span>${def.label}</span><b>${rec.v}${u}</b></div>` +
-        (whr ? `<div class="tr"><span>Country (WHR)</span><b>${(+whr).toFixed(2)}</b></div>` : '') +
-        `<div class="tv">${verdict} its country</div>`;
+    function placeTip(ev) {
       tip.hidden = false;
       const r = wrap.getBoundingClientRect();
       const x = ev.clientX - r.left, y = ev.clientY - r.top;
       tip.style.left = Math.min(x + 14, r.width - tip.offsetWidth - 6) + 'px';
       tip.style.top = Math.max(y - tip.offsetHeight - 12, 6) + 'px';
     }
+    function showCityTip(el, ev) {
+      const rec = JSON.parse(el.dataset.vals)[key]; if (!rec) return;
+      const def = defs.find((d) => d.key === key);
+      const u = def.unit === '%' ? '%' : '';
+      const whr = el.dataset.whr;
+      const verdict = Math.abs(rec.d) < 6 ? 'on par with' : rec.d > 0 ? 'happier than' : 'below';
+      tip.innerHTML =
+        `<b>${el.dataset.city}</b> <span class="tct">${el.dataset.country}</span>` +
+        `<div class="tr"><span>${def.label}</span><b>${rec.v}${u}</b></div>` +
+        (whr ? `<div class="tr"><span>Country (WHR)</span><b>${(+whr).toFixed(2)}</b></div>` : '') +
+        `<div class="tv">${verdict} its country</div>`;
+      placeTip(ev);
+    }
+    function showCountryTip(el, ev) {
+      const a3 = el.dataset.a3, whr = el.dataset.whr;
+      const def = defs.find((d) => d.key === key);
+      const u = def.unit === '%' ? '%' : '';
+      const kids = a3 ? dots.filter((d) => d.dataset.a3 === a3) : [];
+      let body = '';
+      if (kids.length) {
+        const recs = kids.map((d) => JSON.parse(d.dataset.vals)[key]).filter(Boolean);
+        const avg = recs.reduce((s, r) => s + r.v, 0) / recs.length;
+        const above = recs.filter((r) => r.d > 6).length;
+        body = `<div class="tr"><span>${def.label} · avg</span><b>${avg.toFixed(1)}${u}</b></div>` +
+          `<div class="tr"><span>Survey cities</span><b>${kids.length}</b></div>` +
+          `<div class="tv">${above} of ${kids.length} above the country · click to focus</div>`;
+      } else {
+        body = `<div class="tv">No survey cities</div>`;
+      }
+      tip.innerHTML = `<b>${el.dataset.country}</b>` + (whr ? ` <span class="tct">WHR ${(+whr).toFixed(2)}</span>` : '') + body;
+      placeTip(ev);
+    }
+
     dotsEl.addEventListener('mousemove', (e) => {
       const el = e.target.closest('.eu-dot'); if (!el) { tip.hidden = true; return; }
-      el.setAttribute('stroke', 'var(--text)'); showTip(el, e);
+      el.setAttribute('stroke', 'var(--text)'); showCityTip(el, e);
     });
     dotsEl.addEventListener('mouseleave', () => { tip.hidden = true; dots.forEach((d) => d.setAttribute('stroke', 'var(--bg)')); });
+    dotsEl.addEventListener('click', (e) => { const el = e.target.closest('.eu-dot'); if (el && el.dataset.a3) setActive(el.dataset.a3); });
+
+    countriesEl.addEventListener('mousemove', (e) => {
+      const el = e.target.closest('.eu-country'); if (!el) { tip.hidden = true; return; }
+      showCountryTip(el, e);
+    });
+    countriesEl.addEventListener('mouseleave', () => { tip.hidden = true; });
+    countriesEl.addEventListener('click', (e) => { const el = e.target.closest('.eu-country'); if (el) setActive(el.dataset.a3); });
+    svgEl.addEventListener('click', (e) => { if (e.target === svgEl && activeA3) setActive(activeA3); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && activeA3) setActive(activeA3); });
 
     apply();
   })();
@@ -215,7 +277,8 @@ const metricLabels = metrics.map((m) => ({ key: m.key, label: m.label, unit: m.u
   .eumap { margin-top: 8px; }
   .eumap-wrap { position: relative; }
   .eumap svg { width: 100%; height: auto; display: block; max-width: 720px; margin: 0 auto; }
-  .eu-country { transition: fill-opacity 0.2s ease; }
+  .eu-country { cursor: pointer; transition: fill-opacity 0.2s ease, opacity 0.2s ease; }
+  .eu-country:hover { stroke: var(--text-dim); stroke-width: 0.9; }
   .eu-dot { cursor: pointer; transition: r 0.18s ease; }
   .eu-dot:hover { fill-opacity: 1 !important; }
   .eumap-tip {
