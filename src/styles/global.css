@@ -101,19 +101,16 @@ a:hover { text-decoration: underline; }
   .burger-menu .bm-markets, .burger-menu .bm-edu { display: none; }
 }
 @media (max-width: 560px) {
-  .site-header .container { gap: 8px; padding: 0 10px; }
+  .site-header .container { gap: 6px; padding: 0 8px; }
   .brand { gap: 6px; flex: 0 0 auto; }
   .brand .mark { width: 22px; height: 22px; font-size: 13px; }
-  .brand .name { font-size: 13px; }
+  /* wordmark off from 560px (keep the B logo) so all 7 tabs + burger fit */
+  .brand .name { display: none; }
   /* nav scrolls horizontally so nothing is cut off; thin dividers keep items distinct */
   .nav { gap: 0; margin-left: auto; flex: 1 1 auto; min-width: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .nav::-webkit-scrollbar { display: none; }
-  .nav a { font-size: 12px; white-space: nowrap; padding: 3px 8px; }
+  .nav a { font-size: 12px; white-space: nowrap; padding: 3px 6px; }
   .nav a:not(.active) + a:not(.active) { border-left: 1px solid var(--border); border-radius: 0; }
-}
-/* On the narrowest phones, drop the wordmark (keep the logo) so all 6 menu items fit */
-@media (max-width: 400px) {
-  .brand .name { display: none; }
 }
 
 /* Global search overlay (🔍 / Cmd+K) */
