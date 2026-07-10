@@ -21,10 +21,12 @@ const desc = `The best cities to live in across Europe — a livability ranking 
       <div class="ci-controls" style="margin-bottom:6px">
         <div id="city-metrics" class="fchips"></div>
         <select id="city-country"><option value="">All countries</option></select>
+        <button type="button" id="city-sort" class="ghost-btn" style="margin:0">Highest first</button>
         <span id="city-count" class="sub" style="margin:0; align-self:center"></span>
       </div>
       <p id="city-note" class="sub" style="margin:2px 0 14px"></p>
       <div id="city-bars" class="bars"></div>
+      <button type="button" id="city-all" class="ghost-btn" style="margin:12px 0 0">Show all</button>
 
       <p class="method-note" style="margin-top:18px">
         <b>Source:</b> {cities.source} · <a href={cities.url} target="_blank" rel="noopener">Eurostat urb_percep</a> · {cities.license}. Top-2-box (strongly/very + somewhat/fairly).
@@ -41,7 +43,10 @@ const desc = `The best cities to live in across Europe — a livability ranking 
       const barsEl = document.getElementById('city-bars');
       const noteEl = document.getElementById('city-note');
       const countEl = document.getElementById('city-count');
-      let mi = 0;
+      const sortBtn = document.getElementById('city-sort');
+      const allBtn = document.getElementById('city-all');
+      const TOP = 7;
+      let mi = 0, sortDir = 'desc', showAll = false;
 
       metricsEl.innerHTML = CITIES.metrics.map((m, i) =>
         `<button type="button" class="fchip${i === 0 ? ' active' : ''}" data-i="${i}">${m.label}</button>`).join('');
@@ -51,17 +56,22 @@ const desc = `The best cities to live in across Europe — a livability ranking 
       function render() {
         const m = CITIES.metrics[mi];
         const cc = countryEl.value;
-        const rows = m.data.filter((d) => !cc || d.country === cc); // already sorted desc
+        let rows = m.data.filter((d) => !cc || d.country === cc); // data is sorted desc
+        if (sortDir === 'asc') rows = [...rows].reverse();
+        const total = rows.length;
+        const shown = showAll ? rows : rows.slice(0, TOP);
         noteEl.textContent = m.summary;
-        countEl.textContent = `${rows.length} cities`;
+        countEl.textContent = `${total} cities`;
         const max = Math.max(100, ...rows.map((d) => d.value));
         const suffix = m.unit === '%' ? '%' : '';
-        barsEl.innerHTML = rows.map((d, i) => `
+        barsEl.innerHTML = shown.map((d, i) => `
           <div class="bar-row">
             <span title="${d.country}"><em style="color:var(--text-dim);font-style:normal">${i + 1}.</em> ${d.city} <em style="color:var(--text-dim)">${d.cc}</em></span>
             <span class="bar-track"><span class="bar-fill" style="width:${(d.value / max) * 100}%"></span></span>
             <span class="bar-val">${d.value}${suffix}</span>
           </div>`).join('') || '<p class="sub">No cities.</p>';
+        allBtn.textContent = showAll ? `Show top ${TOP}` : `Show all ${total}`;
+        allBtn.style.display = total > TOP ? '' : 'none';
       }
       metricsEl.addEventListener('click', (e) => {
         const b = e.target.closest('.fchip'); if (!b) return;
@@ -70,6 +80,8 @@ const desc = `The best cities to live in across Europe — a livability ranking 
         render();
       });
       countryEl.addEventListener('change', render);
+      sortBtn.addEventListener('click', () => { sortDir = sortDir === 'desc' ? 'asc' : 'desc'; sortBtn.textContent = sortDir === 'desc' ? 'Highest first' : 'Lowest first'; render(); });
+      allBtn.addEventListener('click', () => { showAll = !showAll; render(); });
       render();
     })();
   </script>
