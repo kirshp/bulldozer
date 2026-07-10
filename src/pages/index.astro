@@ -5,7 +5,12 @@ import { datasets, datasetsByKind, getDataset } from '@data/datasets';
 import { upcoming } from '@data/releases';
 import { flagFor } from '@lib/flags';
 import { stories as storyList } from '@data/stories';
+import cities from '@data/cities.json';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Mini preview for the cities card — top-5 most liveable European cities.
+const cityTop = cities.metrics[0].data.slice(0, 5);
+const cityMax = Math.max(1, ...cityTop.map((d) => d.value));
 
 // Mini preview chart for the featured story — the happiest countries.
 const happy = getDataset('whr-happiness');
@@ -150,6 +155,21 @@ const browse = [
           document.getElementById('quiz-game-root')!.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
       </script>
+
+      <a class="card link news-card" href={`${base}/cities`} style="display:block; margin-top:16px">
+        <span class="tag">Cities · Europe</span>
+        <h3>Best cities to live in Europe</h3>
+        <p class="meta">A livability ranking of {cities.metrics[0].data.length} cities from the EU’s open quality-of-life survey.</p>
+        <div class="bars feature-bars" style="margin:12px 0 4px">
+          {cityTop.map((d) => (
+            <div class="bar-row">
+              <span>{d.city} <em style="color:var(--text-dim)">{d.cc}</em></span>
+              <span class="bar-track"><span class="bar-fill" style={`width:${(d.value / cityMax) * 100}%`}></span></span>
+              <span class="bar-val">{d.value}</span>
+            </div>
+          ))}
+        </div>
+      </a>
 
       <div class="grid cols-2" style="margin-top:16px">
         {rest.map((s) => (
