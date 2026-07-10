@@ -91,10 +91,8 @@ a:hover { text-decoration: underline; }
 /* Search/theme live as icons on desktop, as burger items on mobile */
 .bm-tool { display: none; text-align: left; background: transparent; border: 0; cursor: pointer; color: var(--text); font: 500 15px var(--font); padding: 9px 12px; border-radius: 8px; white-space: nowrap; }
 .bm-tool:hover { background: var(--bg-elev); }
-/* Biz/Edu are always visible tabs (there's room on every size); the burger
-   copies are redundant, so hide them everywhere. */
+/* Edu is a plain tab like the rest — there's room on every size */
 .nav-extra { display: inline-block; }
-.burger-menu .bm-markets, .burger-menu .bm-edu { display: none; }
 @media (max-width: 560px) {
   #hdr-search, #hdr-theme { display: none; }
   .bm-tool { display: block; }
