@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import QuizGame from '../components/QuizGame.astro';
+import EuropeMap from '@components/EuropeMap.astro';
 import { datasets, datasetsByKind, getDataset } from '@data/datasets';
 import { upcoming } from '@data/releases';
-import { flagFor } from '@lib/flags';
 import { stories as storyList } from '@data/stories';
 import cities from '@data/cities.json';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -12,11 +12,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const cityTop = cities.metrics[0].data.slice(0, 5);
 const cityMax = Math.max(1, ...cityTop.map((d) => d.value));
 
-// Mini preview chart for the featured story — the happiest countries.
+// Featured story — the happiest countries, previewed with the Europe map.
 const happy = getDataset('whr-happiness');
 const happyLatest = happy ? [...new Set(happy.data.map((o) => o.period))].sort().at(-1) : null;
-const happyTop = happy ? happy.data.filter((o) => o.period === happyLatest).sort((a, b) => b.value - a.value).slice(0, 8) : [];
-const happyMax = Math.max(1, ...happyTop.map((o) => o.value));
 const month = new Date().getMonth() + 1;
 const calendar = upcoming(month).slice(0, 6);
 
@@ -118,23 +116,16 @@ const browse = [
       <h2>What the data is saying</h2>
       <p class="sub">Visual stories built on public data.</p>
 
-      <a class="card link news-card news-feature" href={feature.href} style="display:block; margin-top:8px">
-        <span class="tag">{feature.tag}</span>
-        <h3>{feature.title}</h3>
-        <p class="meta">{feature.dek}</p>
-        {happyTop.length > 0 && (
-          <div class="bars feature-bars" style="margin:14px 0 6px">
-            {happyTop.map((o) => (
-              <div class="bar-row">
-                <span>{flagFor(o.iso)} {o.entity}</span>
-                <span class="bar-track"><span class="bar-fill move-up" style={`width:${Math.round((o.value / happyMax) * 100)}%`}></span></span>
-                <span class="bar-val">{o.value.toFixed(2)}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        <p class="meta" style="color:var(--accent)">Read the story · happiest countries {happyLatest} →</p>
-      </a>
+      <div class="card news-card news-feature" style="margin-top:8px">
+        <a class="news-feature-head" href={feature.href}>
+          <span class="tag">{feature.tag}</span>
+          <h3>{feature.title}</h3>
+          <p class="meta">{feature.dek}</p>
+        </a>
+        <p class="meta" style="margin:6px 0 2px">Europe at a glance — countries shaded by happiness, each dot a city sized by its rating. Hover for detail; click a country to focus it.</p>
+        <EuropeMap />
+        <a class="meta feature-more" href={feature.href} style="color:var(--accent); display:inline-block; margin-top:14px">Read the story · happiest countries {happyLatest} →</a>
+      </div>
 
       <div class="quiz-box">
         <div class="quiz-row">

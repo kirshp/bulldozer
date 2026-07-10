@@ -9,11 +9,15 @@
  * fairly) plus an "Overall livability" composite = the mean percentile rank of
  * each city across the six. Europe-only; the only openly-licensed city ranking.
  */
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const DATA = join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'data');
+const SCRIPTS = dirname(fileURLToPath(import.meta.url));
+const DATA = join(SCRIPTS, '..', 'src', 'data');
+
+// City centroids [lon, lat] keyed by cleaned city name — placed on the Europe map.
+const COORDS = JSON.parse(await readFile(join(SCRIPTS, 'eu_city_coords.json'), 'utf8'));
 const API = 'https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/urb_percep';
 const YEAR = '2023';
 
@@ -115,6 +119,17 @@ async function main() {
   metrics.unshift({ key: 'overall', label: 'Overall livability', unit: 'score',
     summary: 'BullDozer composite — mean percentile rank across the six dimensions below (higher = better).', data: overall });
   console.log(`  overall: ${overall.length} cities (top: ${overall[0]?.city} ${overall[0]?.value})`);
+
+  // attach [lon, lat] to every row so the /cities Europe map can place dots
+  const missing = new Set();
+  for (const m of metrics) {
+    for (const d of m.data) {
+      const c = COORDS[d.city];
+      if (c) { d.lon = c[0]; d.lat = c[1]; } else missing.add(d.city);
+    }
+  }
+  if (missing.size) console.warn(`  ⚠ no coords for ${missing.size}: ${[...missing].join(', ')}`);
+  else console.log('  coords: all cities located');
 
   const out = {
     title: 'Best cities to live in Europe',
