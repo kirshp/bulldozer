@@ -8,7 +8,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, pickPeriodsN, writeDataset, round } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, pickPeriodsN, writeDataset, round } from './lib/datasets.mjs';
 
 const BASE = 'https://reutersinstitute.politics.ox.ac.uk/modules/custom/olamalu_reuters_dnr_infographics';
 const GAP = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs',
@@ -41,7 +41,7 @@ const QUESTIONS = [
 async function alpha2Geo() {
   // alpha2 -> { iso3, name, region } via the Gapminder geo entities file
   const m = new Map();
-  for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+  for (const r of await gapminderRows()) {
     const a2 = (r.iso3166_1_alpha2 || '').toUpperCase();
     if (!a2) continue;
     m.set(a2, {

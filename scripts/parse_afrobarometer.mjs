@@ -8,7 +8,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, writeDataset, round } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, writeDataset, round } from './lib/datasets.mjs';
 
 const CSV = process.env.AFRO_CSV ||
   '/private/tmp/claude-501/-Users-kirillshpara/025d8691-cfe3-48e0-a982-db40cbef8a62/scratchpad/afrobarometer.csv';
@@ -28,7 +28,7 @@ const DIMS = [
 
 async function geoMap() {
   const m = new Map();
-  for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+  for (const r of await gapminderRows()) {
     const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
     if (a3 && r.name) m.set(r.name.toLowerCase(), { iso: a3, region: REGION_4[r.world_4region] || 'Africa' });
   }

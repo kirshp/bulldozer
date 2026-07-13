@@ -7,7 +7,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, writeDataset } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, writeDataset } from './lib/datasets.mjs';
 
 const H = homedir();
 const CSV = process.env.HOFSTEDE_CSV ||
@@ -32,7 +32,7 @@ const ALIAS = {
 
 async function geoMaps() {
   const name2iso = new Map(); const iso2region = new Map();
-  for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+  for (const r of await gapminderRows()) {
     const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
     if (!a3) continue;
     if (r.name) name2iso.set(r.name.toLowerCase(), a3);

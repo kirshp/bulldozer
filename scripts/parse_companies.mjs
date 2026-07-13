@@ -8,7 +8,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, writeDataset } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, writeDataset } from './lib/datasets.mjs';
 
 const GAP = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs', 'BK', 'Opros', 'Inter_survey', 'Gapminder', 'ddf--entities--geo--country.csv');
 const UA = { 'User-Agent': 'BullDozer/1.0 (aurapark888@gmail.com)' };
@@ -25,7 +25,7 @@ async function nameToIso() {
   const m = new Map();
   for (const [k, v] of Object.entries(ALIAS)) m.set(k.toLowerCase(), v);
   try {
-    for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+    for (const r of await gapminderRows()) {
       const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
       if (a3 && r.name) m.set(r.name.toLowerCase(), a3);
     }
@@ -36,7 +36,7 @@ async function nameToIso() {
 async function regionMap() {
   const m = new Map();
   try {
-    for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+    for (const r of await gapminderRows()) {
       const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
       if (a3) m.set(a3, REGION_4[r.world_4region] || 'Other');
     }

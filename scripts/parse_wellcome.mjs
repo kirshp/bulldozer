@@ -11,7 +11,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, writeDataset } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, writeDataset } from './lib/datasets.mjs';
 
 const CSV = process.env.WGM_CSV ||
   '/private/tmp/claude-501/-Users-kirillshpara/025d8691-cfe3-48e0-a982-db40cbef8a62/scratchpad/wgm_agg.csv';
@@ -25,7 +25,7 @@ const COMMON = {
 async function region() {
   const m = new Map();
   try {
-    for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+    for (const r of await gapminderRows()) {
       const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
       if (a3) m.set(a3, REGION_4[r.world_4region] || 'Other');
     }

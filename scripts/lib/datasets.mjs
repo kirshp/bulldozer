@@ -1,10 +1,24 @@
 /** Shared helpers for the data parsers. */
-import { writeFile, mkdir } from 'node:fs/promises';
+import { writeFile, mkdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { homedir } from 'node:os';
+import { parseCsvObjects } from './csv.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const ROOT = join(__dirname, '..', '..');
+
+/** Gapminder country registry rows ({iso3166_1_alpha3, world_4region, name}).
+ *  Reads the local iCloud CSV when available; on CI (no iCloud) falls back to
+ *  the bundled snapshot so ISO→region mapping never hard-fails the build. */
+const GAPMINDER_CSV = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs', 'BK', 'Opros', 'Inter_survey', 'Gapminder', 'ddf--entities--geo--country.csv');
+export async function gapminderRows() {
+  try {
+    return [...parseCsvObjects(await readFile(GAPMINDER_CSV, 'utf8'))];
+  } catch {
+    return JSON.parse(await readFile(join(__dirname, 'gapminder_geo.json'), 'utf8'));
+  }
+}
 
 /** Russian → English region labels used across the tidy macro/survey files.
  *  Keys stay as \u escapes on purpose (repo policy: ASCII-only sources) —

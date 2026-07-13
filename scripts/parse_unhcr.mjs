@@ -9,7 +9,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, writeDataset, pickPeriodsN } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, writeDataset, pickPeriodsN } from './lib/datasets.mjs';
 
 const GAP = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs', 'BK', 'Opros', 'Inter_survey', 'Gapminder', 'ddf--entities--geo--country.csv');
 const API = 'https://api.unhcr.org/population/v1/population/';
@@ -18,7 +18,7 @@ const API = 'https://api.unhcr.org/population/v1/population/';
  *  bureaucratic; Gapminder's ('Syria') match the rest of the site. */
 async function geo() {
   const region = new Map(); const name = new Map();
-  for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+  for (const r of await gapminderRows()) {
     const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
     if (!a3) continue;
     region.set(a3, REGION_4[r.world_4region] || 'Other');

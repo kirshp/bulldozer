@@ -7,7 +7,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, writeDataset, round } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, writeDataset, round } from './lib/datasets.mjs';
 
 const ICLOUD = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs');
 const LITS = join(ICLOUD, 'BK', 'Opros', 'Inter_survey', 'EBRD_LiTS_Life_in_Transition_Survey');
@@ -28,9 +28,8 @@ const QUESTIONS = {
 };
 
 async function loadAlpha2Map() {
-  const text = await readFile(GAP, 'utf8');
   const m = new Map(); // alpha2 -> {iso3, region, name}
-  for (const r of parseCsvObjects(text)) {
+  for (const r of await gapminderRows()) {
     const a2 = (r.iso3166_1_alpha2 || '').toUpperCase();
     if (!a2) continue;
     m.set(a2, { iso3: (r.iso3166_1_alpha3 || '').toUpperCase(), region: REGION_4[r.world_4region] || 'Europe & Central Asia', name: r.name });
