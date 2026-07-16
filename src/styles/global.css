@@ -143,7 +143,7 @@ a:hover { text-decoration: underline; }
 .hero h1 { font-size: clamp(30px, 6.5vw, 44px); line-height: 1.05; margin: 0 0 10px; letter-spacing: -1px; }
 .hero h1 .hl { color: var(--accent); }
 .hero p { font-size: clamp(15px, 2.2vw, 18px); color: var(--text-dim); max-width: 620px; margin: 0; }
-.kicker { display:inline-block; font-family: var(--mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+.kicker { display:inline-block; font-family: var(--mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
 
 /* Grid + cards */
 .grid { display: grid; gap: 16px; }
@@ -163,7 +163,7 @@ a:hover { text-decoration: underline; }
 .section { padding: 28px 0; }
 @media (max-width: 560px) { .section { padding: 20px 0; } }
 .section h2 { font-size: 24px; margin: 0 0 4px; }
-.section .sub { color: var(--text-dim); margin: 0 0 24px; }
+.section .sub { color: var(--text-dim); margin: 0 0 14px; }
 
 /* KPI */
 .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
@@ -272,7 +272,7 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 }
 
 /* Explore section navigation */
-.explore-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; position: sticky; top: 60px; z-index: 20; background: var(--bg); padding: 10px 0; }
+.explore-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; position: sticky; top: 60px; z-index: 20; background: var(--bg); padding: 10px 0; }
 .explore-nav .ghost-btn { margin: 0; text-decoration: none; }
 #explorer, #bivariate, #bubble, #correlation, #distribution, #heatmap, #path, #index, #country, #similar, #compare,
 #stories, #dashboards, #releases, #browse { scroll-margin-top: 124px; }
