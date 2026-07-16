@@ -318,10 +318,6 @@ const metricLabels = metrics.map((m) => ({ key: m.key, label: m.label, unit: m.u
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
     padding: 8px 10px; font-size: 12.5px; color: var(--text); box-shadow: 0 6px 24px rgba(0,0,0,0.28);
   }
-  .eumap-tip .tct { color: var(--text-dim); font-size: 11.5px; }
-  .eumap-tip .tr { display: flex; justify-content: space-between; gap: 14px; margin-top: 4px; color: var(--text-dim); }
-  .eumap-tip .tr b { color: var(--text); font-family: var(--mono); }
-  .eumap-tip .tv { margin-top: 5px; font-size: 11.5px; color: var(--accent); }
   .eumap-legends { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 12px; font-size: 12px; color: var(--text-dim); }
   .eumap-leg { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .eumap-leg-t { color: var(--text); font-weight: 600; }
@@ -331,4 +327,13 @@ const metricLabels = metrics.map((m) => ({ key: m.key, label: m.label, unit: m.u
   .eumap-dotkey { display: inline-flex; align-items: center; gap: 5px; }
   .eumap-dotkey .dk { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
   .dk-lo { background: rgb(219,39,119); } .dk-mid { background: rgb(148,163,184); } .dk-hi { background: rgb(245,158,11); }
+</style>
+
+<style is:global>
+  /* Tooltip rows are written with innerHTML at runtime, so they never get
+     Astro's scope attribute — keep these global, namespaced under #eumap-tip. */
+  #eumap-tip .tct { color: var(--text-dim); font-size: 11.5px; }
+  #eumap-tip .tr { display: flex; justify-content: space-between; gap: 14px; margin-top: 4px; color: var(--text-dim); }
+  #eumap-tip .tr b { color: var(--text); font-family: var(--mono); }
+  #eumap-tip .tv { margin-top: 5px; font-size: 11.5px; color: var(--accent); }
 </style>

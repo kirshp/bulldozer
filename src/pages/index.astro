@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import QuizGame from '../components/QuizGame.astro';
-import EuropeMap from '@components/EuropeMap.astro';
+import GlobeExplorer from '@components/GlobeExplorer.astro';
 import { datasets, datasetsByKind, getDataset } from '@data/datasets';
 import { upcoming } from '@data/releases';
 import { stories as storyList } from '@data/stories';
@@ -117,8 +117,8 @@ const browse = [
           <h3>{feature.title}</h3>
           <p class="meta">{feature.dek}</p>
         </a>
-        <p class="meta" style="margin:6px 0 2px">Europe at a glance — countries shaded by happiness, each dot a city sized by its rating. Hover for detail; click a country to focus it.</p>
-        <EuropeMap />
+        <p class="meta" style="margin:6px 0 2px">The whole world at a glance — every country scored across 8 open datasets, happiness among them. Drag to spin, click a country for its key indicators.</p>
+        <GlobeExplorer />
         <a class="meta feature-more" href={feature.href} style="color:var(--accent); display:inline-block; margin-top:14px">Read the story · happiest countries {happyLatest} →</a>
       </div>
 

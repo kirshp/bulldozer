@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SourceCatalog from '@components/SourceCatalog.astro';
 import DatasetList from '@components/DatasetList.astro';
-import GlobeExplorer from '@components/GlobeExplorer.astro';
+import EuropeMap from '@components/EuropeMap.astro';
 import { datasetsByKind } from '@data/datasets';
 const items = datasetsByKind('macro');
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -14,9 +14,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <h2>Macro &amp; country statistics</h2>
       <p class="page-tagline">Bullish on the numbers.</p>
       <p class="sub">Objective indicators across {datasetsByKind('macro').length} datasets — economy, demographics, health, education, environment, governance and risk. Search or browse by topic.</p>
-      <h3 style="margin:6px 0 2px">The world at a glance</h3>
-      <p class="sub">Drag the globe, click a country — its key indicators from 9 datasets, plus a composite score. <a href={`${base}/dataset/gapminder-internet`}>The internet-adoption chart</a> that used to live here is one click away.</p>
-      <GlobeExplorer />
+      <h3 style="margin:6px 0 2px">Happiness across Europe</h3>
+      <p class="sub">Countries shaded by the World Happiness Report score; each dot is a city sized by its rating. Hover for detail, click a country to focus it. <a href={`${base}/dataset/gapminder-internet`}>The internet-adoption chart</a> that used to live here is one click away.</p>
+      <EuropeMap />
       <DatasetList items={items} />
     </div>
   </section>

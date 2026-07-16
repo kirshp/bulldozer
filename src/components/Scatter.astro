@@ -34,9 +34,18 @@ const sortedByY = [...points].sort((a, b) => b.y - a.y);
 const labelSet = new Set(sortedByY.slice(0, labelTop).map((p) => p.label));
 points.forEach((p) => { if (p.highlight) labelSet.add(p.label); });
 const fmtX = (v: number) => (v >= 1000 ? `${Math.round(v / 1000)}k` : `${v}`);
+// tooltip-friendly value: keep small decimals, abbreviate big magnitudes
+const trimZeros = (s: string) => s.replace(/0+$/, '').replace(/\.$/, '');
+const fmtVal = (v: number) => {
+  const a = Math.abs(v);
+  if (a >= 1000) return trimZeros((v / 1000).toFixed(1)) + 'k';
+  if (a >= 100) return String(Math.round(v));
+  if (a >= 10) return trimZeros(v.toFixed(1));
+  return trimZeros(v.toFixed(2));
+};
 ---
-<div class="chart-svg">
-  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${yLabel} vs ${xLabel}`}>
+<div class="chart-svg sc-wrap">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${yLabel} vs ${xLabel}`} data-xl={xLabel} data-yl={yLabel}>
     {yvals.map((v) => (
       <g>
         <line x1={m.l} y1={Y(v)} x2={W - m.r} y2={Y(v)} stroke="var(--border)" stroke-width="1" />
@@ -50,13 +59,49 @@ const fmtX = (v: number) => (v >= 1000 ? `${Math.round(v / 1000)}k` : `${v}`);
     <text x={14} y={m.t + ih / 2} text-anchor="middle" class="axis-title" transform={`rotate(-90 14 ${m.t + ih / 2})`}>{yLabel}</text>
 
     {points.map((p) => (
-      <circle cx={X(p.x)} cy={Y(p.y)} r={p.highlight ? 6 : 4}
+      <circle class="sc-pt" cx={X(p.x)} cy={Y(p.y)} r={p.highlight ? 6 : 4}
         fill={colorFor(p.group)} fill-opacity={p.highlight ? 1 : 0.78}
-        stroke={p.highlight ? 'var(--text)' : 'none'} stroke-width="1.5" />
+        stroke={p.highlight ? 'var(--text)' : 'none'} stroke-width="1.5"
+        data-l={p.label} data-x={fmtVal(p.x)} data-y={fmtVal(p.y)} />
     ))}
     {points.filter((p) => labelSet.has(p.label)).map((p) => {
       const right = X(p.x) > W * 0.74;
       return <text x={right ? X(p.x) - 8 : X(p.x) + 8} y={Y(p.y) + 3} text-anchor={right ? 'end' : 'start'} class="pt-label" fill={p.highlight ? 'var(--text)' : 'var(--text-dim)'}>{p.label}</text>;
     })}
   </svg>
+  <div class="sc-tip" hidden></div>
 </div>
+
+<script>
+  for (const wrap of document.querySelectorAll<HTMLElement>('.sc-wrap')) {
+    const svg = wrap.querySelector('svg')!;
+    const tip = wrap.querySelector<HTMLElement>('.sc-tip')!;
+    const xl = svg.dataset.xl ?? '', yl = svg.dataset.yl ?? '';
+    const place = (el: SVGCircleElement) => {
+      tip.innerHTML = `<b>${el.dataset.l}</b><span>${xl}: ${el.dataset.x}</span><span>${yl}: ${el.dataset.y}</span>`;
+      tip.hidden = false;
+      const r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
+      const sx = r.width / vb.width, sy = r.height / vb.height;
+      const px = +el.getAttribute('cx')! * sx, py = +el.getAttribute('cy')! * sy;
+      tip.style.left = Math.min(px + 12, r.width - tip.offsetWidth - 6) + 'px';
+      tip.style.top = Math.max(py - tip.offsetHeight - 8, 2) + 'px';
+    };
+    for (const el of wrap.querySelectorAll<SVGCircleElement>('.sc-pt')) {
+      el.addEventListener('mouseenter', () => place(el));
+      el.addEventListener('mouseleave', () => { tip.hidden = true; });
+    }
+  }
+</script>
+
+<style>
+  .sc-wrap { position: relative; }
+  .sc-pt { cursor: pointer; transition: fill-opacity 0.12s ease; }
+  .sc-pt:hover { fill-opacity: 1; stroke: var(--text); stroke-width: 1.5; }
+  .sc-tip {
+    position: absolute; z-index: 6; pointer-events: none; display: flex; flex-direction: column; gap: 1px;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px;
+    font-size: 12px; color: var(--text); white-space: nowrap; box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  }
+  .sc-tip b { font-size: 12.5px; }
+  .sc-tip span { font-size: 11px; color: var(--text-dim); }
+</style>
