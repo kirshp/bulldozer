@@ -16,12 +16,11 @@ const nav = [
   { id: 'news', label: 'New', href: `${base}/` },
   { id: 'explore', label: 'Top', href: `${base}/explore` },
   { id: 'macro', label: 'Macro', href: `${base}/macro` },
+  { id: 'markets', label: 'Biz', href: `${base}/markets` },
   { id: 'surveys', label: 'Polls', href: `${base}/surveys` },
   { id: 'geo', label: 'Geo', href: `${base}/geo` },
 ];
 const burger = [
-  { id: 'markets', label: '💼 Business', href: `${base}/markets` },
-  { id: 'edu', label: '🎓 Edu', href: `${base}/edu` },
   { id: 'quiz', label: '🎲 Country quiz', href: `${base}/quiz` },
   { id: 'glossary', label: '📖 Glossary', href: `${base}/glossary` },
   { id: 'about', label: 'ℹ️ About', href: `${base}/about` },
@@ -99,7 +98,6 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
             <a href={n.href} class={active === n.id ? 'active' : ''}>{n.label}</a>
           ))}
           <!-- mobile-only tabs: on desktop these live in the burger -->
-          <a href={`${base}/markets`} class={`nav-extra ${active === 'markets' ? 'active' : ''}`}>Biz</a>
           <a href={`${base}/edu`} class={`nav-extra ${active === 'edu' ? 'active' : ''}`}>Edu</a>
         </nav>
         <div class="header-tools">
@@ -215,6 +213,7 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
         <span>BullDozer · marketing analytics &amp; research · built on Madeira Ativa</span>
         <span>
           <a href={`${base}/about`}>About</a> ·
+          <a href={`${base}/dashboards`}>Dashboards</a> ·
           <a href={`${base}/glossary`}>Glossary</a> ·
           <a href={`${base}/quiz`}>Quiz</a> ·
           <a href="mailto:azenha.agent@gmail.com">Contact</a> ·

@@ -10,7 +10,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, writeDataset, round } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, writeDataset, round } from './lib/datasets.mjs';
 
 const GAP = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs', 'BK', 'Opros', 'Inter_survey', 'Gapminder', 'ddf--entities--geo--country.csv');
 const ALPHA2 = join(homedir(), 'Projects', 'bulldozer', 'src', 'data', 'iso-alpha2.json');
@@ -23,7 +23,7 @@ async function geoAndCountries() {
   const a2toa3 = Object.fromEntries(Object.entries(a3a2).map(([a3, a2]) => [a2, a3])); // iso2 -> iso3
   const geo = new Map();
   try {
-    for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+    for (const r of await gapminderRows()) {
       const k = (r.iso3166_1_alpha3 || '').toUpperCase();
       if (k) geo.set(k, { name: r.name, region: REGION_4[r.world_4region] || 'Other' });
     }

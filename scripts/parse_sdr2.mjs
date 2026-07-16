@@ -13,7 +13,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, writeDataset } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, writeDataset } from './lib/datasets.mjs';
 
 const CSV = process.env.SDR2_CSV ||
   '/private/tmp/claude-501/-Users-kirillshpara/025d8691-cfe3-48e0-a982-db40cbef8a62/scratchpad/sdr2_agg.csv';
@@ -28,7 +28,7 @@ async function geo() {
   const a2toa3 = Object.fromEntries(Object.entries(a3a2).map(([a3, a2]) => [a2, a3]));
   const region = new Map();
   try {
-    for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+    for (const r of await gapminderRows()) {
       const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
       if (a3) region.set(a3, REGION_4[r.world_4region] || 'Other');
     }

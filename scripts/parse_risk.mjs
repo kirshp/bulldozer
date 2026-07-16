@@ -11,7 +11,7 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, pickPeriodsN, writeDataset, round } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, pickPeriodsN, writeDataset, round } from './lib/datasets.mjs';
 
 const H = homedir();
 const WRP_CSV = process.env.WRP_CSV ||
@@ -27,7 +27,7 @@ const SRC = (source, url) => ({ source, license: 'CC BY 4.0', url, parsedAt: new
 async function iso3Region() {
   const m = new Map();
   try {
-    for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+    for (const r of await gapminderRows()) {
       const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
       if (a3) m.set(a3, REGION_4[r.world_4region] || 'Other');
     }

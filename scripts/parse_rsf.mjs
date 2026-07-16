@@ -10,14 +10,14 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { parseCsvObjects } from './lib/csv.mjs';
-import { REGION_4, writeDataset, round } from './lib/datasets.mjs';
+import { gapminderRows, REGION_4, writeDataset, round } from './lib/datasets.mjs';
 
 const GAP = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs', 'BK', 'Opros', 'Inter_survey', 'Gapminder', 'ddf--entities--geo--country.csv');
 const YEARS = ['2022', '2023', '2024', '2025', '2026'];
 
 async function iso3Region() {
   const m = new Map();
-  for (const r of parseCsvObjects(await readFile(GAP, 'utf8'))) {
+  for (const r of await gapminderRows()) {
     const a3 = (r.iso3166_1_alpha3 || '').toUpperCase();
     if (a3) m.set(a3, REGION_4[r.world_4region] || 'Other');
   }
