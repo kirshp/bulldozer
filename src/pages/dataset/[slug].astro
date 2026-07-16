@@ -35,7 +35,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const DASH: Record<string, string> = {
   'wvs-': 'wvs', 'afro-': 'afrobarometer', 'wgm-': 'wellcome', 'wrp-': 'wrp',
   'sdr2-': 'sdr2', 'v-dem-': 'vdem', 'whr-': 'whr', 'gapminder-': 'gapminder',
-  'qog-': 'qog', 'dhs-': 'dhs',
+  'qog-': 'qog', 'dhs-': 'dhs', 'lb-': 'latinobarometro',
 };
 const dashFile = Object.entries(DASH).find(([p]) => ds.slug.startsWith(p))?.[1];
 const additive = isAdditive(ds.unit);
@@ -98,7 +98,10 @@ const jsonLd = {
       <p style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
         <a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/data/${ds.slug}.csv`} download>↓ Download CSV</a>
         {dashFile && (
-          <a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/dashboards/${dashFile}.html`} target="_blank" rel="noopener">📊 Detailed results dashboard ↗</a>
+          <>
+            <a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/dashboards/${dashFile}.html`} target="_blank" rel="noopener">📊 Detailed results dashboard ↗</a>
+            <a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/dashboards/${dashFile}.html`} download={`${dashFile}-dashboard.html`}>⤓ Download dashboard</a>
+          </>
         )}
       </p>
     </div>

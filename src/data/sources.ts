@@ -86,7 +86,7 @@ export const sources: Source[] = [
     description: 'Pan-African survey of attitudes on democracy, governance and quality of life. We aggregated Round 9 (39 countries): support for democracy, trust, perceived democracy.' },
   { name: 'Arab Barometer', url: 'https://www.arabbarometer.org/', status: 'live', category: 'Public opinion barometers', match: 'Arab Barometer', dash: 'arabbarometer',
     description: 'Public opinion across the Middle East and North Africa. We aggregated Wave VIII (2023–24, 8 countries): trust, support for democracy, perceived corruption, desire to emigrate, religiosity and economic sentiment.' },
-  { name: 'Latinobarómetro', url: 'https://www.latinobarometro.org/', status: 'live', category: 'Public opinion barometers', match: 'Latinobarómetro',
+  { name: 'Latinobarómetro', url: 'https://www.latinobarometro.org/', status: 'live', category: 'Public opinion barometers', match: 'Latinobarómetro', dash: 'latinobarometro',
     description: 'Annual survey of 18 Latin American countries since 1995. We aggregated the 2024 report: support for and satisfaction with democracy (1995–2024) and interpersonal trust.' },
   { name: 'Reuters Institute Digital News Report', url: 'https://reutersinstitute.politics.ox.ac.uk/digital-news-report', status: 'live', category: 'Public opinion barometers', match: 'Digital News Report',
     description: 'The largest ongoing study of news consumption — ~48 markets yearly. Trust in news, paying for online news, news avoidance and social media as a news source.' },
