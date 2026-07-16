@@ -25,6 +25,7 @@
     "parse:fiw": "node scripts/parse_fiw.mjs",
     "parse:unhcr": "node scripts/parse_unhcr.mjs",
     "parse:cities": "node scripts/parse_eu_cities.mjs",
+    "gen:globe": "node scripts/gen_globe_data.mjs",
     "parse:wvs": "node scripts/parse_wvs.mjs",
     "parse:hofstede": "node scripts/parse_hofstede.mjs",
     "parse:afrobarometer": "node scripts/parse_afrobarometer.mjs",
