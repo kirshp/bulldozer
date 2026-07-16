@@ -1,0 +1,771 @@
+<title>Walkadog — Madeira shelter-dog volunteering</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Walkadog: map of Madeira's animal shelters and a volunteer rota. Mark the days you can walk and care for the dogs, see the island's coverage, get reminders and reports." />
+<meta property="og:title" content="Walkadog — Madeira shelter-dog volunteering" />
+<meta property="og:description" content="Pick the days you can walk shelter dogs across Madeira. Island map, live coverage, calendar reminders." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://shpara.com/walkadog/" />
+<meta property="og:image" content="https://shpara.com/walkadog/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMUU2QjQ1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMEU3Qzg2Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNiIgZmlsbD0idXJsKCNnKSIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTYuMiIgcj0iNS4xIiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iOS40IiBjeT0iOC4yIiByPSIyLjUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIxNC42IiBjeT0iOC4yIiByPSIyLjUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI1LjYiIGN5PSIxMi40IiByPSIyLjIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIxOC40IiBjeT0iMTIuNCIgcj0iMi4yIiBmaWxsPSIjZmZmIi8+PC9zdmc+" />
+<style>
+  :root {
+    --ground:#F4F7F4; --panel:#FFFFFF; --panel-2:#FBFDFB;
+    --ink:#16211B; --muted:#5C6B63; --line:#DBE4DD;
+    --accent:#1E6B45; --accent-ink:#0F4A2E; --accent-soft:#E4F0E8;
+    --sea:#0E7C86;
+    --good:#2F8F5B; --good-soft:#E1F1E6;
+    --warn:#B8791F; --warn-soft:#F6ECD8;
+    --gap:#C6482F; --gap-soft:#F7E2DC;
+    --shadow: 0 1px 2px rgba(20,40,30,.06), 0 8px 24px rgba(20,40,30,.06);
+    --r:14px; --r-sm:9px;
+    --font-display: ui-serif, "Iowan Old Style", Georgia, "Times New Roman", serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground:#0F130F; --panel:#161C17; --panel-2:#12170F;
+      --ink:#E7EEE7; --muted:#93A398; --line:#26302A;
+      --accent:#5BB07C; --accent-ink:#8FCda4; --accent-soft:#19271E;
+      --sea:#3FA9B2;
+      --good:#5BB07C; --good-soft:#16261B;
+      --warn:#D6A24A; --warn-soft:#2A2314;
+      --gap:#E27A63; --gap-soft:#2E1B16;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0F130F; --panel:#161C17; --panel-2:#12170F;
+    --ink:#E7EEE7; --muted:#93A398; --line:#26302A;
+    --accent:#5BB07C; --accent-ink:#8FCda4; --accent-soft:#19271E;
+    --sea:#3FA9B2;
+    --good:#5BB07C; --good-soft:#16261B;
+    --warn:#D6A24A; --warn-soft:#2A2314;
+    --gap:#E27A63; --gap-soft:#2E1B16;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    --ground:#F4F7F4; --panel:#FFFFFF; --panel-2:#FBFDFB;
+    --ink:#16211B; --muted:#5C6B63; --line:#DBE4DD;
+    --accent:#1E6B45; --accent-ink:#0F4A2E; --accent-soft:#E4F0E8;
+    --sea:#0E7C86;
+    --good:#2F8F5B; --good-soft:#E1F1E6;
+    --warn:#B8791F; --warn-soft:#F6ECD8;
+    --gap:#C6482F; --gap-soft:#F7E2DC;
+    --shadow: 0 1px 2px rgba(20,40,30,.06), 0 8px 24px rgba(20,40,30,.06);
+  }
+
+  * { box-sizing:border-box; }
+  html,body{ margin:0; overflow-x:hidden; max-width:100%; }
+  body{
+    font-family:var(--font-body);
+    background:var(--ground); color:var(--ink);
+    line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; padding:22px clamp(14px,3vw,30px) 64px; }
+
+  /* header */
+  header.top{ display:flex; flex-wrap:wrap; align-items:flex-end; gap:16px 22px; margin-bottom:20px; }
+  .brand{ display:flex; align-items:center; gap:13px; min-width:0; }
+  .brand > div{ min-width:0; }
+  .mark{ width:44px; height:44px; flex:0 0 auto; border-radius:12px;
+    background:linear-gradient(150deg,var(--accent),var(--sea)); display:grid; place-items:center; box-shadow:var(--shadow); }
+  .mark svg{ width:26px; height:26px; }
+  h1{ font-family:var(--font-display); font-weight:600; font-size:clamp(1.35rem,3vw,1.9rem);
+    letter-spacing:-.01em; margin:0; line-height:1.05; }
+  .tagline{ color:var(--muted); font-size:.86rem; margin-top:3px; }
+  .controls{ margin-left:auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .who{ display:flex; align-items:center; gap:7px; background:var(--panel); border:1px solid var(--line);
+    border-radius:999px; padding:5px 6px 5px 13px; box-shadow:var(--shadow); }
+  .who label{ font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  .who input{ border:0; background:transparent; color:var(--ink); font:inherit; font-size:.9rem; width:9.5ch; padding:3px 6px;
+    border-radius:7px; }
+  .who input:focus{ outline:2px solid var(--accent); }
+  .seg{ display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:3px; box-shadow:var(--shadow); }
+  .seg button{ border:0; background:transparent; color:var(--muted); font:inherit; font-size:.78rem; font-weight:600;
+    padding:5px 10px; border-radius:999px; cursor:pointer; }
+  .seg button[aria-pressed="true"]{ background:var(--accent-soft); color:var(--accent-ink); }
+  .icon-btn{ width:38px; height:36px; border-radius:999px; border:1px solid var(--line); background:var(--panel);
+    color:var(--ink); cursor:pointer; box-shadow:var(--shadow); font-size:1rem; display:grid; place-items:center; }
+  .icon-btn:hover{ border-color:var(--accent); }
+
+  /* summary tiles */
+  .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:12px; margin-bottom:20px; }
+  .tile{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:14px 16px; box-shadow:var(--shadow);
+    position:relative; overflow:hidden; }
+  .tile .k{ font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
+  .tile .v{ font-family:var(--font-display); font-size:1.85rem; font-weight:600; letter-spacing:-.02em; margin-top:4px;
+    font-variant-numeric:tabular-nums; }
+  .tile .s{ font-size:.78rem; color:var(--muted); margin-top:1px; }
+  .tile .rail{ position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--accent); }
+  .tile.good .rail{ background:var(--good); } .tile.warn .rail{ background:var(--warn); } .tile.gap .rail{ background:var(--gap); }
+
+  /* main layout */
+  .grid-main{ display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:18px; align-items:start; }
+  .grid-main > *{ min-width:0; }
+  @media (max-width:880px){ .grid-main{ grid-template-columns:1fr; } }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); }
+  .card h2{ font-family:var(--font-display); font-weight:600; font-size:1.02rem; margin:0; padding:15px 18px 0; letter-spacing:-.01em; }
+  .card .sub{ color:var(--muted); font-size:.8rem; padding:2px 18px 0; }
+
+  /* map */
+  .map-wrap{ padding:12px 14px 16px; position:relative; }
+  .map-pop{ position:absolute; z-index:6; width:212px; background:var(--panel); border:1px solid var(--line);
+    border-radius:12px; box-shadow:var(--shadow); padding:11px 12px 12px; }
+  .map-pop[hidden]{ display:none; }
+  .map-pop::after{ content:""; position:absolute; left:50%; width:12px; height:12px; background:var(--panel); }
+  .map-pop:not(.below)::after{ bottom:-7px; transform:translateX(-50%) rotate(45deg); border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .map-pop.below::after{ top:-7px; transform:translateX(-50%) rotate(45deg); border-left:1px solid var(--line); border-top:1px solid var(--line); }
+  .map-pop .pn{ font-family:var(--font-display); font-weight:600; font-size:.95rem; letter-spacing:-.01em; padding-right:14px; line-height:1.2; }
+  .map-pop .pc{ color:var(--muted); font-size:.76rem; margin:3px 0 7px; }
+  .map-pop .pbar{ height:7px; border-radius:5px; background:var(--line); overflow:hidden; }
+  .map-pop .pbar i{ display:block; height:100%; border-radius:5px; }
+  .map-pop .prow{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:.74rem; color:var(--muted); margin:7px 0 9px; }
+  .map-pop .plink{ color:var(--accent-ink); text-decoration:none; font-weight:600; white-space:nowrap; }
+  .map-pop .pclose{ position:absolute; top:4px; right:7px; border:0; background:transparent; color:var(--muted); font-size:1.05rem; line-height:1; cursor:pointer; }
+  .map-pop .btn.pbook{ width:100%; justify-content:center; padding:7px 10px; font-size:.8rem; }
+  svg.island{ width:100%; height:auto; display:block; }
+  .isle-fill{ fill:var(--accent-soft); stroke:var(--accent); stroke-width:2.4; }
+  .isle-ridge{ fill:none; stroke:var(--accent); stroke-width:1.4; opacity:.32; stroke-linecap:round; }
+  .isle-label{ fill:var(--muted); font-size:12px; font-family:var(--font-body); opacity:.7; }
+  .pin{ cursor:pointer; }
+  .pin circle.dot{ stroke:var(--panel); stroke-width:2; transition:r .12s ease; }
+  .pin:hover circle.dot{ r:11; }
+  .pin.sel circle.halo{ opacity:1; }
+  .pin circle.halo{ fill:none; stroke:var(--ink); stroke-width:2; opacity:0; }
+  .legend{ display:flex; flex-wrap:wrap; gap:12px 18px; padding:4px 18px 14px; font-size:.76rem; color:var(--muted); }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .swatch{ width:12px; height:12px; border-radius:4px; display:inline-block; }
+
+  /* shelter info panel */
+  .info{ padding:6px 18px 18px; }
+  .info .name{ font-family:var(--font-display); font-size:1.12rem; font-weight:600; letter-spacing:-.01em; }
+  .info .meta{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 10px; }
+  .chip{ font-size:.74rem; padding:3px 9px; border-radius:999px; background:var(--accent-soft); color:var(--accent-ink);
+    border:1px solid transparent; }
+  .chip.sea{ background:transparent; border-color:var(--line); color:var(--muted); }
+  .info p.desc{ font-size:.88rem; color:var(--ink); margin:0 0 12px; }
+  .upcoming{ display:flex; flex-direction:column; gap:5px; max-height:352px; overflow-y:auto; padding-right:2px; }
+  .up-row{ display:flex; align-items:center; gap:10px; font-size:.85rem; width:100%; text-align:left; font-family:inherit;
+    background:var(--panel-2); border:1px solid var(--line); border-radius:9px; padding:7px 10px; cursor:pointer; color:var(--ink); }
+  .up-row:hover{ border-color:var(--accent); }
+  .up-row.mine{ background:var(--accent-soft); border-color:var(--accent); }
+  .up-tick{ width:20px; height:20px; flex:0 0 auto; border-radius:6px; display:grid; place-items:center; font-size:.82rem;
+    background:var(--line); color:var(--muted); }
+  .up-row.mine .up-tick{ background:var(--accent); color:#fff; }
+  .up-date{ width:96px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .up-bar{ flex:1; height:8px; border-radius:6px; background:var(--line); overflow:hidden; }
+  .up-bar i{ display:block; height:100%; border-radius:6px; }
+  .up-n{ width:58px; text-align:right; font-variant-numeric:tabular-nums; font-size:.8rem; color:var(--muted); }
+  .btn{ display:inline-flex; align-items:center; gap:7px; border:1px solid var(--accent); background:var(--accent); color:#fff;
+    font:inherit; font-weight:600; font-size:.86rem; padding:9px 15px; border-radius:10px; cursor:pointer; }
+  .btn:hover{ filter:brightness(1.06); }
+  .btn.ghost{ background:transparent; color:var(--accent-ink); }
+  .btn-row{ display:flex; flex-wrap:wrap; gap:9px; margin-top:14px; }
+
+  /* schedule grid */
+  .sched-scroll{ overflow-x:auto; padding:6px 6px 14px; }
+  table.sched{ border-collapse:separate; border-spacing:0; width:100%; }
+  table.sched th, table.sched td{ padding:0; }
+  .sh-name{ position:sticky; left:0; z-index:2; background:var(--panel); text-align:left; padding:8px 12px 8px 12px;
+    font-size:.82rem; font-weight:600; white-space:nowrap; border-bottom:1px solid var(--line); cursor:pointer; min-width:172px; }
+  .sh-name .council{ display:block; font-weight:400; color:var(--muted); font-size:.72rem; }
+  tr.selrow .sh-name{ box-shadow:inset 3px 0 0 var(--accent); }
+  .dhead{ padding:7px 4px !important; text-align:center; font-size:.68rem; color:var(--muted); border-bottom:1px solid var(--line);
+    font-weight:600; min-width:38px; }
+  .dhead.we{ color:var(--sea); }
+  .dhead small{ display:block; font-weight:400; font-size:.62rem; opacity:.8; }
+  .cell{ text-align:center; }
+  .cell button{ width:100%; min-width:38px; height:38px; border:0; border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--panel-2); font:inherit; font-size:.82rem; font-variant-numeric:tabular-nums; cursor:pointer; color:var(--muted);
+    position:relative; transition:background .1s; }
+  .cell button:hover{ outline:2px solid var(--accent); outline-offset:-2px; z-index:1; }
+  .cell button.c0{ background:var(--gap-soft); color:var(--gap); }
+  .cell button.cthin{ background:var(--warn-soft); color:var(--warn); }
+  .cell button.cfull{ background:var(--good-soft); color:var(--good); font-weight:700; }
+  .cell button.mine::after{ content:""; position:absolute; inset:4px; border:2px solid var(--accent); border-radius:7px; pointer-events:none; }
+  .cell button.we{ box-shadow:inset 0 0 0 999px rgba(14,124,134,.04); }
+
+  /* report card */
+  .report{ margin-top:18px; }
+  .rep-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; padding:8px 18px 18px; }
+  @media (max-width:620px){ .rep-grid{ grid-template-columns:1fr; } }
+  .rep-h{ font-size:.74rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin:6px 0 8px; }
+  .gap-list, .vol-list{ display:flex; flex-direction:column; gap:5px; max-height:230px; overflow-y:auto; }
+  .gap-item{ display:flex; align-items:center; gap:8px; font-size:.83rem; padding:5px 8px; border-radius:8px; background:var(--gap-soft); }
+  .gap-item .gd{ color:var(--gap); font-weight:600; }
+  .gap-item.ok{ background:var(--good-soft); color:var(--good); }
+  .vol-item{ display:flex; align-items:center; gap:10px; font-size:.85rem; padding:4px 2px; }
+  .vol-item .vn{ flex:1; }
+  .vol-item .vbar{ height:8px; border-radius:6px; background:var(--accent); }
+  .vol-item .vc{ width:28px; text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .vol-item.you .vn{ color:var(--accent-ink); font-weight:600; }
+
+  .tabs{ display:flex; gap:2px; margin-bottom:20px; border-bottom:1px solid var(--line); overflow-x:auto; scrollbar-width:none; }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .tabs button{ border:0; background:transparent; color:var(--muted); font:inherit; font-weight:600; font-size:.94rem;
+    padding:11px 15px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; border-radius:8px 8px 0 0; }
+  .tabs button:hover{ color:var(--ink); }
+  .tabs button[aria-selected="true"]{ color:var(--accent-ink); border-bottom-color:var(--accent); }
+  .panel[hidden]{ display:none; }
+  .cov-list{ display:flex; flex-direction:column; gap:9px; padding:10px 18px 18px; }
+  .cov-row{ display:flex; align-items:center; gap:12px; font-size:.86rem; }
+  .cov-row .cn{ width:200px; flex:0 0 auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cov-row .cbar{ flex:1; height:9px; border-radius:6px; background:var(--line); overflow:hidden; }
+  .cov-row .cbar i{ display:block; height:100%; border-radius:6px; }
+  .cov-row .cp{ width:42px; text-align:right; font-variant-numeric:tabular-nums; color:var(--muted); }
+  .dir-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(238px,1fr)); gap:14px; }
+  .dir-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow);
+    padding:15px 16px; display:flex; flex-direction:column; gap:9px; }
+  .dir-card .dn{ font-family:var(--font-display); font-weight:600; font-size:1.02rem; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; }
+  .dir-card .dot-s{ width:9px; height:9px; border-radius:999px; flex:0 0 auto; }
+  .dir-card .dmeta{ display:flex; flex-wrap:wrap; gap:6px; }
+  .dir-card p{ margin:0; font-size:.85rem; color:var(--muted); }
+  .dir-card .dbar{ height:8px; border-radius:6px; background:var(--line); overflow:hidden; margin-top:2px; }
+  .dir-card .dbar i{ display:block; height:100%; border-radius:6px; }
+  .dir-card .drow{ display:flex; align-items:center; justify-content:space-between; font-size:.79rem; color:var(--muted); }
+  .dir-card .btn{ padding:7px 12px; font-size:.82rem; }
+  .dir-card .drow2{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .dir-card .dlink{ color:var(--accent-ink); text-decoration:none; font-weight:600; font-size:.8rem; white-space:nowrap; }
+  @media (max-width:560px){
+    .wrap{ padding-top:16px; }
+    .cov-row .cn{ width:118px; }
+    .tabs button{ font-size:.9rem; padding:10px 13px; }
+    header.top{ flex-direction:column; align-items:stretch; gap:12px; }
+    .controls{ margin-left:0; justify-content:space-between; width:100%; }
+    .who{ flex:1 1 100%; }
+    .who input{ width:100%; }
+    h1{ font-size:1.5rem; }
+    .tagline{ font-size:.82rem; }
+    .tiles{ grid-template-columns:repeat(2,1fr); }
+    .tile .v{ font-size:1.5rem; }
+    .card h2{ font-size:.98rem; }
+    .sh-name{ min-width:130px; }
+    .sh-name .council{ display:none; }
+    .cell button{ min-width:34px; height:36px; }
+  }
+  footer.note{ margin-top:26px; font-size:.76rem; color:var(--muted); line-height:1.55; }
+  footer.note strong{ color:var(--ink); font-weight:600; }
+  .toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--ground);
+    padding:11px 18px; border-radius:11px; font-size:.86rem; font-weight:500; box-shadow:var(--shadow); opacity:0; pointer-events:none;
+    transition:opacity .2s, transform .2s; z-index:50; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto; }
+  .toast .undo{ margin-left:12px; background:none; border:0; color:inherit; font:inherit; font-weight:700; text-decoration:underline; cursor:pointer; padding:0; }
+  .dhead.today{ color:var(--accent-ink); box-shadow:inset 0 -3px 0 var(--accent); }
+  .up-date.today{ color:var(--accent-ink); font-weight:700; }
+  .demo-note{ color:var(--muted); font-size:.75rem; font-style:italic; margin-top:8px; }
+  @media (prefers-reduced-motion:reduce){ *{ transition:none !important; } }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="16.2" r="5.1"/><circle cx="9.4" cy="8.2" r="2.5"/><circle cx="14.6" cy="8.2" r="2.5"/><circle cx="5.6" cy="12.4" r="2.2"/><circle cx="18.4" cy="12.4" r="2.2"/></svg>
+      </div>
+      <div>
+        <h1>Walkadog</h1>
+        <div class="tagline" data-i="tagline">Passeia e cuida dos cães dos refúgios da Madeira — marca os teus dias, vê a cobertura da ilha.</div>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="who">
+        <label data-i="you">Sou</label>
+        <input id="me" maxlength="18" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="seg" role="group" aria-label="Idioma">
+        <button data-lang="pt" aria-pressed="false">PT</button>
+        <button data-lang="en" aria-pressed="true">EN</button>
+      </div>
+      <button class="icon-btn" id="theme" title="Tema" aria-label="Tema">◐</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Secções">
+    <button role="tab" data-tab="mapa" aria-selected="true" data-i="tabMapa">Mapa</button>
+    <button role="tab" data-tab="agenda" aria-selected="false" data-i="tabAgenda">Agenda</button>
+    <button role="tab" data-tab="stats" aria-selected="false" data-i="tabStats">Estatística</button>
+    <button role="tab" data-tab="refugios" aria-selected="false" data-i="tabRefugios">Refúgios</button>
+  </nav>
+
+  <section class="panel" id="panel-mapa" role="tabpanel">
+    <div class="grid-main">
+      <div class="col-left">
+        <div class="card">
+          <h2 data-i="mapTitle">Mapa da ilha</h2>
+          <div class="sub" data-i="mapSub">Toca num refúgio para ver os detalhes e a agenda.</div>
+          <div class="map-wrap" id="mapWrap"><div id="mapSvgHost"></div><div class="map-pop" id="mapPop" hidden></div></div>
+          <div class="legend">
+            <span><i class="swatch" style="background:var(--gap)"></i><span data-i="lgGap">Sem voluntários</span></span>
+            <span><i class="swatch" style="background:var(--warn)"></i><span data-i="lgThin">Cobertura fraca</span></span>
+            <span><i class="swatch" style="background:var(--good)"></i><span data-i="lgFull">Coberto</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <h2 id="infoTitle" data-i="infoTitle">Detalhes do refúgio</h2>
+          <div class="info" id="info"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-agenda" role="tabpanel" hidden>
+    <div class="card">
+      <h2 data-i="schedTitle">Agenda — próximos 21 dias</h2>
+      <div class="sub" data-i="schedSub">Clica numa célula para marcar (ou desmarcar) o teu turno.</div>
+      <div class="sched-scroll"><table class="sched" id="sched"></table></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-stats" role="tabpanel" hidden>
+    <section class="tiles" id="tiles" aria-live="polite"></section>
+    <div class="card report">
+      <h2 data-i="repTitle">Relatório</h2>
+      <div class="rep-grid">
+        <div>
+          <div class="rep-h" data-i="repGaps">Dias por cobrir</div>
+          <div class="gap-list" id="gapList"></div>
+        </div>
+        <div>
+          <div class="rep-h" data-i="repVols">Voluntários</div>
+          <div class="vol-list" id="volList"></div>
+        </div>
+      </div>
+      <div class="btn-row" style="padding:0 18px 18px;">
+        <button class="btn" id="ics">📅 <span data-i="btnIcs">Exportar os meus turnos (.ics)</span></button>
+        <button class="btn ghost" id="reset" data-i="btnReset">Repor demonstração</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:18px;">
+      <h2 data-i="repShelters">Cobertura por refúgio</h2>
+      <div class="cov-list" id="covList"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-refugios" role="tabpanel" hidden>
+    <div class="dir-grid" id="dir"></div>
+  </section>
+
+  <footer class="note">
+    <strong data-i="noteH">Protótipo.</strong>
+    <span data-i="noteBody">Os dados de refúgios (localidade, foco, necessidade) são exemplos para demonstração e devem ser confirmados com cada associação. As marcações ficam guardadas apenas neste navegador (localStorage) — a versão partilhada, com conta comum e lembretes automáticos, precisa de um backend. As camadas de leitura/gravação de dados estão isoladas para essa ligação futura.</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- data model (swap points for a shared backend) ------------------ */
+const SHELTERS = [
+  { id:"spad",        name:"SPAD Funchal",                       council:"Funchal · Santa Luzia",             coast:"S", focus:{pt:"Cães e gatos · único abrigo licenciado da ilha",en:"Dogs & cats · island's only licensed shelter"}, physical:true,  need:4, lat:32.6554, lng:-16.9009, url:"https://spad.pt/" },
+  { id:"vascogil",    name:"Canil do Funchal (Vasco Gil)",       council:"Funchal · Santo António",           coast:"S", focus:{pt:"Canil municipal / CRO · cães e gatos",en:"Municipal shelter (CRO) · dogs & cats"}, physical:true,  need:4, lat:32.6916, lng:-16.9489, url:"https://canil.funchal.pt/" },
+  { id:"machico",     name:"Abrigo Municipal de Machico",        council:"Machico",                           coast:"E", focus:{pt:"Abrigo municipal · 80+ cães",en:"Municipal shelter · 80+ dogs"}, physical:true,  need:3, lat:32.7289, lng:-16.7734, url:"https://abrigomunicipal.cm-machico.pt/" },
+  { id:"camaralobos", name:"Canil de Câmara de Lobos",           council:"Câmara de Lobos",                   coast:"S", focus:{pt:"Canil municipal · tem voluntariado",en:"Municipal shelter · has volunteering"}, physical:true,  need:3, lat:32.6486, lng:-16.9785, url:"https://causaanimal.cm-camaradelobos.pt/" },
+  { id:"amaw",        name:"AMAW – Madeira Animal Welfare",      council:"Santa Cruz · Sto António da Serra", coast:"E", focus:{pt:"Esterilização de cães e gatos errantes",en:"Spay/neuter of stray dogs & cats"}, physical:false, need:1, lat:32.7163, lng:-16.8361, url:"https://www.madeiraanimalwelfare.org/" },
+  { id:"amais",       name:"AMAIS Madeira",                      council:"Funchal · São Roque",               coast:"S", focus:{pt:"Cães e gatos · adoção e resgate",en:"Dogs & cats · adoption & rescue"}, physical:false, need:2, lat:32.6948, lng:-16.9238, url:"https://www.facebook.com/AMAISmadeira/" },
+  { id:"refugio",     name:"O Nosso Refúgio",                    council:"Funchal",                           coast:"S", focus:{pt:"Rede de famílias de acolhimento",en:"Foster-family network"}, physical:false, need:1, lat:32.6485, lng:-16.9080, url:"https://nossorefugio.ong.pt/" },
+  { id:"animad",      name:"ANIMAD",                             council:"Santa Cruz · Caniço",               coast:"S", focus:{pt:"Cães e gatos · acolhimento e adoção",en:"Dogs & cats · fostering & adoption"}, physical:false, need:2, lat:32.6524, lng:-16.8410, url:"https://www.facebook.com/associacao.animad/" },
+  { id:"pata",        name:"PATA Madeira",                       council:"Santa Cruz · Camacha",              coast:"S", focus:{pt:"Cães e gatos · colónias e acolhimento",en:"Dogs & cats · colonies & fostering"}, physical:false, need:2, lat:32.6794, lng:-16.8449, url:"https://www.facebook.com/patamadeira/" },
+  { id:"vamosla",     name:"Vamos Lá Madeira",                   council:"Funchal · São Roque",               coast:"S", focus:{pt:"Colónias (CED) e adoção responsável",en:"TNR colonies & responsible adoption"}, physical:false, need:1, lat:32.7050, lng:-16.9450, url:"https://www.facebook.com/vamoslamadeira/" },
+  { id:"santana",     name:"Abrigo em Santana (a confirmar)",    council:"Santana",                           coast:"N", focus:{pt:"Abrigo semiprivado · a confirmar",en:"Semi-private shelter · to confirm"}, physical:true,  need:2, lat:32.7990, lng:-16.8810, url:null },
+  { id:"saovicente",  name:"Abrigo em São Vicente (a confirmar)",council:"São Vicente",                       coast:"N", focus:{pt:"Costa norte · a confirmar",en:"North coast · to confirm"}, physical:true,  need:2, lat:32.7950, lng:-16.9830, url:null },
+];
+// map projection: real (lat,lng) → SVG coords (equirectangular; from OSM coastline of Ilha da Madeira, relation 1715038)
+const GEO = { pad:26, minLng:-17.2659253, maxLat:32.8706178, cosMid:0.8410224955845828, scale:1920.9812581235947, W:1000, H:509 };
+const projX = lng => GEO.pad + (lng-GEO.minLng)*GEO.cosMid*GEO.scale;
+const projY = lat => GEO.pad + (GEO.maxLat-lat)*GEO.scale;
+SHELTERS.forEach(s=>{ s.x=Math.round(projX(s.lng)); s.y=Math.round(projY(s.lat)); });
+
+const DAYS = 21;
+const SHIFT_START = 9, SHIFT_END = 13; // horário de turno para os lembretes
+const STORE_KEY = "walkadog-v1";
+
+/* storage layer — replace loadState/saveState with API calls for a shared backend */
+const DATA_VERSION = 2; // bump when shelter ids / key format change; stale data is reseeded (name kept)
+function loadState(){
+  try {
+    const raw = localStorage.getItem(STORE_KEY); if(!raw) return null;
+    const s = JSON.parse(raw);
+    if(s && s.v === DATA_VERSION) return s;
+    return { v: DATA_VERSION, me: (s && s.me) || "", demo: true, signups: seed() };
+  } catch(e){}
+  return null;
+}
+function saveState(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e){} }
+
+/* ---------- dates -------------------------------------------------------- */
+function isoOf(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+const today = (()=>{ const d=new Date(); d.setHours(0,0,0,0); return d; })();
+const dates = Array.from({length:DAYS}, (_,i)=>{ const d=new Date(today); d.setDate(d.getDate()+i); return d; });
+const dateKeys = dates.map(isoOf);
+function isWeekend(d){ const w=d.getDay(); return w===0||w===6; }
+function slotKey(sid, iso){ return sid+"|"+iso; }
+
+/* ---------- seed demo signups (first run only) --------------------------- */
+function seed(){
+  const S = {}; const put=(sid,off,names)=>{ S[slotKey(sid,dateKeys[off])] = names.slice(); };
+  put("spad",0,["Ana","João","Sofia"]);        put("spad",1,["Ana","Beatriz"]);   put("spad",3,["Miguel"]);
+  put("spad",6,["Sofia","João","Ana","Rui"]);  put("spad",7,["Beatriz"]);
+  put("vascogil",0,["Rui","Sofia"]);           put("vascogil",2,["Ana"]);         put("vascogil",5,["João","Miguel","Sofia"]);
+  put("vascogil",4,["Ana","Sofia"]);
+  put("machico",1,["Miguel","Rui"]);           put("machico",4,["Ana","Sofia","João"]); put("machico",8,["Rui"]);
+  put("camaralobos",0,["Beatriz","Sofia"]);    put("camaralobos",3,["Ana"]);      put("camaralobos",9,["Rui","Miguel"]);
+  put("amais",2,["João"]);                     put("amais",6,["Beatriz"]);
+  put("animad",2,["Sofia"]);                   put("animad",7,["Rui","Miguel"]);
+  put("pata",1,["Miguel"]);                    put("pata",5,["Ana","Rui"]);
+  put("amaw",4,["João"]);
+  put("refugio",3,["Beatriz"]);
+  put("santana",6,["Sofia"]);
+  put("saovicente",8,["Ana"]);
+  return S;
+}
+
+let state = loadState() || { v: DATA_VERSION, me:"", demo: true, signups: seed() };
+
+/* ---------- i18n --------------------------------------------------------- */
+const I18N = {
+  pt:{ tagline:"Passeia e cuida dos cães dos refúgios da Madeira — marca os teus dias, vê a cobertura da ilha.", you:"Sou",
+    mapTitle:"Mapa da ilha", mapSub:"Toca num refúgio para ver os detalhes e a agenda.",
+    lgGap:"Sem voluntários", lgThin:"Cobertura fraca", lgFull:"Coberto",
+    infoTitle:"Detalhes do refúgio", schedTitle:"Agenda — próximos 21 dias",
+    schedSub:"Clica numa célula para marcar (ou desmarcar) o teu turno.",
+    repTitle:"Relatório", repGaps:"Dias por cobrir", repVols:"Voluntários",
+    btnIcs:"Exportar os meus turnos (.ics)", btnReset:"Repor demonstração",
+    noteH:"Protótipo.",
+    noteBody:"Os refúgios e as localizações são reais (fontes públicas: sites oficiais, câmaras municipais, MAPESS). A necessidade diária de voluntários é ilustrativa, e várias associações funcionam por famílias de acolhimento/colónias, sem abrigo físico próprio — os dois refúgios do norte (Santana, São Vicente) estão por confirmar. Existe ainda a AAMA no Porto Santo (ilha separada, fora do mapa). As marcações ficam guardadas apenas neste navegador (localStorage); a versão partilhada, com conta comum e lembretes automáticos, precisa de um backend.",
+    tCovered:"Cobertura", tGaps:"Dias por cobrir", tMine:"Os meus turnos", tVols:"Voluntários", tSlots:"Turnos marcados", of:"de",
+    ofNeed:"do necessário", perDay:"por dia", need:"Precisa de", vols:"voluntários", noGaps:"Tudo coberto 🎉",
+    pickShelter:"Escolhe um refúgio no mapa.", added:"Turno marcado", removed:"Turno removido",
+    setName:"Escreve o teu nome primeiro.", icsEmpty:"Ainda não tens turnos marcados.", icsOk:"Ficheiro de calendário criado.",
+    reset:"Demonstração reposta.", coast:{N:"Costa norte",S:"Costa sul",E:"Leste",W:"Oeste"}, upcoming:"Próximos dias", yourName:"o teu nome", tapToBook:"toca para marcar",
+    tabMapa:"Mapa", tabAgenda:"Agenda", tabStats:"Estatística", tabRefugios:"Refúgios", repShelters:"Cobertura por refúgio", seeRota:"Ver agenda", covered:"coberto",
+    siteLink:"Site", physicalChip:"Abrigo físico", fosterChip:"Rede de acolhimento",
+    undo:"Anular", today:"Hoje", demoTag:"dados de exemplo — repõe ou edita à vontade" },
+  en:{ tagline:"Walk and care for Madeira's shelter dogs — mark your days, see the island's coverage.", you:"I am",
+    mapTitle:"Island map", mapSub:"Tap a shelter to see details and its rota.",
+    lgGap:"No volunteers", lgThin:"Thin coverage", lgFull:"Covered",
+    infoTitle:"Shelter details", schedTitle:"Rota — next 21 days",
+    schedSub:"Click a cell to add (or remove) your shift.",
+    repTitle:"Report", repGaps:"Days to cover", repVols:"Volunteers",
+    btnIcs:"Export my shifts (.ics)", btnReset:"Reset demo",
+    noteH:"Prototype.",
+    noteBody:"Shelters and locations are real (public sources: official sites, town councils, MAPESS). The daily volunteer need is illustrative, and several associations run on foster families / colonies without their own physical shelter — the two north-coast shelters (Santana, São Vicente) are unconfirmed. There is also AAMA on Porto Santo (a separate island, off this map). Sign-ups are saved only in this browser (localStorage); the shared version, with a common account and automatic reminders, needs a backend.",
+    tCovered:"Coverage", tGaps:"Days to cover", tMine:"My shifts", tVols:"Volunteers", tSlots:"Shifts booked", of:"of",
+    ofNeed:"of target", perDay:"per day", need:"Needs", vols:"volunteers", noGaps:"All covered 🎉",
+    pickShelter:"Pick a shelter on the map.", added:"Shift added", removed:"Shift removed",
+    setName:"Type your name first.", icsEmpty:"You have no shifts yet.", icsOk:"Calendar file created.",
+    reset:"Demo reset.", coast:{N:"North coast",S:"South coast",E:"East",W:"West"}, upcoming:"Upcoming days", yourName:"your name", tapToBook:"tap to book",
+    tabMapa:"Map", tabAgenda:"Rota", tabStats:"Stats", tabRefugios:"Shelters", repShelters:"Coverage by shelter", seeRota:"View rota", covered:"covered",
+    siteLink:"Site", physicalChip:"Physical shelter", fosterChip:"Foster network",
+    undo:"Undo", today:"Today", demoTag:"sample data — reset or edit freely" },
+};
+const LOCALE = { pt:"pt-PT", en:"en-GB" };
+let lang = "en";
+const t = k => I18N[lang][k];
+
+/* ---------- helpers ------------------------------------------------------ */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function signupsFor(sid, iso){ return state.signups[slotKey(sid,iso)] || []; }
+function coverClass(n, need){ if(n===0) return "c0"; if(n<need) return "cthin"; return "cfull"; }
+function fmtDate(d, opts){ return new Intl.DateTimeFormat(LOCALE[lang], opts).format(d); }
+
+/* ---------- rendering ---------------------------------------------------- */
+let selected = SHELTERS[0].id;
+let currentTab = "mapa";
+let popOpenId = null;
+const TABS = ["mapa","agenda","stats","refugios"];
+const $ = s => document.querySelector(s);
+
+function switchTab(name){
+  if(!TABS.includes(name)) name="mapa";
+  currentTab=name;
+  if(name!=="mapa") closePop();
+  document.querySelectorAll("#tabs button").forEach(b=> b.setAttribute("aria-selected", b.getAttribute("data-tab")===name?"true":"false"));
+  TABS.forEach(tb=>{ const p=document.getElementById("panel-"+tb); if(p) p.hidden=(tb!==name); });
+  if(("#"+name)!==location.hash){ try{ history.replaceState(null,"","#"+name); }catch(e){} }
+}
+
+function render(){
+  applyI18n();
+  renderTiles();
+  renderMap();
+  renderSchedule();
+  renderInfo();
+  renderReport();
+  renderCoverage();
+  renderShelters();
+  saveState();
+}
+
+function applyI18n(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i]").forEach(el=>{ const k=el.getAttribute("data-i"); if(I18N[lang][k]!==undefined) el.textContent=I18N[lang][k]; });
+  $("#me").placeholder = t("yourName");
+}
+
+function renderTiles(){
+  let totalNeed=0, totalHave=0, gapDays=0, slots=0;
+  const vols=new Set();
+  for(const s of SHELTERS){ for(const iso of dateKeys){
+    const n=signupsFor(s.id,iso).length; totalNeed+=s.need; totalHave+=Math.min(n,s.need);
+    if(n===0) gapDays++; slots+=n; signupsFor(s.id,iso).forEach(v=>vols.add(v));
+  }}
+  const mine = countMine();
+  const cov = totalNeed? Math.round(totalHave/totalNeed*100):0;
+  const covCls = cov>=80?"good":cov>=50?"warn":"gap";
+  const tiles=[
+    {cls:covCls, k:t("tCovered"), v:cov+"%", s:t("ofNeed")},
+    {cls:"gap",  k:t("tGaps"),    v:gapDays, s:t("of")+" "+(SHELTERS.length*DAYS)},
+    {cls:"",     k:t("tMine"),    v:mine,   s:state.me? esc(state.me) : "—"},
+    {cls:"",     k:t("tVols"),    v:vols.size, s:""},
+  ];
+  $("#tiles").innerHTML = tiles.map(x=>`<div class="tile ${x.cls}"><div class="rail"></div><div class="k">${x.k}</div><div class="v">${x.v}</div><div class="s">${x.s}</div></div>`).join("");
+}
+
+function shelterCover(sid){ // over the whole window: fraction of need met
+  let need=0, have=0; const s=SHELTERS.find(x=>x.id===sid);
+  for(const iso of dateKeys){ const n=signupsFor(sid,iso).length; need+=s.need; have+=Math.min(n,s.need); }
+  return need? have/need : 0;
+}
+function shelterState(sid){ // worst-ish signal for the pin colour
+  let anyGap=false, anyThin=false, s=SHELTERS.find(x=>x.id===sid);
+  for(const iso of dateKeys){ const n=signupsFor(sid,iso).length; if(n===0) anyGap=true; else if(n<s.need) anyThin=true; }
+  return anyGap?"gap":anyThin?"thin":"full";
+}
+
+function renderMap(){
+  const colorOf = { gap:"var(--gap)", thin:"var(--warn)", full:"var(--good)" };
+  const pins = SHELTERS.map(s=>{
+    const st = shelterState(s.id); const c = colorOf[st];
+    const sel = s.id===selected ? " sel":"";
+    return `<g class="pin${sel}" data-id="${s.id}" tabindex="0" role="button" aria-label="${s.name}">
+      <circle class="halo" cx="${s.x}" cy="${s.y}" r="15"></circle>
+      <circle class="dot" cx="${s.x}" cy="${s.y}" r="8.5" fill="${c}"></circle>
+    </g>`;
+  }).join("");
+  $("#mapSvgHost").innerHTML = `
+  <svg class="island" viewBox="0 0 1000 509" role="img" aria-label="Mapa da Ilha da Madeira">
+    <path class="isle-fill" d="M26.0 134.7 L31.3 144.2 L38.1 147.8 L49.6 158.0 L56.0 174.1 L57.6 185.6 L62.8 196.8 L60.5 208.6 L59.1 209.4 L59.8 213.4 L67.2 223.3 L76.3 229.9 L86.7 248.7 L93.0 253.3 L93.4 255.7 L93.5 253.1 L96.4 255.0 L99.3 262.0 L106.8 265.6 L111.8 275.8 L111.9 282.5 L125.0 291.4 L135.8 295.4 L145.0 303.5 L146.2 306.7 L148.0 305.9 L153.4 309.1 L160.4 310.3 L166.9 314.0 L167.7 316.0 L169.2 316.4 L167.5 315.5 L168.6 314.1 L172.7 316.0 L172.8 317.8 L170.6 317.1 L178.3 322.2 L175.0 319.0 L175.9 317.6 L179.7 319.5 L179.4 321.2 L177.6 320.3 L179.5 322.6 L182.5 321.7 L182.4 323.9 L183.1 322.3 L184.4 323.1 L183.1 324.1 L185.4 323.4 L198.9 331.5 L209.7 334.4 L223.2 346.8 L231.6 347.3 L236.4 352.9 L243.1 356.1 L252.3 366.9 L259.2 369.1 L264.3 376.8 L270.7 380.5 L285.9 395.1 L285.0 393.3 L287.1 395.5 L294.8 393.0 L306.2 395.4 L299.6 392.8 L300.6 390.8 L304.5 391.9 L305.5 394.3 L310.9 395.2 L317.3 393.1 L327.6 398.1 L338.8 400.8 L347.3 409.3 L346.5 410.6 L344.7 409.0 L345.8 410.4 L349.1 411.3 L348.4 413.1 L353.1 415.8 L352.4 413.7 L357.1 412.9 L375.7 421.4 L384.0 422.1 L395.0 427.7 L399.5 427.7 L420.1 441.1 L420.0 442.5 L421.4 441.6 L429.6 445.4 L446.5 444.2 L449.4 442.3 L457.8 444.1 L464.4 448.2 L478.0 447.4 L484.3 450.9 L487.4 450.8 L492.1 455.4 L495.1 456.1 L495.0 458.6 L494.7 454.3 L495.9 453.7 L498.1 458.3 L499.1 457.4 L501.4 460.5 L519.8 463.2 L525.0 466.8 L528.0 465.4 L539.9 475.6 L539.3 478.3 L542.4 482.3 L547.4 482.6 L550.7 479.9 L553.6 481.0 L554.1 477.4 L557.1 476.2 L558.2 477.3 L561.0 475.8 L564.5 478.3 L571.3 474.6 L575.2 474.6 L576.8 469.2 L579.3 470.1 L580.5 466.8 L583.2 466.0 L592.6 467.4 L605.9 466.0 L589.7 465.7 L596.3 461.3 L596.8 459.0 L596.7 460.9 L598.6 459.7 L597.6 458.1 L599.2 459.6 L599.2 457.6 L601.9 457.1 L602.2 458.7 L599.8 460.0 L602.6 458.7 L602.3 456.9 L606.0 457.4 L606.4 458.6 L603.2 459.9 L607.7 458.6 L609.0 455.7 L613.4 458.1 L614.1 456.6 L617.7 458.0 L617.6 456.4 L619.5 457.2 L623.9 455.4 L632.3 456.3 L634.9 458.1 L641.8 457.2 L660.1 460.5 L694.2 472.7 L698.1 476.1 L698.5 470.9 L702.7 468.8 L710.4 469.8 L719.2 466.6 L726.4 466.7 L728.3 468.3 L733.5 461.2 L739.5 458.5 L739.8 455.2 L741.2 455.4 L740.4 452.9 L742.7 453.3 L743.1 450.1 L746.5 448.6 L750.2 449.5 L756.3 445.8 L755.4 444.6 L758.0 442.5 L758.8 439.2 L762.6 437.1 L768.0 430.2 L765.8 429.6 L766.7 427.1 L770.4 425.4 L770.5 423.7 L773.2 425.0 L776.3 404.0 L791.2 380.5 L795.7 376.8 L802.0 376.3 L804.3 376.8 L803.7 377.8 L811.0 373.7 L821.6 371.2 L827.4 354.7 L830.5 352.4 L827.7 353.0 L841.3 339.5 L840.6 330.6 L835.4 324.2 L836.7 321.1 L838.8 319.0 L841.3 319.9 L841.1 317.7 L844.5 319.1 L842.6 320.9 L843.8 320.8 L849.5 315.9 L854.3 307.0 L853.8 304.4 L857.8 299.9 L861.8 299.4 L859.8 297.1 L860.7 293.8 L864.2 293.1 L863.8 290.4 L866.1 287.2 L872.5 285.2 L874.9 287.1 L880.4 283.1 L884.6 287.0 L882.7 282.5 L884.7 284.4 L891.3 281.1 L886.8 288.2 L883.3 290.5 L886.9 288.7 L891.8 282.6 L892.9 280.6 L890.4 280.9 L891.1 278.4 L898.0 275.6 L897.4 273.5 L899.6 272.3 L902.7 273.9 L907.4 272.1 L909.5 273.8 L915.0 271.6 L918.4 274.9 L921.3 272.8 L923.3 274.7 L917.4 276.1 L928.5 273.1 L931.2 278.2 L932.9 277.5 L934.7 279.2 L939.4 274.2 L944.9 275.0 L942.8 269.3 L947.4 262.1 L961.0 267.1 L962.5 273.2 L969.5 279.9 L967.6 282.5 L974.0 279.0 L971.5 276.5 L972.1 271.8 L969.8 271.1 L972.4 269.5 L969.5 266.5 L970.0 264.2 L961.7 262.1 L958.8 265.1 L956.3 263.2 L955.8 256.3 L957.6 256.3 L956.3 255.2 L958.4 253.8 L954.8 251.5 L953.0 251.6 L955.2 252.9 L954.4 256.6 L950.0 256.5 L946.2 253.8 L946.1 256.1 L941.9 261.0 L931.3 258.8 L926.7 253.9 L924.2 254.2 L923.9 259.1 L917.8 259.0 L915.0 262.7 L907.1 262.1 L904.5 259.8 L903.6 262.0 L900.0 262.5 L897.0 260.6 L895.7 254.6 L887.8 260.5 L884.1 258.9 L881.9 261.4 L877.8 257.2 L880.0 254.3 L875.0 255.2 L874.3 252.2 L867.7 246.8 L863.2 247.7 L852.6 243.1 L851.7 244.6 L847.3 243.7 L845.1 245.4 L841.5 242.2 L834.0 240.0 L831.7 240.4 L829.4 243.9 L826.1 243.3 L823.1 239.7 L818.4 239.9 L814.2 242.9 L810.6 239.4 L806.3 239.7 L804.6 235.0 L801.0 234.6 L800.5 229.8 L796.1 226.6 L792.7 226.3 L794.7 228.6 L791.4 230.5 L786.2 230.0 L781.9 233.8 L776.6 230.5 L776.6 228.3 L772.4 229.9 L768.0 228.9 L763.4 224.6 L752.6 220.9 L746.3 224.2 L743.1 223.1 L734.4 213.8 L736.8 207.0 L733.9 207.3 L732.9 210.3 L731.6 207.7 L728.9 206.8 L729.0 200.0 L725.3 196.3 L725.7 193.5 L721.8 191.2 L721.1 186.6 L712.9 186.8 L706.0 184.2 L703.2 180.9 L703.4 178.7 L701.0 176.6 L699.4 177.2 L701.2 175.8 L699.6 175.1 L701.1 173.3 L699.9 171.8 L694.5 174.3 L690.9 173.1 L683.6 164.5 L682.1 161.5 L683.0 156.4 L683.6 158.0 L684.0 157.0 L682.6 154.5 L690.7 146.7 L680.9 149.6 L676.2 147.7 L676.9 144.5 L675.1 145.4 L674.3 143.0 L656.3 129.8 L643.9 110.7 L638.3 107.4 L627.5 106.5 L621.1 103.9 L615.9 96.3 L616.5 94.9 L613.7 95.3 L610.4 92.0 L611.0 89.4 L608.7 92.5 L605.5 91.0 L597.3 91.8 L581.6 98.2 L575.1 97.3 L567.8 100.6 L538.2 102.9 L521.1 107.4 L519.6 105.6 L518.7 109.3 L514.3 110.5 L509.4 108.9 L504.7 110.6 L493.0 107.5 L483.9 110.7 L480.7 106.3 L472.3 103.3 L457.1 117.2 L444.1 121.3 L429.7 131.9 L411.3 132.7 L391.5 139.6 L384.9 138.5 L377.9 143.7 L372.9 145.4 L359.5 142.3 L340.2 134.4 L334.9 135.2 L322.4 130.6 L305.0 132.0 L299.3 128.6 L299.2 124.5 L297.0 127.3 L289.4 122.1 L290.1 118.3 L291.9 119.5 L290.7 114.9 L289.1 115.4 L290.4 116.4 L289.3 117.7 L286.7 113.9 L287.8 112.2 L285.5 113.6 L284.5 110.2 L280.0 111.9 L275.8 107.6 L274.8 111.7 L272.0 111.5 L272.4 108.7 L271.0 108.6 L267.5 112.2 L253.6 108.7 L234.5 93.0 L228.2 80.1 L213.4 69.6 L213.4 61.1 L210.7 55.7 L190.7 42.1 L186.2 35.1 L188.7 33.9 L191.1 35.8 L187.8 31.8 L189.1 29.9 L181.2 31.8 L180.8 29.2 L179.2 29.0 L168.2 33.7 L150.9 27.3 L140.7 26.0 L131.8 30.7 L120.6 47.5 L116.9 50.8 L109.2 53.8 L101.2 64.0 L100.3 68.2 L94.2 71.8 L84.2 83.7 L62.0 98.1 L53.9 112.6 L36.7 128.2 L27.5 131.7 Z"></path>
+    <text class="isle-label" x="604" y="454" text-anchor="middle">Funchal</text>
+    <text class="isle-label" x="491" y="450" text-anchor="middle">Câmara de Lobos</text>
+    <text class="isle-label" x="834" y="319" text-anchor="middle">Machico</text>
+    <text class="isle-label" x="648" y="162" text-anchor="middle">Santana</text>
+    <text class="isle-label" x="483" y="171" text-anchor="middle">São Vicente</text>
+    <text class="isle-label" x="170" y="323" text-anchor="middle">Calheta</text>
+    <text class="isle-label" x="187" y="35" text-anchor="middle">Porto Moniz</text>
+    ${pins}
+  </svg>`;
+  $("#mapSvgHost").querySelectorAll(".pin").forEach(g=>{
+    const pick=(e)=>{ if(e) e.stopPropagation(); selected=g.getAttribute("data-id"); popOpenId=selected; render(); };
+    g.addEventListener("click", pick);
+    g.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
+  });
+  if(popOpenId) openPop(popOpenId);
+}
+
+function openPop(id){
+  const s=SHELTERS.find(x=>x.id===id); const host=$("#mapSvgHost"); const svg=host&&host.querySelector("svg"); const pop=$("#mapPop");
+  if(!s||!svg||!pop) return;
+  const w = svg.clientWidth || svg.getBoundingClientRect().width; if(!w){ return; }
+  const scale=w/1000; const px=s.x*scale, py=s.y*scale;
+  const st=shelterState(id); const col= st==="gap"?"var(--gap)": st==="thin"?"var(--warn)":"var(--good)";
+  const pct=Math.round(shelterCover(id)*100); const below = py<128;
+  pop.className="map-pop"+(below?" below":"");
+  pop.style.left=px+"px"; pop.style.top=py+"px";
+  pop.style.transform = below ? "translate(-50%,16px)" : "translate(-50%,calc(-100% - 16px))";
+  const link = s.url ? `<a class="plink" href="${s.url}" target="_blank" rel="noopener">${t("siteLink")} ↗</a>` : "";
+  pop.innerHTML = `<button class="pclose" aria-label="fechar">×</button>
+    <div class="pn">${s.name}</div>
+    <div class="pc">${s.council} · ${s.physical?t("physicalChip"):t("fosterChip")}</div>
+    <div class="pbar"><i style="width:${Math.max(pct,3)}%;background:${col}"></i></div>
+    <div class="prow"><span>${pct}% · ${t("need")} ${s.need}/${t("perDay")}</span>${link}</div>
+    <button class="btn pbook" data-book="${id}">${t("tapToBook")} ↓</button>`;
+  pop.hidden=false;
+  pop.querySelector(".pclose").onclick=(e)=>{ e.stopPropagation(); closePop(); };
+  pop.querySelector(".pbook").onclick=(e)=>{ e.stopPropagation(); const el=document.getElementById("infoTitle"); if(el) el.scrollIntoView({behavior:"smooth",block:"center"}); };
+}
+function closePop(){ popOpenId=null; const p=$("#mapPop"); if(p) p.hidden=true; }
+
+function renderSchedule(){
+  const head = `<thead><tr><th class="sh-name" style="cursor:default">&nbsp;</th>${
+    dates.map((d,i)=>{ const we=isWeekend(d)?" we":""; const td=i===0?" today":"";
+      return `<th class="dhead${we}${td}">${i===0?t("today"):fmtDate(d,{weekday:"short"})}<small>${fmtDate(d,{day:"2-digit",month:"2-digit"})}</small></th>`; }).join("")
+  }</tr></thead>`;
+  const body = SHELTERS.map(s=>{
+    const sel = s.id===selected?" selrow":"";
+    const cells = dates.map((d,i)=>{
+      const iso=dateKeys[i]; const list=signupsFor(s.id,iso); const n=list.length;
+      const cc=coverClass(n,s.need); const we=isWeekend(d)?" we":"";
+      const mine = state.me && list.includes(state.me) ? " mine":"";
+      return `<td class="cell"><button class="${cc}${we}${mine}" data-id="${s.id}" data-iso="${iso}" title="${s.name} · ${fmtDate(d,{weekday:"long",day:"numeric",month:"long"})} · ${n}/${s.need}">${n||""}</button></td>`;
+    }).join("");
+    return `<tr class="${sel}"><th class="sh-name" data-id="${s.id}">${s.name}<span class="council">${s.council}</span></th>${cells}</tr>`;
+  }).join("");
+  $("#sched").innerHTML = head + "<tbody>"+body+"</tbody>";
+  $("#sched").querySelectorAll(".cell button").forEach(b=>{
+    b.addEventListener("click", ()=> toggleSlot(b.getAttribute("data-id"), b.getAttribute("data-iso")));
+  });
+  $("#sched").querySelectorAll(".sh-name[data-id]").forEach(th=>{
+    th.addEventListener("click", ()=>{ selected=th.getAttribute("data-id"); render(); });
+  });
+}
+
+function renderInfo(){
+  const s = SHELTERS.find(x=>x.id===selected);
+  if(!s){ $("#info").innerHTML = `<p class="desc">${t("pickShelter")}</p>`; return; }
+  const rows = dates.map((d,i)=>{
+    const iso=dateKeys[i]; const list=signupsFor(s.id,iso); const n=list.length; const frac=Math.min(n/s.need,1);
+    const col = n===0?"var(--gap)": n<s.need?"var(--warn)":"var(--good)";
+    const mine = state.me && list.includes(state.me);
+    return `<button class="up-row${mine?" mine":""}" data-id="${s.id}" data-iso="${iso}">
+      <span class="up-tick">${mine?"✓":"+"}</span>
+      <span class="up-date${i===0?" today":""}">${i===0? t("today")+", "+fmtDate(d,{day:"numeric",month:"short"}) : fmtDate(d,{weekday:"short",day:"numeric",month:"short"})}</span>
+      <span class="up-bar"><i style="width:${Math.max(frac*100,n?8:0)}%;background:${col}"></i></span>
+      <span class="up-n">${n}/${s.need}</span></button>`;
+  }).join("");
+  $("#info").innerHTML = `
+    <div class="name">${s.name}</div>
+    <div class="meta"><span class="chip">${s.council}</span><span class="chip sea">${t("coast")[s.coast]}</span>
+      <span class="chip sea">${s.physical?t("physicalChip"):t("fosterChip")}</span>
+      <span class="chip sea">${t("need")} ${s.need} ${t("vols")}/${t("perDay")}</span></div>
+    <p class="desc">${s.focus[lang]}${s.url?` · <a href="${s.url}" target="_blank" rel="noopener" style="color:var(--accent-ink);font-weight:600;text-decoration:none">${t("siteLink")} ↗</a>`:""}</p>
+    <div class="rep-h">${t("upcoming")} · <span style="text-transform:none;letter-spacing:0">${t("tapToBook")}</span></div>
+    <div class="upcoming">${rows}</div>`;
+  $("#info").querySelectorAll(".up-row").forEach(b=> b.addEventListener("click", ()=> toggleSlot(b.getAttribute("data-id"), b.getAttribute("data-iso"))));
+}
+
+function renderReport(){
+  // gaps: soonest uncovered slots
+  const gaps=[];
+  for(let i=0;i<dateKeys.length;i++){ for(const s of SHELTERS){ if(signupsFor(s.id,dateKeys[i]).length===0) gaps.push({s,i}); } }
+  const gl=$("#gapList");
+  if(gaps.length===0){ gl.innerHTML = `<div class="gap-item ok">${t("noGaps")}</div>`; }
+  else{
+    gl.innerHTML = gaps.slice(0,40).map(g=>{
+      const d=dates[g.i];
+      return `<div class="gap-item"><span class="gd">●</span><span style="flex:1">${g.s.name}</span>
+        <span style="color:var(--muted)">${fmtDate(d,{weekday:"short",day:"numeric",month:"short"})}</span></div>`;
+    }).join("") + (gaps.length>40? `<div class="gap-item" style="background:transparent;color:var(--muted)">+${gaps.length-40}…</div>`:"");
+  }
+  // volunteers
+  const tally={};
+  for(const k in state.signups){ for(const v of state.signups[k]){ tally[v]=(tally[v]||0)+1; } }
+  const entries=Object.entries(tally).sort((a,b)=>b[1]-a[1]);
+  const max=entries.length? entries[0][1]:1;
+  $("#volList").innerHTML = entries.map(([v,c])=>{
+    const you = state.me && v===state.me ? " you":"";
+    return `<div class="vol-item${you}"><span class="vn">${esc(v)}${you?" ·":""}</span>
+      <span class="vbar" style="width:${8+Math.round(c/max*120)}px"></span><span class="vc">${c}</span></div>`;
+  }).join("") || `<div style="color:var(--muted);font-size:.85rem">—</div>`;
+  if(state.demo) $("#volList").innerHTML += `<div class="demo-note">${t("demoTag")}</div>`;
+}
+
+function renderCoverage(){
+  $("#covList").innerHTML = SHELTERS.map(s=>{
+    const pct=Math.round(shelterCover(s.id)*100);
+    const col = pct<50?"var(--gap)": pct<80?"var(--warn)":"var(--good)";
+    return `<div class="cov-row"><span class="cn">${s.name}</span>
+      <span class="cbar"><i style="width:${Math.max(pct,2)}%;background:${col}"></i></span>
+      <span class="cp">${pct}%</span></div>`;
+  }).join("");
+}
+
+function renderShelters(){
+  const colorOf={ gap:"var(--gap)", thin:"var(--warn)", full:"var(--good)" };
+  $("#dir").innerHTML = SHELTERS.map(s=>{
+    const st=shelterState(s.id); const col=colorOf[st]; const pct=Math.round(shelterCover(s.id)*100);
+    return `<div class="dir-card">
+      <div class="dn"><span class="dot-s" style="background:${col}"></span>${s.name}</div>
+      <div class="dmeta"><span class="chip">${s.council}</span><span class="chip sea">${t("coast")[s.coast]}</span><span class="chip sea">${s.physical?t("physicalChip"):t("fosterChip")}</span></div>
+      <p>${s.focus[lang]}</p>
+      <div class="dbar"><i style="width:${Math.max(pct,2)}%;background:${col}"></i></div>
+      <div class="drow"><span>${t("need")} ${s.need}/${t("perDay")}</span><span>${pct}% ${t("covered")}</span></div>
+      <div class="drow2"><button class="btn ghost" data-goto="${s.id}">${t("seeRota")} →</button>${s.url?`<a class="dlink" href="${s.url}" target="_blank" rel="noopener">${t("siteLink")} ↗</a>`:""}</div>
+    </div>`;
+  }).join("");
+  $("#dir").querySelectorAll("[data-goto]").forEach(b=> b.addEventListener("click", ()=>{ selected=b.getAttribute("data-goto"); switchTab("mapa"); render(); window.scrollTo(0,0); }));
+}
+
+function countMine(){ if(!state.me) return 0; let n=0; for(const k in state.signups){ if(state.signups[k].includes(state.me)) n++; } return n; }
+
+/* ---------- actions ------------------------------------------------------ */
+function toggleSlot(sid, iso){
+  if(!state.me){ toast(t("setName")); $("#me").focus(); return; }
+  const k=slotKey(sid,iso); const list=state.signups[k] ? state.signups[k].slice():[];
+  const idx=list.indexOf(state.me);
+  const undo = { label:t("undo"), fn:()=>toggleSlot(sid,iso) };
+  if(idx>=0){ list.splice(idx,1); toast(t("removed"), undo); } else { list.push(state.me); toast(t("added"), undo); }
+  if(list.length) state.signups[k]=list; else delete state.signups[k];
+  selected=sid; render();
+}
+
+function toast(msg, action){
+  const el=$("#toast"); el.textContent=msg;
+  if(action){ const b=document.createElement("button"); b.className="undo"; b.textContent=action.label;
+    b.onclick=e=>{ e.stopPropagation(); clearTimeout(toast._t); el.classList.remove("show"); action.fn(); };
+    el.appendChild(b); }
+  el.classList.add("show"); clearTimeout(toast._t);
+  toast._t=setTimeout(()=>el.classList.remove("show"), action?3200:1700);
+}
+
+function pad(n){ return String(n).padStart(2,"0"); }
+function icsStamp(d,h,m){ return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"T"+pad(h)+pad(m)+"00"; }
+function exportICS(){
+  if(!state.me){ toast(t("setName")); $("#me").focus(); return; }
+  const mine=[];
+  for(let i=0;i<dateKeys.length;i++){ for(const s of SHELTERS){ if(signupsFor(s.id,dateKeys[i]).includes(state.me)) mine.push({s,d:dates[i],iso:dateKeys[i]}); } }
+  if(mine.length===0){ toast(t("icsEmpty")); return; }
+  const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Walkadog//Madeira//PT","CALSCALE:GREGORIAN"];
+  mine.forEach((m,idx)=>{
+    lines.push("BEGIN:VEVENT",
+      "UID:"+m.iso+"-"+m.s.id+"-"+idx+"@refugios-madeira",
+      "DTSTART:"+icsStamp(m.d,SHIFT_START,0),
+      "DTEND:"+icsStamp(m.d,SHIFT_END,0),
+      "SUMMARY:"+ (lang==="en"?"Volunteering — ":"Voluntariado — ")+m.s.name,
+      "LOCATION:"+m.s.council,
+      "DESCRIPTION:"+m.s.focus[lang],
+      "END:VEVENT");
+  });
+  lines.push("END:VCALENDAR");
+  const blob=new Blob([lines.join("\r\n")],{type:"text/calendar"});
+  const url=URL.createObjectURL(blob); const a=document.createElement("a");
+  a.href=url; a.download="walkadog-madeira.ics"; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000); toast(t("icsOk"));
+}
+
+/* ---------- wiring ------------------------------------------------------- */
+$("#me").value = state.me || "";
+$("#me").addEventListener("input", e=>{ state.me=e.target.value.trim(); renderTiles(); renderReport(); saveState(); });
+$("#me").addEventListener("change", ()=> render());
+
+document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{
+  lang=b.getAttribute("data-lang");
+  document.querySelectorAll("[data-lang]").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+  render();
+}));
+
+$("#theme").addEventListener("click",()=>{
+  const cur=document.documentElement.getAttribute("data-theme");
+  const sysDark=matchMedia("(prefers-color-scheme:dark)").matches;
+  const next = cur ? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark");
+  document.documentElement.setAttribute("data-theme",next); renderMap();
+});
+
+$("#ics").addEventListener("click", exportICS);
+$("#reset").addEventListener("click", ()=>{ state={ v:DATA_VERSION, me:state.me, demo:true, signups:seed() }; selected=SHELTERS[0].id; render(); toast(t("reset")); });
+
+document.querySelectorAll("#tabs button").forEach(b=> b.addEventListener("click", ()=> switchTab(b.getAttribute("data-tab"))));
+window.addEventListener("hashchange", ()=> switchTab((location.hash||"").slice(1)));
+document.addEventListener("click", e=>{ if(popOpenId && !e.target.closest("#mapWrap")) closePop(); });
+window.addEventListener("resize", ()=>{ if(popOpenId) openPop(popOpenId); });
+
+render();
+switchTab((location.hash||"").slice(1) || "mapa");
+</script>
