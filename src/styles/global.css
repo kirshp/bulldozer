@@ -548,3 +548,18 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 /* Footer */
 .site-footer { border-top: 1px solid var(--border); margin-top: 40px; padding: 28px 0; color: var(--text-dim); font-size: 13px; }
 .site-footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+/* ---- mobile: keep charts and tables inside the viewport ---- */
+@media (max-width: 560px) {
+  /* data tables (country profiles, dataset tables) scroll inside themselves */
+  table.data { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* bar rows: narrower label column, roomier value column for "7.5 +0.03pp" */
+  .bar-row { grid-template-columns: 96px 1fr 72px; gap: 8px; font-size: 13px; }
+  .bar-val em { display: block; margin-left: 0; }
+}
+/* the focused-country SVG marker can poke past the card edge */
+.country-card { overflow: hidden; }
+.cc-map svg { max-width: 100%; height: auto; }
+/* long dataset titles must never stretch selects past the viewport */
+select { max-width: 100%; }
+.controls label, .ci-controls label { min-width: 0; max-width: 100%; }
