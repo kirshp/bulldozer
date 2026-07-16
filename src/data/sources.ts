@@ -92,7 +92,7 @@ export const sources: Source[] = [
     description: 'The largest ongoing study of news consumption — ~48 markets yearly. Trust in news, paying for online news, news avoidance and social media as a news source.' },
   { name: 'Caucasus Barometer (CRRC)', url: 'https://caucasusbarometer.org/', status: 'live', category: 'Public opinion barometers', match: 'Caucasus Barometer',
     description: 'Household survey for the South Caucasus from the Caucasus Research Resource Centers. We aggregated the 2013 regional wave (the last covering all of Armenia, Azerbaijan and Georgia): life satisfaction and trust in the army, police and the EU.' },
-  { name: 'RLMS-HSE — Russia Longitudinal Monitoring Survey', url: 'https://rlms-hse.cpc.unc.edu/', status: 'live', category: 'Public opinion barometers', match: 'RLMS-HSE',
+  { name: 'RLMS-HSE — Russia Longitudinal Monitoring Survey', url: 'https://rlms-hse.cpc.unc.edu/', status: 'live', category: 'Public opinion barometers', match: 'RLMS-HSE', dash: 'rlms',
     description: 'HSE / UNC household panel running since 1994 — the deepest open microdata on everyday life in Russia. We aggregated internet use, incomes, life satisfaction, higher education, smoking & alcohol, marriage and bank cards.' },
   { name: 'EBRD — Life in Transition Survey (LiTS)', url: 'https://www.ebrd.com/what-we-do/economic-research-and-data/data/lits.html', status: 'live', category: 'Public opinion barometers', match: 'EBRD — Life in Transition',
     description: 'Attitudes to transition, markets and democracy across Central/Eastern Europe and Central Asia. Trust, risk tolerance, religion and more.' },
