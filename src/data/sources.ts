@@ -100,8 +100,8 @@ export const sources: Source[] = [
     description: 'Large harmonised ex-post integration of international survey projects. We aggregated the SDR2 master file: political trust (government, parliament, parties, legal system), demonstrations, petitions and union membership.' },
 
   // ── Health & demography ────────────────────────────────────────────
-  { name: 'DHS — Demographic and Health Surveys', url: 'https://dhsprogram.com/', status: 'catalog', category: 'Health & demography',
-    description: 'Nationally-representative household surveys on population, health and nutrition in low- and middle-income countries.' },
+  { name: 'DHS — Demographic and Health Surveys', url: 'https://dhsprogram.com/', status: 'live', category: 'Health & demography', match: 'Demographic and Health Surveys', dash: 'dhs',
+    description: 'Nationally-representative household surveys on population, health and nutrition. We aggregated the latest available wave for each Central Asian country (women 15–49): employment, modern contraception and child marriage.' },
   { name: 'MICS — Multiple Indicator Cluster Surveys', url: 'https://mics.unicef.org/', status: 'catalog', category: 'Health & demography',
     description: 'UNICEF-supported household surveys tracking the situation of children and women worldwide.' },
   { name: 'SHARE — Health, Ageing and Retirement', url: 'https://share-eric.eu/', status: 'catalog', category: 'Health & demography',
