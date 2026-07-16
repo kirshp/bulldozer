@@ -16,6 +16,9 @@ import shutil
 
 import numpy as np
 import pyreadstat
+import sys
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent / 'lib'))
+from survey_dash import write_site_dataset  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 HOME = pathlib.Path.home()
@@ -33,21 +36,28 @@ CC = {'AL': 'Albania', 'AT': 'Austria', 'BA': 'Bosnia & H.', 'BE': 'Belgium', 'B
 SEX = {1: 'Men', 2: 'Women'}
 AGE = {1: '15–25', 2: '26–40', 3: '41–60', 4: '61+'}
 
-# (topic, code, positive cats, base cats, label, blurb)
+# (topic, code, positive cats, base cats, label, blurb, [site dataset spec])
 INDS = [
     ('Politics & democracy', 'sd18a', {1, 2}, {1, 2, 3, 4}, 'Satisfaction with democracy',
-     'Very or fairly satisfied with the way democracy works in their country.'),
+     'Very or fairly satisfied with the way democracy works in their country.',
+     dict(slug='eb-democracy-satisfaction', title='Satisfaction with Democracy', topic='governance')),
     ('Politics & democracy', 'd73_1', {1}, {1, 2, 3}, 'Country on the right track',
      'Things in their country are going in the right direction.'),
     ('Wellbeing & lifestyle', 'd70', {1, 2}, {1, 2, 3, 4}, 'Satisfaction with life',
-     'Very or fairly satisfied with the life they lead.'),
+     'Very or fairly satisfied with the life they lead.',
+     dict(slug='eb-life-satisfaction', title='Life Satisfaction (Eurobarometer)', topic='wellbeing')),
     ('Digital behaviour', 'netuse', {1, 2, 3}, {1, 2, 3, 4, 5, 6, 7}, 'Weekly internet use',
-     'Use the internet at least about once a week.'),
+     'Use the internet at least about once a week.',
+     dict(slug='eb-weekly-internet-use', title='Weekly Internet Use', topic='connectivity')),
     ('Media & science', 'qa12_2', {1, 2}, {1, 2, 3, 4}, 'Engage with science media',
      'Regularly or occasionally watch documentaries or read/listen to science content.'),
     ('Media & science', 'qa17_8', {2}, {1, 2}, 'Climate-science literacy',
      'Correctly answer that climate change is not caused mainly by natural processes.'),
 ]
+
+SITE_SOURCE = 'Eurobarometer'
+SITE_LICENSE = 'Free for research use (GESIS)'
+SITE_URL = 'https://europa.eu/eurobarometer/'
 
 
 def wshare(w, pos):
@@ -132,7 +142,9 @@ def main():
     df = load()
     print(f'  loaded {len(df):,} respondents, {df["cc"].nunique()} countries')
     body, last = '', None
-    for topic, code, pos, base, lbl, blurb in INDS:
+    for ind in INDS:
+        topic, code, pos, base, lbl, blurb = ind[:6]
+        site = ind[6] if len(ind) > 6 else None
         c = cells(df, code, pos, base)
         if not c['overall']:
             print(f'  – {lbl}: no data, skipped'); continue
@@ -140,6 +152,9 @@ def main():
             body += f'<h2 class="topichdr">{topic}</h2>'; last = topic
         body += section(lbl, blurb, c)
         print(f'  ✓ {lbl}: {c["overall"]["pct"]}% ({len(c["country"])} countries)')
+        if site:
+            write_site_dataset(ROOT, site['slug'], site['title'], site['topic'], lbl, '%',
+                                blurb, SITE_SOURCE, SITE_LICENSE, SITE_URL, WAVE, c['country'])
     html = TEMPLATE.replace('{{BODY}}', body).replace('{{WAVE}}', WAVE)
     out = ROOT / 'public/dashboards/eurobarometer.html'
     out.write_text(html)

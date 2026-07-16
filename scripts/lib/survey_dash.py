@@ -6,6 +6,7 @@ country, sex and age, grouped by topic. Same look as the Latinobarómetro and
 Eurobarometer dashboards. Significance uses the Kish effective sample size from
 the survey weights.
 """
+import json
 import math
 import pathlib
 import shutil
@@ -14,6 +15,24 @@ import numpy as np
 import pyreadstat
 
 AGE_BANDS = [(25, '15–25'), (40, '26–40'), (60, '41–60'), (200, '61+')]
+
+_LIBDIR = pathlib.Path(__file__).resolve().parent
+_GAP = json.loads((_LIBDIR / 'gapminder_geo.json').read_text())
+_NAME2ROW = {r['name']: r for r in _GAP}
+# country names in our survey configs that don't match Gapminder's spelling
+_NAME_ALIAS = {
+    'Czechia': 'Czech Republic', 'Slovakia': 'Slovak Republic', 'Türkiye': 'Turkey',
+    'Bosnia & H.': 'Bosnia and Herzegovina', 'Great Britain': 'United Kingdom', 'United Kingdom': 'UK',
+    'United States': 'USA',
+}
+_REGION_LABEL = {'africa': 'Africa', 'americas': 'Americas', 'asia': 'Asia', 'europe': 'Europe'}
+
+
+def _iso3_region(name):
+    row = _NAME2ROW.get(_NAME_ALIAS.get(name, name))
+    if not row:
+        return None, None
+    return row['iso3166_1_alpha3'], _REGION_LABEL.get(row['world_4region'], 'Other')
 
 
 def wshare(w, pos):
@@ -84,6 +103,32 @@ def _section(lbl, blurb, c, wave):
 <div class="panel"><h3>By age</h3>{abars}</div></div></div></section>"""
 
 
+def write_site_dataset(root, slug, title, topic, value_label, unit, summary, source, license_, url, wave, country_cells):
+    """Write one src/data/surveys/<slug>.json from already-computed per-country cells
+    (the 'country' dict returned inside a _cells() result: {name: {pct, ci, n}})."""
+    data, missing = [], []
+    for name, cell in country_cells.items():
+        if not cell:
+            continue
+        iso, region = _iso3_region(name)
+        if not iso:
+            missing.append(name); continue
+        data.append({'entity': name, 'group': region, 'period': str(wave), 'value': cell['pct'], 'iso': iso})
+    if missing:
+        print(f'    (site dataset {slug}: no ISO for {missing})')
+    if len(data) < 8:
+        print(f'    – {slug}: only {len(data)} countries, not registered as a site dataset')
+        return
+    out = {
+        'meta': {'title': title, 'summary': summary, 'unit': unit, 'valueLabel': value_label,
+                  'changeMode': 'pp', 'topic': topic, 'source': source, 'license': license_,
+                  'url': url, 'parsedAt': str(wave), 'kind': 'survey'},
+        'data': sorted(data, key=lambda r: -r['value']),
+    }
+    (pathlib.Path(root) / 'src/data/surveys' / f'{slug}.json').write_text(json.dumps(out, ensure_ascii=False))
+    print(f'    ✓ site dataset {slug}: {len(data)} countries')
+
+
 def generate(cfg):
     print(f'{cfg["name"]} extended dashboard →')
     want = [cfg['weight'], cfg['country_col'], cfg['sex_col'], cfg['age_col']] + [t[1] for t in cfg['inds']]
@@ -105,7 +150,9 @@ def generate(cfg):
     print(f'  loaded {len(df):,} respondents, {df["_cc"].nunique()} countries')
 
     body, last = '', None
-    for topic, code, pos, base, lbl, blurb in cfg['inds']:
+    for ind in cfg['inds']:
+        topic, code, pos, base, lbl, blurb = ind[:6]
+        site = ind[6] if len(ind) > 6 else None
         c = _cells(df, code, set(pos), set(base), cfg)
         if not c['overall']:
             print(f'  – {lbl}: no data, skipped'); continue
@@ -113,6 +160,11 @@ def generate(cfg):
             body += f'<h2 class="topichdr">{topic}</h2>'; last = topic
         body += _section(lbl, blurb, c, cfg['wave'])
         print(f'  ✓ {lbl}: {c["overall"]["pct"]}% ({len(c["country"])} countries)')
+        if site:
+            write_site_dataset(cfg['root'], site['slug'], site['title'], site['topic'],
+                                site.get('value_label', lbl), site.get('unit', '%'),
+                                site.get('summary', blurb), cfg['site_source'], cfg['site_license'],
+                                cfg['site_url'], cfg['wave'], c['country'])
 
     html = _TEMPLATE.format(title=cfg['title'], lead=cfg['lead'], sigkey=cfg['sigkey'],
                             body=body, foot=cfg['foot'])
