@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sources } from '@data/sources';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const boards = sources.filter((s) => s.dash);
+const desc = `Detailed, downloadable results dashboards for ${boards.length} survey programmes — full breakdowns behind the headline BullDozer datasets.`;
+---
+<BaseLayout title="Detailed dashboards" description={desc}>
+  <section class="section">
+    <div class="container">
+      <span class="kicker">Dashboards</span>
+      <h2>Detailed results dashboards</h2>
+      <p class="sub" style="max-width:70ch">
+        Extended, self-contained dashboards behind our datasets — full frequency tables and, for the microdata
+        sources, breakdowns by demographic group with confidence intervals. Open in any browser or download the
+        file to keep. Each is also linked from its dataset pages.
+      </p>
+      <div class="grid cols-2" style="margin-top:16px">
+        {boards.map((b) => (
+          <div class="card">
+            <h3 style="margin:0 0 4px">{b.name}</h3>
+            <p class="meta" style="margin:0 0 12px">{b.description}</p>
+            <p style="display:flex; gap:10px; flex-wrap:wrap; margin:0">
+              <a class="ghost-btn" style="margin:0; text-decoration:none" href={`${base}/dashboards/${b.dash}.html`} target="_blank" rel="noopener">📊 Open ↗</a>
+              <a class="ghost-btn" style="margin:0; text-decoration:none" href={`${base}/dashboards/${b.dash}.html`} download={`${b.dash}-dashboard.html`}>⤓ Download</a>
+              <a class="ghost-btn" style="margin:0; text-decoration:none" href={b.url} target="_blank" rel="noopener">Source ↗</a>
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
