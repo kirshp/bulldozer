@@ -76,8 +76,8 @@ export const sources: Source[] = [
     description: 'EC Joint Research Centre / IASC index of humanitarian crisis and disaster risk, including hazard, vulnerability and coping capacity.' },
 
   // ── Public opinion (regional barometers) ───────────────────────────
-  { name: 'Eurobarometer', url: 'https://europa.eu/eurobarometer/', status: 'catalog', category: 'Public opinion barometers',
-    description: 'European Commission’s standard survey of public opinion across EU member states since 1974.' },
+  { name: 'Eurobarometer', url: 'https://europa.eu/eurobarometer/', status: 'catalog', category: 'Public opinion barometers', dash: 'eurobarometer',
+    description: 'European Commission’s standard survey of public opinion across EU member states since 1974. Extended dashboard: 34 countries, weighted, with breakdowns by sex and age — democracy, wellbeing, digital behaviour and science/media.' },
   { name: 'European Social Survey (ESS)', url: 'https://www.europeansocialsurvey.org/', status: 'live', category: 'Public opinion barometers', match: 'European Social Survey',
     description: 'Rigorous biennial survey of attitudes across Europe. We aggregated trust in people and satisfaction with democracy.' },
   { name: 'ISSP — International Social Survey Programme', url: 'https://issp.org/', status: 'catalog', category: 'Public opinion barometers',
