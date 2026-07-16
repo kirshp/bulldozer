@@ -30,14 +30,27 @@ CTRY = {32: 'Argentina', 68: 'Bolivia', 76: 'Brazil', 152: 'Chile', 170: 'Colomb
 SEX = {1: 'Men', 2: 'Women'}
 AGE = {1: '16–25', 2: '26–40', 3: '41–60', 4: '61+'}
 
-# indicator = (code, positive categories, base = valid categories, label, blurb)
+# indicator = (topic, code, positive categories, base = valid categories, label, blurb)
+# Beyond politics: values, media, consumption and lifestyle too.
 INDS = [
-    ('P10STGBS', {1}, {1, 2, 3}, 'Support for democracy',
+    ('Politics & democracy', 'P10STGBS', {1}, {1, 2, 3}, 'Support for democracy',
      'Democracy is preferable to any other kind of government.'),
-    ('P11STGBS.A', {1, 2}, {1, 2, 3, 4}, 'Satisfaction with democracy',
+    ('Politics & democracy', 'P11STGBS.A', {1, 2}, {1, 2, 3, 4}, 'Satisfaction with democracy',
      'Very or fairly satisfied with the way democracy works.'),
-    ('P9STGBS', {1}, {1, 2}, 'Interpersonal trust',
+    ('Society & values', 'P9STGBS', {1}, {1, 2}, 'Interpersonal trust',
      'One can trust most people (vs. can never be too careful).'),
+    ('Society & values', 'P60ST', {1, 2}, {1, 2, 3, 4}, 'Progress against corruption',
+     'A lot or some progress reducing corruption in state institutions.'),
+    ('Media', 'P14ST.D', {1, 2}, {1, 2, 3, 4}, 'Trust in television',
+     'A lot or some trust that television works to improve quality of life.'),
+    ('Media', 'P14N.I', {1, 2}, {1, 2, 3, 4}, 'Trust in social media',
+     'A lot or some trust in social media.'),
+    ('Economy & consumption', 'P5STGBS', {1, 2}, {1, 2, 3, 4, 5}, 'Economy rated good',
+     'Rate the country’s current economic situation as good or very good.'),
+    ('Economy & consumption', 'S5', {1, 2}, {1, 2, 3, 4}, 'Income covers needs',
+     'Household income is enough to live on (can save or no major problems).'),
+    ('Wellbeing & lifestyle', 'P1ST', {1, 2}, {1, 2, 3, 4}, 'Satisfaction with life',
+     'Very or quite satisfied with the life they lead.'),
 ]
 
 
@@ -54,8 +67,13 @@ def wshare(w, pos):
 
 def load(year):
     path = SRC / WAVES[year]
-    cols = ['WT', 'IDENPA', 'SEXO', 'REEDAD'] + [c for c, *_ in INDS]
-    df, _ = pyreadstat.read_sav(str(path), usecols=cols)
+    want = ['WT', 'IDENPA', 'SEXO', 'REEDAD'] + [t[1] for t in INDS]
+    _, meta = pyreadstat.read_sav(str(path), metadataonly=True)
+    have = [c for c in want if c in meta.column_names]  # questionnaires differ by wave
+    df, _ = pyreadstat.read_sav(str(path), usecols=have)
+    for c in want:
+        if c not in df.columns:
+            df[c] = float('nan')
     df = df[df['IDENPA'].isin(CTRY)].copy()
     df['WT'] = df['WT'].clip(lower=0).fillna(0)
     return df
@@ -133,11 +151,19 @@ def main():
     data = {}
     for year in WAVES:
         df = load(year)
-        data[year] = {code: cells(df, code, pos, base) for code, pos, base, *_ in INDS}
+        data[year] = {code: cells(df, code, pos, base) for _t, code, pos, base, *_ in INDS}
         print(f'  loaded {year}: {len(df):,} respondents, {df["IDENPA"].nunique()} countries')
 
-    body = ''.join(section(lbl, blurb, data[2023][code], data[2020].get(code))
-                   for code, pos, base, lbl, blurb in INDS)
+    body, last_topic = '', None
+    for topic, code, pos, base, lbl, blurb in INDS:
+        c23 = data[2023][code]
+        if not c23['overall']:  # not asked in 2023 → skip
+            print(f'  – {lbl}: no 2023 data, skipped')
+            continue
+        if topic != last_topic:
+            body += f'<h2 class="topichdr">{topic}</h2>'
+            last_topic = topic
+        body += section(lbl, blurb, c23, data[2020].get(code))
     html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Latinobarómetro — extended dashboard</title>
@@ -162,6 +188,7 @@ h1{{font-size:23px;margin:0 0 2px}}.lead{{color:var(--dim);margin:0 0 22px;font-
 .val{{text-align:right;font-variant-numeric:tabular-nums;color:var(--dim)}}.val em{{font-style:normal;font-size:10px;opacity:.7;margin-left:1px}}
 .foot{{color:var(--dim);font-size:12px;margin-top:16px}}.foot a{{color:var(--accent)}}
 .sigkey{{font-size:11.5px;color:var(--dim);margin:0 0 18px}}
+.topichdr{{font-size:13px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin:22px 0 8px;border-bottom:1px solid var(--border);padding-bottom:5px}}
 </style></head><body>
 <h1>Latinobarómetro — extended dashboard</h1>
 <p class="lead">Weighted attitudes across Latin America from the Latinobarómetro microdata, broken down by country, sex and age with 95% confidence intervals. The main site carries the long 1995–2024 trend; this view adds the demographic detail the published report leaves out.</p>
