@@ -202,6 +202,10 @@ a:hover { text-decoration: underline; }
 /* a11y utility */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .bar-val { text-align: right; font-family: var(--mono); color: var(--text-dim); }
+/* Company/brand money bars carry wide values like "$4.24 tn" — give the value
+   column room and stop it wrapping, which was blowing up the row height. */
+#co-bars .bar-row, #br-bars .bar-row { grid-template-columns: 150px 1fr 92px; }
+#co-bars .bar-val, #br-bars .bar-val { white-space: nowrap; }
 
 /* Table */
 table.data { width: 100%; border-collapse: collapse; font-size: 14px; }
