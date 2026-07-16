@@ -2,9 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SourceCatalog from '@components/SourceCatalog.astro';
 import DatasetList from '@components/DatasetList.astro';
-import Scatter from '@components/Scatter.astro';
+import CulturalMap from '@components/CulturalMap.astro';
 import { datasetsByKind, getDataset } from '@data/datasets';
-import { colorFor, regionList } from '@lib/palette';
 // RLMS covers a single country — keep it inside its study card only, out of the
 // cross-country topic blocks and the filter chips.
 const items = datasetsByKind('survey').filter((d) => !d.slug.startsWith('rlms-'));
@@ -29,11 +28,8 @@ const points = (emo?.data || [])
       {points.length > 0 && (
         <div class="study-map">
           <h3 style="margin:6px 0 2px">The cultural map of the world</h3>
-          <p class="sub">Every country on two value dimensions — survival ↔ self-expression and traditional ↔ secular (World Values Survey, Wave 7).</p>
-          <Scatter points={points} xLabel="Survival → Self-expression values" yLabel="Traditional → Secular values" labelTop={0} />
-          <div class="legend-regions">
-            {regionList.map((r) => (<span class="lr"><span class="lr-dot" style={`background:${colorFor(r)}`}></span>{r}</span>))}
-          </div>
+          <p class="sub">Every country on two value dimensions — survival ↔ self-expression and traditional ↔ secular (World Values Survey, Wave 7), coloured by cultural zone. Hover a country for its scores.</p>
+          <CulturalMap />
           <p style="margin:8px 0 28px"><a class="ghost-btn" style="margin:0; display:inline-block; text-decoration:none" href={`${base}/stories/cultural-map`}>Open the full cultural map →</a></p>
         </div>
       )}

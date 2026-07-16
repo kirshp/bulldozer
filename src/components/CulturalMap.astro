@@ -1,0 +1,178 @@
+---
+/**
+ * The Inglehart-Welzel cultural map, rendered from raw WVS Wave 7 values:
+ * survival↔self-expression (x) × traditional↔secular (y). Countries are
+ * coloured by cultural zone with a soft zone tint behind them (convex hull of
+ * each zone's members, smoothed) — our own palette and geometry, computed from
+ * the data, not traced from any poster. Anchor countries are labelled;
+ * everything is hoverable; a legend below names all zones so the crowded
+ * centre stays clean.
+ */
+import wvsE from '@data/surveys/wvs-emancipative.json';
+import wvsS from '@data/surveys/wvs-secular.json';
+
+type Row = { iso: string; entity: string; value: number };
+const secByIso = new Map((wvsS.data as Row[]).map((o) => [o.iso, o]));
+const SHORT: Record<string, string> = {
+  'Czech Republic': 'Czechia', 'Slovak Republic': 'Slovakia', 'Hong Kong, China': 'Hong Kong',
+  'Macao, China': 'Macao', 'Korea, Republic of': 'South Korea', 'United States': 'USA', 'United Kingdom': 'UK',
+};
+const ZONE: Record<string, string> = {
+  CZE: 'cat', KOR: 'con', MNG: 'con', MAC: 'con', HKG: 'con', CAN: 'eng', UKR: 'ort', SVK: 'cat', CHL: 'lat',
+  NLD: 'pro', TWN: 'con', RUS: 'ort', JPN: 'con', SRB: 'ort', MEX: 'lat', GBR: 'eng', VNM: 'con', ARG: 'lat',
+  VEN: 'lat', AUS: 'eng', AND: 'cat', NZL: 'eng', GTM: 'lat', CHN: 'con', NIR: 'eng', THA: 'was', TJK: 'afi',
+  DEU: 'pro', MYS: 'was', USA: 'eng', PER: 'lat', URY: 'lat', KAZ: 'ort', BOL: 'lat', LBN: 'afi', MAR: 'afi',
+  NIC: 'lat', BRA: 'lat', IRQ: 'afi', COL: 'lat', KEN: 'afi', ECU: 'lat', ROU: 'ort', GRC: 'ort', SGP: 'was',
+  PHL: 'lat', MMR: 'afi', CYP: 'was', KGZ: 'afi', TUN: 'afi', ARM: 'ort', TUR: 'afi', PRI: 'lat', IRN: 'afi',
+  IDN: 'afi', NGA: 'afi', PAK: 'afi', BGD: 'afi', ZWE: 'afi', LBY: 'afi', MDV: 'afi', ETH: 'afi', JOR: 'afi', EGY: 'afi',
+};
+const ZMETA: Record<string, [string, string]> = {
+  con: ['Confucian', '#e0566a'], pro: ['Protestant Europe', '#3f9ae0'], cat: ['Catholic Europe', '#4a6cd4'],
+  eng: ['English-Speaking', '#7a5fd0'], lat: ['Latin America', '#12a596'], was: ['West & South Asia', '#e0a838'],
+  afi: ['African-Islamic', '#4fa356'], ort: ['Orthodox Europe', '#cf57a6'],
+};
+const ANCHOR = new Set(['JPN', 'KOR', 'CHN', 'TWN', 'DEU', 'NLD', 'CZE', 'USA', 'GBR', 'CAN', 'AUS', 'NZL',
+  'BRA', 'MEX', 'ARG', 'CHL', 'COL', 'THA', 'SGP', 'MYS', 'EGY', 'NGA', 'IRN', 'TUR', 'IDN', 'RUS', 'UKR', 'GRC', 'SRB', 'ROU']);
+
+const pts = (wvsE.data as Row[])
+  .filter((o) => o.iso && secByIso.has(o.iso))
+  .map((o) => ({ iso: o.iso, n: SHORT[o.entity] ?? o.entity, x: o.value, y: secByIso.get(o.iso)!.value, z: ZONE[o.iso] ?? 'was' }));
+
+const W = 1180, H = 900, m = { t: 40, r: 54, b: 70, l: 76 };
+const iw = W - m.l - m.r, ih = H - m.t - m.b;
+const xs = pts.map((p) => p.x), ys = pts.map((p) => p.y);
+const xMin = Math.min(...xs) - 0.03, xMax = Math.max(...xs) + 0.03, yMin = Math.min(...ys) - 0.03, yMax = Math.max(...ys) + 0.03;
+const X = (v: number) => m.l + ((v - xMin) / (xMax - xMin)) * iw;
+const Y = (v: number) => m.t + ih - ((v - yMin) / (yMax - yMin)) * ih;
+const r1 = (v: number) => Math.round(v * 10) / 10;
+
+type Pt = [number, number];
+function hull(P: Pt[]): Pt[] {
+  P = [...P].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const cr = (o: Pt, a: Pt, b: Pt) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  const L: Pt[] = []; for (const p of P) { while (L.length >= 2 && cr(L[L.length - 2], L[L.length - 1], p) <= 0) L.pop(); L.push(p); }
+  const U: Pt[] = []; for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; while (U.length >= 2 && cr(U[U.length - 2], U[U.length - 1], p) <= 0) U.pop(); U.push(p); }
+  return L.slice(0, -1).concat(U.slice(0, -1));
+}
+const cen = (P: Pt[]): Pt => [P.reduce((s, p) => s + p[0], 0) / P.length, P.reduce((s, p) => s + p[1], 0) / P.length];
+function padRing(P: Pt[], d: number): Pt[] { const c = cen(P); return P.map(([x, y]) => { const dx = x - c[0], dy = y - c[1], L = Math.hypot(dx, dy) || 1; return [x + dx / L * d, y + dy / L * d]; }); }
+function smooth(P: Pt[]): string {
+  const n = P.length, at = (i: number) => P[((i % n) + n) % n];
+  let d = `M${at(0).map(r1)}`;
+  for (let i = 0; i < n; i++) {
+    const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += `C${c1.map(r1)} ${c2.map(r1)} ${p2.map(r1)}`;
+  }
+  return d + 'Z';
+}
+
+// build zone blobs + greedy, collision-free labels (skipped labels live in the legend)
+const boxes: { x: number; y: number; w: number; h: number }[] = [];
+const fits = (cx: number, cy: number, w: number, h: number) => {
+  const b = { x: cx - w / 2, y: cy - h / 2, w, h };
+  for (const o of boxes) if (Math.abs((b.x + w / 2) - (o.x + o.w / 2)) < (w + o.w) / 2 + 3 && Math.abs((b.y + h / 2) - (o.y + o.h / 2)) < (h + o.h) / 2 + 3) return false;
+  boxes.push(b); return true;
+};
+const blobs: { d: string; col: string }[] = [];
+const zoneLabels: { x: number; y: number; text: string; col: string }[] = [];
+for (const z of Object.keys(ZMETA)) {
+  const zp = pts.filter((p) => p.z === z).map((p) => [X(p.x), Y(p.y)] as Pt);
+  const [name, col] = ZMETA[z];
+  if (zp.length >= 3) blobs.push({ d: smooth(padRing(hull(zp), 20)), col });
+  else if (zp.length) blobs.push({ d: `M${cen(zp).map(r1)} m-32,0 a32,32 0 1,0 64,0 a32,32 0 1,0 -64,0`, col });
+  const cx = zp.reduce((s, p) => s + p[0], 0) / zp.length;
+  const topY = Math.min(...zp.map((p) => p[1]));
+  const label = name.toUpperCase();
+  if (fits(cx, topY - 12, label.length * 8.4, 18)) zoneLabels.push({ x: cx, y: topY - 12, text: label, col });
+}
+// anchor country labels (after zone labels so zones win ties)
+const dots = pts.map((p) => ({ ...p, cx: X(p.x), cy: Y(p.y), col: ZMETA[p.z][1], anchor: ANCHOR.has(p.iso) }));
+const anchorLabels: { x: number; y: number; text: string; right: boolean }[] = [];
+for (const d of dots.filter((d) => d.anchor)) {
+  const right = d.cx > W * 0.72;
+  const w = d.n.length * 7 + 10;
+  const lx = right ? d.cx - 8 - w / 2 : d.cx + 8 + w / 2;
+  if (fits(lx, d.cy, w, 15)) anchorLabels.push({ x: right ? d.cx - 8 : d.cx + 8, y: d.cy + 3.6, text: d.n, right });
+}
+const legend = Object.keys(ZMETA).map((z) => ({ name: ZMETA[z][0], col: ZMETA[z][1] }));
+---
+<div class="cmap">
+  <div class="cmap-wrap">
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="The cultural map of the world" preserveAspectRatio="xMidYMid meet">
+      {blobs.map((b) => <path d={b.d} fill={b.col} fill-opacity="0.13" stroke="none" />)}
+      <line class="cmap-axis" x1={m.l} y1={m.t} x2={m.l} y2={H - m.b} />
+      <line class="cmap-axis" x1={m.l} y1={H - m.b} x2={W - m.r} y2={H - m.b} />
+      <text class="cmap-atitle" x={m.l - 40} y={m.t + ih / 2} text-anchor="middle" transform={`rotate(-90 ${m.l - 40} ${m.t + ih / 2})`}>TRADITIONAL → SECULAR VALUES</text>
+      <text class="cmap-atitle" x={m.l + iw / 2} y={H - 24} text-anchor="middle">SURVIVAL → SELF-EXPRESSION VALUES</text>
+      {dots.map((d) => (
+        <circle class="cmap-dot" cx={r1(d.cx)} cy={r1(d.cy)} r={d.anchor ? 5.5 : 4} fill={d.col}
+          fill-opacity={d.anchor ? 1 : 0.86} data-n={d.n} data-z={ZMETA[d.z][0]}
+          data-x={d.x.toFixed(2)} data-y={d.y.toFixed(2)} />
+      ))}
+      {anchorLabels.map((l) => (
+        <text class="cmap-alabel" x={r1(l.x)} y={r1(l.y)} text-anchor={l.right ? 'end' : 'start'}>{l.text}</text>
+      ))}
+      {zoneLabels.map((l) => (
+        <text class="cmap-zlabel" x={r1(l.x)} y={r1(l.y)} text-anchor="middle" fill={l.col}>{l.text}</text>
+      ))}
+    </svg>
+    <div id="cmap-tip" class="cmap-tip" hidden></div>
+  </div>
+  <div class="cmap-legend">
+    {legend.map((l) => <span class="cl"><i style={`background:${l.col}`}></i>{l.name}</span>)}
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const wrap = document.querySelector('.cmap-wrap');
+    if (!wrap) return;
+    const svg = wrap.querySelector('svg');
+    const tip = wrap.querySelector('.cmap-tip');
+    function show(el) {
+      tip.innerHTML =
+        `<b>${el.dataset.n}</b> <span class="cz">${el.dataset.z}</span>` +
+        `<div class="cr"><span>Self-expression</span><b>${el.dataset.x}</b></div>` +
+        `<div class="cr"><span>Secular values</span><b>${el.dataset.y}</b></div>`;
+      tip.hidden = false;
+      const r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
+      const sx = r.width / vb.width, sy = r.height / vb.height;
+      const px = +el.getAttribute('cx') * sx, py = +el.getAttribute('cy') * sy;
+      tip.style.left = Math.min(px + 12, r.width - tip.offsetWidth - 6) + 'px';
+      tip.style.top = Math.max(py - tip.offsetHeight - 8, 2) + 'px';
+    }
+    for (const el of svg.querySelectorAll('.cmap-dot')) {
+      el.addEventListener('mouseenter', () => show(el));
+      el.addEventListener('mouseleave', () => { tip.hidden = true; });
+    }
+  })();
+</script>
+
+<style>
+  .cmap { margin: 10px 0 8px; }
+  .cmap-wrap { position: relative; }
+  .cmap svg { width: 100%; height: auto; display: block; }
+  .cmap-axis { stroke: var(--border); stroke-width: 1; }
+  .cmap-atitle { fill: var(--text-dim); font-size: 12.5px; font-weight: 700; letter-spacing: 1.4px; }
+  .cmap-dot { stroke: var(--bg); stroke-width: 1.2; cursor: pointer; transition: r 0.12s ease; }
+  .cmap-dot:hover { fill-opacity: 1; }
+  .cmap-alabel { fill: var(--text); font-size: 12.5px; font-weight: 600; paint-order: stroke; stroke: var(--bg); stroke-width: 3.2px; }
+  .cmap-zlabel { font-size: 14.5px; font-weight: 800; letter-spacing: 1px; paint-order: stroke; stroke: var(--bg); stroke-width: 4px; }
+  .cmap-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; font-size: 12.5px; color: var(--text-dim); }
+  .cmap-legend .cl { display: inline-flex; align-items: center; gap: 6px; }
+  .cmap-legend .cl i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+</style>
+
+<style is:global>
+  /* Tooltip body is injected with innerHTML, so it can't use scoped classes. */
+  #cmap-tip {
+    position: absolute; z-index: 6; pointer-events: none; min-width: 172px;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font-size: 12.5px; color: var(--text); box-shadow: 0 6px 22px rgba(0,0,0,0.28);
+  }
+  #cmap-tip .cz { color: var(--text-dim); font-size: 11px; }
+  #cmap-tip .cr { display: flex; justify-content: space-between; gap: 16px; margin-top: 4px; color: var(--text-dim); }
+  #cmap-tip .cr b { color: var(--text); font-family: var(--mono); }
+</style>
