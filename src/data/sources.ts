@@ -60,7 +60,7 @@ export const sources: Source[] = [
     description: 'Global survey of values across ~100 societies. We aggregated Wave 7 into the Inglehart-Welzel cultural dimensions (secular & self-expression values).' },
   { name: 'Hofstede cultural dimensions', url: 'https://geerthofstede.com/research-and-vsm/dimension-data-matrix/', status: 'live', category: 'Wellbeing & values', match: 'Hofstede',
     description: 'Geert Hofstede’s six (here five) dimensions of national culture — power distance, individualism, masculinity, uncertainty avoidance and long-term orientation.' },
-  { name: 'European Values Study (EVS)', url: 'https://europeanvaluesstudy.eu/', status: 'catalog', category: 'Wellbeing & values', dash: 'evs',
+  { name: 'European Values Study (EVS)', url: 'https://europeanvaluesstudy.eu/', status: 'live', category: 'Wellbeing & values', match: 'European Values Study', dash: 'evs',
     description: 'Large-scale, repeated survey of human values across Europe. Extended dashboard from the 2017 wave: 36 countries, weighted, by sex and age — happiness, trust, politics, religion and social tolerance.' },
   { name: 'Wellcome Global Monitor', url: 'https://wellcome.org/reports/wellcome-global-monitor', status: 'live', category: 'Wellbeing & values', match: 'Wellcome Global Monitor', dash: 'wellcome',
     description: 'Gallup study of how people worldwide think and feel about science and health. We aggregated 2018: trust in science and scientists, vaccine safety and effectiveness.' },
@@ -76,11 +76,11 @@ export const sources: Source[] = [
     description: 'EC Joint Research Centre / IASC index of humanitarian crisis and disaster risk, including hazard, vulnerability and coping capacity.' },
 
   // ── Public opinion (regional barometers) ───────────────────────────
-  { name: 'Eurobarometer', url: 'https://europa.eu/eurobarometer/', status: 'catalog', category: 'Public opinion barometers', dash: 'eurobarometer',
+  { name: 'Eurobarometer', url: 'https://europa.eu/eurobarometer/', status: 'live', category: 'Public opinion barometers', match: 'Eurobarometer', dash: 'eurobarometer',
     description: 'European Commission’s standard survey of public opinion across EU member states since 1974. Extended dashboard: 34 countries, weighted, with breakdowns by sex and age — democracy, wellbeing, digital behaviour and science/media.' },
   { name: 'European Social Survey (ESS)', url: 'https://www.europeansocialsurvey.org/', status: 'live', category: 'Public opinion barometers', match: 'European Social Survey',
     description: 'Rigorous biennial survey of attitudes across Europe. We aggregated trust in people and satisfaction with democracy.' },
-  { name: 'ISSP — International Social Survey Programme', url: 'https://issp.org/', status: 'catalog', category: 'Public opinion barometers', dash: 'issp',
+  { name: 'ISSP — International Social Survey Programme', url: 'https://issp.org/', status: 'live', category: 'Public opinion barometers', match: 'ISSP', dash: 'issp',
     description: 'Annual cross-national survey on rotating social-science themes. Extended dashboard from the 2020 Environment module: 28 countries worldwide, weighted, by sex and age — trust, media, the environment and green trade-offs.' },
   { name: 'Afrobarometer', url: 'https://www.afrobarometer.org/', status: 'live', category: 'Public opinion barometers', match: 'Afrobarometer', dash: 'afrobarometer',
     description: 'Pan-African survey of attitudes on democracy, governance and quality of life. We aggregated Round 9 (39 countries): support for democracy, trust, perceived democracy.' },
