@@ -82,6 +82,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
   <div id="view-map" class="view" hidden><WorldMap /></div>
   <div id="view-bubbles" class="view" hidden>
     <svg id="bubble-target" viewBox="0 0 960 520" role="img" aria-label="Bubble map: circle area = indicator value" preserveAspectRatio="xMidYMid meet"></svg>
+    <div id="bubble-tip" hidden></div>
     <div class="map-legend" id="bubble-legend"></div>
   </div>
 </div>
@@ -248,7 +249,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
   // the country's map position and gently pushed apart until nothing overlaps.
   function renderBubbles(rows) {
     const m = meta(); const unit = m.unit.includes('%') ? '%' : '';
-    const data = rows.filter((r) => r.iso && CENT[r.iso]).slice(0, 60);
+    const data = rows.map((r, i) => ({ ...r, rank: i + 1 })).filter((r) => r.iso && CENT[r.iso]).slice(0, 60);
     if (!data.length) { el('bubble-target').innerHTML = ''; el('bubble-legend').innerHTML = '<span class="legend-label">No countries with map positions for this indicator.</span>'; return; }
     const signed = data.some((r) => r.value < 0);
     const maxV = Math.max(...data.map((r) => Math.abs(r.value))) || 1;
@@ -269,6 +270,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
     }
     const absSorted = data.map((r) => Math.abs(r.value)).sort((x, y) => x - y);
     const rankT = (v) => absSorted.length > 1 ? absSorted.indexOf(Math.abs(v)) / (absSorted.length - 1) : 1;
+    el('bubble-target').dataset.lbl = m.valueLabel;
     el('bubble-target').innerHTML = nodes.map((n) => {
       const t = signed ? Math.abs(n.value) / maxV : 0.15 + 0.85 * rankT(n.value);
       const col = signed ? (n.value < 0 ? mix(GREY, RED, Math.abs(n.value) / maxV) : mix(GREY, GREEN, n.value / maxV)) : mix(DARK, AMBER, t);
@@ -276,12 +278,44 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
       const txt = dark ? '#1a1300' : '#e7e9ec';
       const a2 = isoAlpha2[n.iso] || n.iso.slice(0, 2);
       const showCode = n.r > 9, showVal = n.r > 19;
-      return `<g transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})">` +
-        `<circle r="${n.r.toFixed(1)}" fill="${col}" fill-opacity="0.94" stroke="rgba(0,0,0,0.35)" stroke-width="1"><title>${n.entity} — ${fmtNum(n.value)}${unit}</title></circle>` +
+      const ent = String(n.entity).replace(/"/g, '&quot;');
+      return `<g transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})" data-e="${ent}" data-iso="${n.iso}"` +
+        ` data-v="${fmtNum(n.value)}${unit}" data-r="#${n.rank} of ${rows.length}"` +
+        ` data-c="${n.change == null ? '' : fmtChange(n.change, m.changeMode)}" data-g="${n.group || ''}">` +
+        `<circle r="${n.r.toFixed(1)}" fill="${col}" fill-opacity="0.94" stroke="rgba(0,0,0,0.35)" stroke-width="1"></circle>` +
         (showCode ? `<text class="bub-t" fill="${txt}" y="${showVal ? -2.5 : 4}">${a2}</text>` : '') +
         (showVal ? `<text class="bub-v" fill="${txt}" y="12">${fmtNum(n.value)}${unit}</text>` : '') + `</g>`;
     }).join('');
-    el('bubble-legend').innerHTML = `<span class="legend-label">${m.valueLabel} · ${state.period} · bubble size = value · top ${nodes.length} of ${rows.length} countries · hover for names</span>`;
+    el('bubble-legend').innerHTML = `<span class="legend-label">${m.valueLabel} · ${state.period} · bubble size = value · top ${nodes.length} of ${rows.length} countries · hover or tap a bubble</span>`;
+  }
+
+  // Bubble tooltip: hover for the full story, click/tap to pin it.
+  {
+    const btgt = el('bubble-target'), btip = el('bubble-tip'), bwrap = el('view-bubbles');
+    let pinned = false;
+    const show = (g, ev) => {
+      const d = g.dataset;
+      btip.innerHTML = `<b>${flag(d.iso)}${d.e}</b>` +
+        `<div class="tr"><span>${btgt.dataset.lbl || 'Value'}</span><b>${d.v}</b></div>` +
+        `<div class="tr"><span>Rank</span><b>${d.r}</b></div>` +
+        (d.c ? `<div class="tr"><span>vs previous period</span><b>${d.c}</b></div>` : '') +
+        (d.g ? `<div class="tr"><span>Region</span><b>${d.g}</b></div>` : '');
+      btip.hidden = false;
+      const r = bwrap.getBoundingClientRect();
+      const x = ev.clientX - r.left, y = ev.clientY - r.top;
+      btip.style.left = Math.max(4, Math.min(x + 14, r.width - btip.offsetWidth - 8)) + 'px';
+      btip.style.top = Math.max(y - btip.offsetHeight - 12, 4) + 'px';
+    };
+    btgt.addEventListener('mousemove', (e) => {
+      if (pinned) return;
+      const g = e.target.closest('g[data-e]');
+      if (g) show(g, e); else btip.hidden = true;
+    });
+    btgt.addEventListener('mouseleave', () => { if (!pinned) btip.hidden = true; });
+    btgt.addEventListener('click', (e) => {
+      const g = e.target.closest('g[data-e]');
+      if (g) { pinned = true; show(g, e); } else { pinned = false; btip.hidden = true; }
+    });
   }
 
   async function render() {
