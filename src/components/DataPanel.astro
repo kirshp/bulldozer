@@ -40,15 +40,15 @@ export interface IndexItem {
   slug: string; title: string; kind: string; unit: string; valueLabel: string;
   changeMode: 'pct' | 'pp'; periods: string[];
 }
-interface Props { indicators: IndexItem[]; pinnedSlug?: string }
-const { indicators, pinnedSlug } = Astro.props;
+interface Props { indicators: IndexItem[]; pinnedSlug?: string; defaultView?: 'bar' | 'table' | 'map' | 'bubbles' }
+const { indicators, pinnedSlug, defaultView = 'bar' } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const showIndicator = !pinnedSlug && indicators.length > 1;
 // Default to a flagship indicator, not "datasets[0] after alphabetical sort" —
 // that shifts to whatever obscure dataset title happens to sort first
 // whenever a new one is added (e.g. "Acceptance of ..."), which reads as random.
 const defaultSlug = indicators.some((d) => d.slug === 'whr-happiness') ? 'whr-happiness' : indicators[0]?.slug;
-const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, datasets: indicators };
+const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView, datasets: indicators };
 ---
 <div class="datapanel">
   <div class="controls">
@@ -102,7 +102,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, datasets: in
   const el = (id) => document.getElementById(id);
   const selI = el('sel-indicator'), selP = el('sel-period'), selQ = el('sel-query');
   const TOP_N = 7;
-  const state = { slug: cfg.pinnedSlug || cfg.defaultSlug || cfg.datasets[0]?.slug, period: null, view: 'bar', query: '', pinned: new Set(), showAll: false, sortDir: 'desc' };
+  const state = { slug: cfg.pinnedSlug || cfg.defaultSlug || cfg.datasets[0]?.slug, period: null, view: cfg.defaultView || 'bar', query: '', pinned: new Set(), showAll: false, sortDir: 'desc' };
   const cache = new Map();
   const meta = () => cfg.datasets.find((d) => d.slug === state.slug);
 
