@@ -549,6 +549,11 @@ table.data td.num { text-align: right; font-family: var(--mono); }
 .legend-bar { width: 160px; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--bg-card), var(--accent)); border: 1px solid var(--border); }
 .legend-label { margin-left: auto; text-transform: uppercase; letter-spacing: 1px; }
 
+/* Bubbles view (DataPanel) — drawn with innerHTML, so styled globally */
+#view-bubbles svg { width: 100%; height: auto; display: block; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); }
+#view-bubbles .bub-t { text-anchor: middle; font-family: var(--mono); font-size: 11.5px; font-weight: 700; pointer-events: none; }
+#view-bubbles .bub-v { text-anchor: middle; font-family: var(--mono); font-size: 10px; font-weight: 600; pointer-events: none; opacity: 0.85; }
+
 /* Footer */
 .site-footer { border-top: 1px solid var(--border); margin-top: 40px; padding: 28px 0; color: var(--text-dim); font-size: 13px; }
 .site-footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }

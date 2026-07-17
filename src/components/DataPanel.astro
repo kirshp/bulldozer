@@ -2,6 +2,36 @@
 import WorldMap from '@components/WorldMap.astro';
 import isoNumeric from '@data/iso-numeric.json';
 import isoAlpha2 from '@data/iso-alpha2.json';
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { feature } from 'topojson-client';
+import { geoNaturalEarth1, geoCentroid } from 'd3-geo';
+
+// Projected country centroids for the Bubbles view — same projection and
+// frame as WorldMap, so bubbles start from each country's map position.
+const requireHere = createRequire(import.meta.url);
+const worldTopo = JSON.parse(readFileSync(requireHere.resolve('world-atlas/countries-110m.json'), 'utf8'));
+const worldFc: any = feature(worldTopo, (worldTopo as any).objects.countries);
+const bubbleProj = geoNaturalEarth1().fitSize([960, 480], worldFc);
+const centroids: Record<string, [number, number]> = {};
+for (const f of worldFc.features) {
+  const a3 = (isoNumeric as any)[String(Number(f.id))];
+  if (!a3) continue;
+  const c = bubbleProj(geoCentroid(f) as [number, number]);
+  if (c) centroids[a3] = [Math.round(c[0]), Math.round(c[1])];
+}
+// Micro-states missing from the 110m geometry (Hong Kong tops several market
+// indicators) — pin them by hand so they don't vanish from the bubble view.
+const MICRO: Record<string, [number, number]> = {
+  HKG: [114.17, 22.3], SGP: [103.85, 1.29], BHR: [50.55, 26.05], MLT: [14.4, 35.9],
+  MUS: [57.55, -20.3], BRB: [-59.55, 13.1], MCO: [7.42, 43.73], LIE: [9.52, 47.14],
+  AND: [1.52, 42.5], SMR: [12.45, 43.94], SYC: [55.45, -4.6], MDV: [73.5, 4.2], CPV: [-23.6, 15.1],
+};
+for (const [a3, ll] of Object.entries(MICRO)) {
+  if (centroids[a3]) continue;
+  const c = bubbleProj(ll as [number, number]);
+  if (c) centroids[a3] = [Math.round(c[0]), Math.round(c[1])];
+}
 
 // Reusable interactive panel: indicator (optional) + period + country search +
 // Bars/Table/Map views. Used by /explore (all indicators) and each dataset
@@ -31,6 +61,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, datasets: in
       <button data-view="bar" class="active">Bars</button>
       <button data-view="table">Table</button>
       <button data-view="map">Map</button>
+      <button data-view="bubbles">Bubbles</button>
     </div>
   </div>
 
@@ -49,9 +80,14 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, datasets: in
   </div>
   <div id="view-table" class="view" hidden><table class="data" id="table-target"></table></div>
   <div id="view-map" class="view" hidden><WorldMap /></div>
+  <div id="view-bubbles" class="view" hidden>
+    <svg id="bubble-target" viewBox="0 0 960 520" role="img" aria-label="Bubble map: circle area = indicator value" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="map-legend" id="bubble-legend"></div>
+  </div>
 </div>
 
 <script type="application/json" id="bd-config" set:html={JSON.stringify(config)}></script>
+<script type="application/json" id="bd-centroids" set:html={JSON.stringify(centroids)}></script>
 <script type="application/json" id="bd-iso" set:html={JSON.stringify(isoNumeric)}></script>
 <script type="application/json" id="bd-a2" set:html={JSON.stringify(isoAlpha2)}></script>
 
@@ -59,6 +95,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, datasets: in
   const cfg = JSON.parse(document.getElementById('bd-config').textContent);
   const isoNumeric = JSON.parse(document.getElementById('bd-iso').textContent); // numeric -> alpha3
   const isoAlpha2 = JSON.parse(document.getElementById('bd-a2').textContent);   // alpha3 -> alpha2
+  const CENT = JSON.parse(document.getElementById('bd-centroids').textContent); // alpha3 -> [x,y]
   // Flag emoji from alpha-3; '' for aggregates/unknowns (decorative only).
   const flag = (iso) => { const a2 = iso && isoAlpha2[iso.toUpperCase()]; return a2 ? String.fromCodePoint(...[...a2].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) + ' ' : ''; };
   const BASE = cfg.base;
@@ -72,7 +109,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, datasets: in
   // ---- deep-link state from the URL ----
   const params = new URLSearchParams(location.search);
   if (!cfg.pinnedSlug && params.get('i') && cfg.datasets.some((d) => d.slug === params.get('i'))) state.slug = params.get('i');
-  if (['bar', 'table', 'map'].includes(params.get('v'))) state.view = params.get('v');
+  if (['bar', 'table', 'map', 'bubbles'].includes(params.get('v'))) state.view = params.get('v');
   function syncUrl() {
     const p = new URLSearchParams(location.search);
     if (!cfg.pinnedSlug) p.set('i', state.slug);
@@ -207,11 +244,51 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, datasets: in
     el('map-legend').innerHTML = `<span>${isFinite(min) ? fmtNum(min) : '—'}${unit}</span><span class="legend-bar" style="background:${bar}"></span><span>${isFinite(max) ? fmtNum(max) : '—'}${unit}</span><span class="legend-label">${m.valueLabel} · ${state.period}${diverging ? ' · 0-centred' : ' · shaded by rank'}</span>`;
   }
 
+  // Dorling-style bubble map: a circle per country, area = value, anchored at
+  // the country's map position and gently pushed apart until nothing overlaps.
+  function renderBubbles(rows) {
+    const m = meta(); const unit = m.unit.includes('%') ? '%' : '';
+    const data = rows.filter((r) => r.iso && CENT[r.iso]).slice(0, 60);
+    if (!data.length) { el('bubble-target').innerHTML = ''; el('bubble-legend').innerHTML = '<span class="legend-label">No countries with map positions for this indicator.</span>'; return; }
+    const signed = data.some((r) => r.value < 0);
+    const maxV = Math.max(...data.map((r) => Math.abs(r.value))) || 1;
+    const W = 960, H = 520, MAXR = 54, MINR = 4;
+    // pow 0.4 instead of a strict sqrt: one outlier (Hong Kong at 1,114%)
+    // would otherwise shrink everyone else into unlabelled dots
+    const nodes = data.map((r) => ({ ...r,
+      x: CENT[r.iso][0], y: CENT[r.iso][1] + 20,
+      r: Math.max(MINR, Math.pow(Math.abs(r.value) / maxV, 0.4) * MAXR) }));
+    for (let it = 0; it < 70; it++) {
+      for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        let dx = b.x - a.x, dy = b.y - a.y;
+        const d = Math.hypot(dx, dy) || 0.001, min = a.r + b.r + 1.5;
+        if (d < min) { const push = (min - d) / 2; dx /= d; dy /= d; a.x -= dx * push; a.y -= dy * push; b.x += dx * push; b.y += dy * push; }
+      }
+      for (const n of nodes) { n.x = Math.max(n.r + 2, Math.min(W - n.r - 2, n.x)); n.y = Math.max(n.r + 2, Math.min(H - n.r - 2, n.y)); }
+    }
+    const absSorted = data.map((r) => Math.abs(r.value)).sort((x, y) => x - y);
+    const rankT = (v) => absSorted.length > 1 ? absSorted.indexOf(Math.abs(v)) / (absSorted.length - 1) : 1;
+    el('bubble-target').innerHTML = nodes.map((n) => {
+      const t = signed ? Math.abs(n.value) / maxV : 0.15 + 0.85 * rankT(n.value);
+      const col = signed ? (n.value < 0 ? mix(GREY, RED, Math.abs(n.value) / maxV) : mix(GREY, GREEN, n.value / maxV)) : mix(DARK, AMBER, t);
+      const dark = !signed && t > 0.55;
+      const txt = dark ? '#1a1300' : '#e7e9ec';
+      const a2 = isoAlpha2[n.iso] || n.iso.slice(0, 2);
+      const showCode = n.r > 9, showVal = n.r > 19;
+      return `<g transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})">` +
+        `<circle r="${n.r.toFixed(1)}" fill="${col}" fill-opacity="0.94" stroke="rgba(0,0,0,0.35)" stroke-width="1"><title>${n.entity} — ${fmtNum(n.value)}${unit}</title></circle>` +
+        (showCode ? `<text class="bub-t" fill="${txt}" y="${showVal ? -2.5 : 4}">${a2}</text>` : '') +
+        (showVal ? `<text class="bub-v" fill="${txt}" y="12">${fmtNum(n.value)}${unit}</text>` : '') + `</g>`;
+    }).join('');
+    el('bubble-legend').innerHTML = `<span class="legend-label">${m.valueLabel} · ${state.period} · bubble size = value · top ${nodes.length} of ${rows.length} countries · hover for names</span>`;
+  }
+
   async function render() {
     const ds = await load(state.slug); const m = meta(); const rows = rowsFor(ds);
     el('ex-summary').textContent = `${m.title} · ${state.period} · ${rows.length} countries · unit ${m.unit}`;
-    for (const v of ['bar', 'table', 'map']) el('view-' + v).hidden = state.view !== v;
-    if (state.view === 'bar') renderBars(rows); else if (state.view === 'table') renderTable(rows); else renderMap(rows);
+    for (const v of ['bar', 'table', 'map', 'bubbles']) el('view-' + v).hidden = state.view !== v;
+    if (state.view === 'bar') renderBars(rows); else if (state.view === 'table') renderTable(rows); else if (state.view === 'bubbles') renderBubbles(rows); else renderMap(rows);
     syncUrl();
   }
 
