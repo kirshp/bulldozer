@@ -185,11 +185,15 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, datasets: in
   function renderMap(rows) {
     const m = meta(); const unit = m.unit.includes('%') ? '%' : '';
     const byIso = new Map(); for (const r of rows) if (r.iso) byIso.set(r.iso, r.value);
-    const vals = [...byIso.values()]; const min = Math.min(...vals), max = Math.max(...vals), span = (max - min) || 1;
+    const vals = [...byIso.values()]; const min = Math.min(...vals), max = Math.max(...vals);
     const diverging = min < 0 && max > 0; // signed indicator → red ↔ green around zero
+    // Shade by rank, not raw value: one outlier (Hong Kong at 1,114% of GDP)
+    // would otherwise squash every other country into near-background black.
+    const sorted = [...vals].sort((a, b) => a - b);
+    const rankT = (v) => sorted.length > 1 ? sorted.indexOf(v) / (sorted.length - 1) : 1;
     const colorFor = (v) => diverging
       ? (v < 0 ? mix(GREY, RED, v / min) : mix(GREY, GREEN, v / max))
-      : mix(DARK, AMBER, (v - min) / span);
+      : mix(DARK, AMBER, 0.08 + 0.92 * rankT(v));
     el('view-map').querySelectorAll('.country').forEach((p) => {
       // data-num is zero-padded ("076"); iso-numeric keys are unpadded ("76")
       const iso = isoNumeric[String(Number(p.getAttribute('data-num')))];
@@ -200,7 +204,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, datasets: in
     const bar = diverging
       ? 'linear-gradient(90deg,#f87171,#464a52,#34d399)'
       : 'linear-gradient(90deg,var(--bg-card),var(--accent))';
-    el('map-legend').innerHTML = `<span>${isFinite(min) ? fmtNum(min) : '—'}${unit}</span><span class="legend-bar" style="background:${bar}"></span><span>${isFinite(max) ? fmtNum(max) : '—'}${unit}</span><span class="legend-label">${m.valueLabel} · ${state.period}${diverging ? ' · 0-centred' : ''}</span>`;
+    el('map-legend').innerHTML = `<span>${isFinite(min) ? fmtNum(min) : '—'}${unit}</span><span class="legend-bar" style="background:${bar}"></span><span>${isFinite(max) ? fmtNum(max) : '—'}${unit}</span><span class="legend-label">${m.valueLabel} · ${state.period}${diverging ? ' · 0-centred' : ' · shaded by rank'}</span>`;
   }
 
   async function render() {

@@ -1,16 +1,17 @@
 ---
 /**
- * "Europe in relief" — an isometric extruded choropleth for /macro.
- * Height of each country = GDP per capita (PPP); colour = happiness (WHR).
- * Built from raw world-atlas geometry (overseas territories clipped away),
- * projected + tilted, then extruded by stacking translated rings so a plain
- * SVG reads as 3-D. Every country's top face is hoverable for its numbers.
+ * "Europe in relief" — the familiar flat Europe choropleth with a gentle
+ * 3-D lift for /macro. Height of each country = GDP per capita (PPP);
+ * colour = happiness (WHR), same blue ramp as the flat map. Built from raw
+ * world-atlas geometry (overseas territories clipped away), projected with
+ * the flat map's conic projection, then extruded a few pixels by stacking
+ * translated rings. Every country's top face is hoverable for its numbers.
  * Our own render — not traced from any atlas.
  */
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { feature } from 'topojson-client';
-import { geoMercator, geoCentroid } from 'd3-geo';
+import { geoConicConformal, geoCentroid } from 'd3-geo';
 import isoNumericJson from '@data/iso-numeric.json';
 import gdpJson from '@data/macro/imf-gdp-per-capita-ppp.json';
 import whrJson from '@data/surveys/whr-happiness.json';
@@ -37,9 +38,11 @@ const raw = fc.features
   .map((f: any) => ({ f, a3: isoNumeric[String(Number(f.id))], rings: euRings(f) }))
   .filter((o: any) => o.rings.length);
 
-const W = 1160, H = 760, TILT = 0.56, MAXH = 62, MINH = 7, M = 44;
+const W = 1160, H = 720, TILT = 0.92, MAXH = 26, MINH = 3, M = 44;
 const allPts: number[][] = raw.flatMap((o: any) => o.rings.flat());
-const proj = geoMercator().fitExtent([[M, M + MAXH], [W - M, H - M]], { type: 'MultiPoint', coordinates: allPts } as any);
+// Same conic projection as the flat Europe map, so the shape reads "as before".
+const proj = geoConicConformal().parallels([43, 62]).rotate([-13, 0])
+  .fitExtent([[M, M + MAXH], [W - M, H - M]], { type: 'MultiPoint', coordinates: allPts } as any);
 const projYs = allPts.map((ll) => proj(ll as any)![1]);
 const yMid = (Math.min(...projYs) + Math.max(...projYs)) / 2;
 const T = ([x, y]: [number, number]): [number, number] => [x, yMid + (y - yMid) * TILT];
@@ -50,9 +53,11 @@ const heightOf = (g?: number) => (g == null ? 0 : MINH + Math.pow((g - gMin) / (
 const wVals = raw.map((o: any) => wByIso.get(o.a3)).filter((v: any) => v != null) as number[];
 const wMin = Math.min(...wVals), wMax = Math.max(...wVals);
 const lerp = (a: number[], b: number[], t: number) => a.map((v, i) => v + (b[i] - v) * t);
-const LO = [54, 68, 110], HI = [132, 186, 255];
+// Same look as the flat map: #3b82f6 blue whose strength tracks happiness,
+// pre-blended against the light paper stage into solid fills.
+const PAPER = [243, 245, 250], BLUE = [59, 130, 246];
 const rgb = (a: number[]) => `rgb(${Math.round(a[0])},${Math.round(a[1])},${Math.round(a[2])})`;
-const topCol = (w?: number) => (w == null ? [72, 76, 86] : lerp(LO, HI, (w - wMin) / (wMax - wMin)));
+const topCol = (w?: number) => (w == null ? [225, 229, 237] : lerp(PAPER, BLUE, 0.16 + 0.72 * ((w - wMin) / (wMax - wMin))));
 const r1 = (v: number) => Math.round(v * 10) / 10;
 
 const recs = raw.map((o: any) => {
@@ -68,11 +73,12 @@ const ringD = (rings: number[][][], dy: number) =>
 // build the extruded body (stacked rings) + a hoverable top face per country
 let bodyHtml = '';
 for (const r of recs) {
-  const h = heightOf(r.gdp), tc = topCol(r.whr), side = tc.map((v) => v * 0.4);
-  const steps = Math.max(1, Math.round(h));
+  const h = heightOf(r.gdp), tc = topCol(r.whr);
+  // one solid, slightly darker shade for the whole wall — smooth, no banding
+  const side = rgb(lerp(tc, [96, 114, 152], 0.55));
+  const steps = Math.max(1, Math.round(h * 2));
   for (let i = 0; i < steps; i++) {
-    const t = i / steps;
-    bodyHtml += `<path class="er-body" d="${ringD(r.rings, -h * t)}" fill="${rgb(lerp(side, tc, t))}"/>`;
+    bodyHtml += `<path class="er-body" d="${ringD(r.rings, -h * (i / steps))}" fill="${side}"/>`;
   }
   const name = SHORT[r.name] ?? r.name;
   const gTxt = r.gdp != null ? '$' + Math.round(r.gdp / 1000) + 'k' : '—';
@@ -135,15 +141,15 @@ for (const r of [...recs].sort((a, b) => (b.gdp ?? 0) - (a.gdp ?? 0))) {
 
 <style>
   .er { margin: 10px 0 8px; }
-  .er-wrap { position: relative; background: #0e0f11; border: 1px solid #22252b; border-radius: var(--radius); overflow: hidden; }
+  .er-wrap { position: relative; background: #f3f5fa; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   .er-wrap svg { width: 100%; height: auto; display: block; }
   .er-body { pointer-events: none; }
-  .er-top { cursor: pointer; stroke: rgba(6,8,12,0.45); stroke-width: 0.5; }
-  .er-top:hover { stroke: #fff; stroke-width: 1.1; }
-  .er-lab { fill: #eef2f8; font-size: 11.5px; font-weight: 700; paint-order: stroke; stroke: rgba(10,12,18,0.8); stroke-width: 2.6px; pointer-events: none; }
+  .er-top { cursor: pointer; stroke: rgba(255,255,255,0.8); stroke-width: 0.6; }
+  .er-top:hover { stroke: #0f172a; stroke-width: 1.1; }
+  .er-lab { fill: #1f2b46; font-size: 11.5px; font-weight: 700; paint-order: stroke; stroke: rgba(255,255,255,0.85); stroke-width: 2.6px; pointer-events: none; }
   .er-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 10px; font-size: 12px; color: var(--text-dim); }
   .er-key b { color: var(--text); font-weight: 600; }
-  .er-ramp { width: 90px; height: 10px; border-radius: 5px; display: inline-block; background: linear-gradient(90deg, rgb(54,68,110), rgb(132,186,255)); border: 1px solid var(--border); }
+  .er-ramp { width: 90px; height: 10px; border-radius: 5px; display: inline-block; background: linear-gradient(90deg, rgb(214,227,247), rgb(81,144,246)); border: 1px solid var(--border); }
 </style>
 
 <style is:global>
