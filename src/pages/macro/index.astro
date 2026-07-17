@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SourceCatalog from '@components/SourceCatalog.astro';
 import DatasetList from '@components/DatasetList.astro';
+import EuropeMap from '@components/EuropeMap.astro';
 import EuropeRelief from '@components/EuropeRelief.astro';
 import { datasetsByKind } from '@data/datasets';
 const items = datasetsByKind('macro');
@@ -14,12 +15,32 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <h2>Macro, Country &amp; City statistics</h2>
       <p class="page-tagline">Bullish on the numbers.</p>
       <p class="sub">Objective indicators across {datasetsByKind('macro').length} datasets — economy, demographics, health, education, environment, governance and risk. Search or browse by topic.</p>
-      <h3 style="margin:6px 0 2px">Europe in relief</h3>
-      <p class="sub">Countries raised by their wealth and coloured by their mood — <b>height = GDP per capita (PPP)</b>, <b>colour = happiness</b>. Hover a country for its numbers. <a href={`${base}/dataset/gapminder-internet`}>The internet-adoption chart</a> that used to live here is one click away.</p>
-      <EuropeRelief />
+      <div class="eu-head">
+        <h3 style="margin:6px 0 2px">Europe: happiness &amp; cities</h3>
+        <div class="view-toggle" id="eu-mode" role="tablist" aria-label="Europe map style">
+          <button type="button" class="active" data-m="flat">Flat map</button>
+          <button type="button" data-m="relief">3-D relief</button>
+        </div>
+      </div>
+      <p class="sub">Countries shaded by happiness, city dots sized by their own ratings — or flip to the relief, where <b>height = GDP per capita (PPP)</b> and <b>colour = happiness</b>. <a href={`${base}/dataset/gapminder-internet`}>The internet-adoption chart</a> that used to live here is one click away.</p>
+      <div id="eu-flat"><EuropeMap /></div>
+      <div id="eu-relief" hidden><EuropeRelief /></div>
+      <script is:inline>
+        document.getElementById('eu-mode').addEventListener('click', (e) => {
+          const b = e.target.closest('button'); if (!b) return;
+          document.querySelectorAll('#eu-mode button').forEach((x) => x.classList.toggle('active', x === b));
+          document.getElementById('eu-flat').hidden = b.dataset.m !== 'flat';
+          document.getElementById('eu-relief').hidden = b.dataset.m !== 'relief';
+        });
+      </script>
       <DatasetList items={items} />
     </div>
   </section>
+
+  <style>
+    .eu-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .eu-head .view-toggle { margin-top: 4px; }
+  </style>
 
   <section class="section" style="padding-top:0">
     <div class="container">
