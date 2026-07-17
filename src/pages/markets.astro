@@ -20,7 +20,7 @@ const countryList = (items: { iso?: string | null }[]) => {
 const coCountries = countryList(companies);
 const brCountries = countryList(brands);
 
-const MARKET = ['wb-market-cap', 'forbes-global-2000', 'brandz-value', 'brandz-count', 'wb-stocks-traded', 'wb-listed-companies'];
+const MARKET = ['wb-market-cap-share', 'wb-market-cap', 'forbes-global-2000', 'brandz-value', 'brandz-count', 'wb-stocks-traded', 'wb-listed-companies'];
 const FINANCE = ['wb-account-ownership', 'wb-digital-payments', 'wb-mobile-money', 'wb-debit-card', 'wb-bank-branches'];
 const slugs = [...MARKET, ...FINANCE].filter((s) => getDataset(s));
 const panelIndicators = slugs.map((s) => {
