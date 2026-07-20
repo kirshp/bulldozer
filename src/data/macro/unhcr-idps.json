@@ -9,7 +9,7 @@
     "source": "UNHCR Refugee Data Finder",
     "license": "CC BY 4.0",
     "url": "https://www.unhcr.org/refugee-statistics/",
-    "parsedAt": "2026-07-13",
+    "parsedAt": "2026-07-20",
     "kind": "macro"
   },
   "data": [
@@ -182,13 +182,6 @@
       "iso": "SLV"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2018",
-      "value": 215794,
-      "iso": "SRB"
-    },
-    {
       "entity": "Somalia",
       "group": "Africa",
       "period": "2018",
@@ -196,11 +189,11 @@
       "iso": "SOM"
     },
     {
-      "entity": "Sudan",
-      "group": "Africa",
+      "entity": "Serbia",
+      "group": "Europe",
       "period": "2018",
-      "value": 1864195,
-      "iso": "SDN"
+      "value": 215794,
+      "iso": "SRB"
     },
     {
       "entity": "South Sudan",
@@ -208,6 +201,13 @@
       "period": "2018",
       "value": 1878154,
       "iso": "SSD"
+    },
+    {
+      "entity": "Sudan",
+      "group": "Africa",
+      "period": "2018",
+      "value": 1864195,
+      "iso": "SDN"
     },
     {
       "entity": "Syria",
@@ -406,13 +406,6 @@
       "iso": "SLV"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2019",
-      "value": 214696,
-      "iso": "SRB"
-    },
-    {
       "entity": "Somalia",
       "group": "Africa",
       "period": "2019",
@@ -420,11 +413,11 @@
       "iso": "SOM"
     },
     {
-      "entity": "Sudan",
-      "group": "Africa",
+      "entity": "Serbia",
+      "group": "Europe",
       "period": "2019",
-      "value": 1885782,
-      "iso": "SDN"
+      "value": 214696,
+      "iso": "SRB"
     },
     {
       "entity": "South Sudan",
@@ -432,6 +425,13 @@
       "period": "2019",
       "value": 1665815,
       "iso": "SSD"
+    },
+    {
+      "entity": "Sudan",
+      "group": "Africa",
+      "period": "2019",
+      "value": 1885782,
+      "iso": "SDN"
     },
     {
       "entity": "Syria",
@@ -651,13 +651,6 @@
       "iso": "SLV"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2020",
-      "value": 213018,
-      "iso": "SRB"
-    },
-    {
       "entity": "Somalia",
       "group": "Africa",
       "period": "2020",
@@ -665,11 +658,11 @@
       "iso": "SOM"
     },
     {
-      "entity": "Sudan",
-      "group": "Africa",
+      "entity": "Serbia",
+      "group": "Europe",
       "period": "2020",
-      "value": 2552174,
-      "iso": "SDN"
+      "value": 213018,
+      "iso": "SRB"
     },
     {
       "entity": "South Sudan",
@@ -677,6 +670,13 @@
       "period": "2020",
       "value": 1600254,
       "iso": "SSD"
+    },
+    {
+      "entity": "Sudan",
+      "group": "Africa",
+      "period": "2020",
+      "value": 2552174,
+      "iso": "SDN"
     },
     {
       "entity": "Syria",
@@ -889,13 +889,6 @@
       "iso": "SLV"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2021",
-      "value": 211823,
-      "iso": "SRB"
-    },
-    {
       "entity": "Solomon Islands",
       "group": "Asia",
       "period": "2021",
@@ -910,11 +903,11 @@
       "iso": "SOM"
     },
     {
-      "entity": "Sudan",
-      "group": "Africa",
+      "entity": "Serbia",
+      "group": "Europe",
       "period": "2021",
-      "value": 3036590,
-      "iso": "SDN"
+      "value": 211823,
+      "iso": "SRB"
     },
     {
       "entity": "South Sudan",
@@ -922,6 +915,13 @@
       "period": "2021",
       "value": 2017236,
       "iso": "SSD"
+    },
+    {
+      "entity": "Sudan",
+      "group": "Africa",
+      "period": "2021",
+      "value": 3036590,
+      "iso": "SDN"
     },
     {
       "entity": "Syria",
@@ -1127,13 +1127,6 @@
       "iso": "SLV"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2022",
-      "value": 210308,
-      "iso": "SRB"
-    },
-    {
       "entity": "Solomon Islands",
       "group": "Asia",
       "period": "2022",
@@ -1148,11 +1141,11 @@
       "iso": "SOM"
     },
     {
-      "entity": "Sudan",
-      "group": "Africa",
+      "entity": "Serbia",
+      "group": "Europe",
       "period": "2022",
-      "value": 3552717,
-      "iso": "SDN"
+      "value": 210308,
+      "iso": "SRB"
     },
     {
       "entity": "South Sudan",
@@ -1160,6 +1153,13 @@
       "period": "2022",
       "value": 1474679,
       "iso": "SSD"
+    },
+    {
+      "entity": "Sudan",
+      "group": "Africa",
+      "period": "2022",
+      "value": 3552717,
+      "iso": "SDN"
     },
     {
       "entity": "Syria",
@@ -1372,13 +1372,6 @@
       "iso": "SLV"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2023",
-      "value": 209790,
-      "iso": "SRB"
-    },
-    {
       "entity": "Solomon Islands",
       "group": "Asia",
       "period": "2023",
@@ -1393,11 +1386,11 @@
       "iso": "SOM"
     },
     {
-      "entity": "Sudan",
-      "group": "Africa",
+      "entity": "Serbia",
+      "group": "Europe",
       "period": "2023",
-      "value": 9052822,
-      "iso": "SDN"
+      "value": 209790,
+      "iso": "SRB"
     },
     {
       "entity": "South Sudan",
@@ -1405,6 +1398,13 @@
       "period": "2023",
       "value": 1236672,
       "iso": "SSD"
+    },
+    {
+      "entity": "Sudan",
+      "group": "Africa",
+      "period": "2023",
+      "value": 9052822,
+      "iso": "SDN"
     },
     {
       "entity": "Syria",
@@ -1638,13 +1638,6 @@
       "iso": "SLV"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2024",
-      "value": 209753,
-      "iso": "SRB"
-    },
-    {
       "entity": "Solomon Islands",
       "group": "Asia",
       "period": "2024",
@@ -1659,11 +1652,11 @@
       "iso": "SOM"
     },
     {
-      "entity": "Sudan",
-      "group": "Africa",
+      "entity": "Serbia",
+      "group": "Europe",
       "period": "2024",
-      "value": 11559970,
-      "iso": "SDN"
+      "value": 209753,
+      "iso": "SRB"
     },
     {
       "entity": "South Sudan",
@@ -1671,6 +1664,13 @@
       "period": "2024",
       "value": 944631,
       "iso": "SSD"
+    },
+    {
+      "entity": "Sudan",
+      "group": "Africa",
+      "period": "2024",
+      "value": 11559970,
+      "iso": "SDN"
     },
     {
       "entity": "Syria",
@@ -1911,13 +1911,6 @@
       "iso": "SLV"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2025",
-      "value": 209453,
-      "iso": "SRB"
-    },
-    {
       "entity": "Somalia",
       "group": "Africa",
       "period": "2025",
@@ -1925,11 +1918,11 @@
       "iso": "SOM"
     },
     {
-      "entity": "Sudan",
-      "group": "Africa",
+      "entity": "Serbia",
+      "group": "Europe",
       "period": "2025",
-      "value": 9139309,
-      "iso": "SDN"
+      "value": 209453,
+      "iso": "SRB"
     },
     {
       "entity": "South Sudan",
@@ -1937,6 +1930,13 @@
       "period": "2025",
       "value": 1277527,
       "iso": "SSD"
+    },
+    {
+      "entity": "Sudan",
+      "group": "Africa",
+      "period": "2025",
+      "value": 9139309,
+      "iso": "SDN"
     },
     {
       "entity": "Syria",

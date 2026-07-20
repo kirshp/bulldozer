@@ -9,7 +9,7 @@
     "source": "UNHCR Refugee Data Finder",
     "license": "CC BY 4.0",
     "url": "https://www.unhcr.org/refugee-statistics/",
-    "parsedAt": "2026-07-13",
+    "parsedAt": "2026-07-20",
     "kind": "macro"
   },
   "data": [
@@ -299,6 +299,13 @@
       "period": "2018",
       "value": 5488,
       "iso": "CUB"
+    },
+    {
+      "entity": "Curaçao",
+      "group": "Americas",
+      "period": "2018",
+      "value": 35,
+      "iso": "CUW"
     },
     {
       "entity": "Cape Verde",
@@ -784,6 +791,13 @@
       "iso": "MWI"
     },
     {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2018",
+      "value": 715,
+      "iso": "MNE"
+    },
+    {
       "entity": "Mongolia",
       "group": "Asia",
       "period": "2018",
@@ -810,13 +824,6 @@
       "period": "2018",
       "value": 5,
       "iso": "MLT"
-    },
-    {
-      "entity": "Montenegro",
-      "group": "Europe",
-      "period": "2018",
-      "value": 715,
-      "iso": "MNE"
     },
     {
       "entity": "Mauritius",
@@ -1008,13 +1015,6 @@
       "iso": "SAU"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2018",
-      "value": 32368,
-      "iso": "SRB"
-    },
-    {
       "entity": "Senegal",
       "group": "Africa",
       "period": "2018",
@@ -1064,11 +1064,25 @@
       "iso": "ESP"
     },
     {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2018",
+      "value": 32368,
+      "iso": "SRB"
+    },
+    {
       "entity": "Vietnam",
       "group": "Asia",
       "period": "2018",
       "value": 334464,
       "iso": "VNM"
+    },
+    {
+      "entity": "South Sudan",
+      "group": "Africa",
+      "period": "2018",
+      "value": 2285301,
+      "iso": "SSD"
     },
     {
       "entity": "St. Kitts and Nevis",
@@ -1097,13 +1111,6 @@
       "period": "2018",
       "value": 22,
       "iso": "SUR"
-    },
-    {
-      "entity": "South Sudan",
-      "group": "Africa",
-      "period": "2018",
-      "value": 2285301,
-      "iso": "SSD"
     },
     {
       "entity": "Slovak Republic",
@@ -1307,13 +1314,6 @@
       "period": "2018",
       "value": 15618,
       "iso": "ZWE"
-    },
-    {
-      "entity": "Curaçao",
-      "group": "Americas",
-      "period": "2018",
-      "value": 35,
-      "iso": "CUW"
     },
     {
       "entity": "Afghanistan",
@@ -1601,6 +1601,13 @@
       "period": "2019",
       "value": 6625,
       "iso": "CUB"
+    },
+    {
+      "entity": "Curaçao",
+      "group": "Americas",
+      "period": "2019",
+      "value": 35,
+      "iso": "CUW"
     },
     {
       "entity": "Cape Verde",
@@ -2086,6 +2093,13 @@
       "iso": "MWI"
     },
     {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2019",
+      "value": 659,
+      "iso": "MNE"
+    },
+    {
       "entity": "Mongolia",
       "group": "Asia",
       "period": "2019",
@@ -2112,13 +2126,6 @@
       "period": "2019",
       "value": 5,
       "iso": "MLT"
-    },
-    {
-      "entity": "Montenegro",
-      "group": "Europe",
-      "period": "2019",
-      "value": 659,
-      "iso": "MNE"
     },
     {
       "entity": "Mauritius",
@@ -2310,13 +2317,6 @@
       "iso": "SAU"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2019",
-      "value": 31251,
-      "iso": "SRB"
-    },
-    {
       "entity": "Senegal",
       "group": "Africa",
       "period": "2019",
@@ -2366,11 +2366,25 @@
       "iso": "ESP"
     },
     {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2019",
+      "value": 31251,
+      "iso": "SRB"
+    },
+    {
       "entity": "Vietnam",
       "group": "Asia",
       "period": "2019",
       "value": 316441,
       "iso": "VNM"
+    },
+    {
+      "entity": "South Sudan",
+      "group": "Africa",
+      "period": "2019",
+      "value": 2234805,
+      "iso": "SSD"
     },
     {
       "entity": "St. Kitts and Nevis",
@@ -2399,13 +2413,6 @@
       "period": "2019",
       "value": 17,
       "iso": "SUR"
-    },
-    {
-      "entity": "South Sudan",
-      "group": "Africa",
-      "period": "2019",
-      "value": 2234805,
-      "iso": "SSD"
     },
     {
       "entity": "Slovak Republic",
@@ -2609,13 +2616,6 @@
       "period": "2019",
       "value": 10045,
       "iso": "ZWE"
-    },
-    {
-      "entity": "Curaçao",
-      "group": "Americas",
-      "period": "2019",
-      "value": 35,
-      "iso": "CUW"
     },
     {
       "entity": "Afghanistan",
@@ -2903,6 +2903,13 @@
       "period": "2020",
       "value": 8912,
       "iso": "CUB"
+    },
+    {
+      "entity": "Curaçao",
+      "group": "Americas",
+      "period": "2020",
+      "value": 35,
+      "iso": "CUW"
     },
     {
       "entity": "Cape Verde",
@@ -3381,6 +3388,13 @@
       "iso": "MWI"
     },
     {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2020",
+      "value": 530,
+      "iso": "MNE"
+    },
+    {
       "entity": "Mongolia",
       "group": "Asia",
       "period": "2020",
@@ -3407,13 +3421,6 @@
       "period": "2020",
       "value": 5,
       "iso": "MLT"
-    },
-    {
-      "entity": "Montenegro",
-      "group": "Europe",
-      "period": "2020",
-      "value": 530,
-      "iso": "MNE"
     },
     {
       "entity": "Mauritius",
@@ -3612,13 +3619,6 @@
       "iso": "SAU"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2020",
-      "value": 29976,
-      "iso": "SRB"
-    },
-    {
       "entity": "Senegal",
       "group": "Africa",
       "period": "2020",
@@ -3668,11 +3668,25 @@
       "iso": "ESP"
     },
     {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2020",
+      "value": 29976,
+      "iso": "SRB"
+    },
+    {
       "entity": "Vietnam",
       "group": "Asia",
       "period": "2020",
       "value": 316728,
       "iso": "VNM"
+    },
+    {
+      "entity": "South Sudan",
+      "group": "Africa",
+      "period": "2020",
+      "value": 2188785,
+      "iso": "SSD"
     },
     {
       "entity": "St. Kitts and Nevis",
@@ -3701,13 +3715,6 @@
       "period": "2020",
       "value": 17,
       "iso": "SUR"
-    },
-    {
-      "entity": "South Sudan",
-      "group": "Africa",
-      "period": "2020",
-      "value": 2188785,
-      "iso": "SSD"
     },
     {
       "entity": "Slovak Republic",
@@ -3913,13 +3920,6 @@
       "iso": "ZWE"
     },
     {
-      "entity": "Curaçao",
-      "group": "Americas",
-      "period": "2020",
-      "value": 35,
-      "iso": "CUW"
-    },
-    {
       "entity": "Afghanistan",
       "group": "Asia",
       "period": "2021",
@@ -4102,6 +4102,13 @@
       "iso": "BGR"
     },
     {
+      "entity": "British Virgin Islands",
+      "group": "Americas",
+      "period": "2021",
+      "value": 20,
+      "iso": "VGB"
+    },
+    {
       "entity": "Belize",
       "group": "Americas",
       "period": "2021",
@@ -4205,6 +4212,13 @@
       "period": "2021",
       "value": 11534,
       "iso": "CUB"
+    },
+    {
+      "entity": "Curaçao",
+      "group": "Americas",
+      "period": "2021",
+      "value": 35,
+      "iso": "CUW"
     },
     {
       "entity": "Cape Verde",
@@ -4704,6 +4718,13 @@
       "iso": "MWI"
     },
     {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2021",
+      "value": 623,
+      "iso": "MNE"
+    },
+    {
       "entity": "Mongolia",
       "group": "Asia",
       "period": "2021",
@@ -4730,13 +4751,6 @@
       "period": "2021",
       "value": 7,
       "iso": "MLT"
-    },
-    {
-      "entity": "Montenegro",
-      "group": "Europe",
-      "period": "2021",
-      "value": 623,
-      "iso": "MNE"
     },
     {
       "entity": "Mauritius",
@@ -4935,13 +4949,6 @@
       "iso": "SAU"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2021",
-      "value": 31735,
-      "iso": "SRB"
-    },
-    {
       "entity": "Senegal",
       "group": "Africa",
       "period": "2021",
@@ -4991,11 +4998,25 @@
       "iso": "ESP"
     },
     {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2021",
+      "value": 31735,
+      "iso": "SRB"
+    },
+    {
       "entity": "Vietnam",
       "group": "Asia",
       "period": "2021",
       "value": 317737,
       "iso": "VNM"
+    },
+    {
+      "entity": "South Sudan",
+      "group": "Africa",
+      "period": "2021",
+      "value": 2362759,
+      "iso": "SSD"
     },
     {
       "entity": "St. Kitts and Nevis",
@@ -5024,13 +5045,6 @@
       "period": "2021",
       "value": 22,
       "iso": "SUR"
-    },
-    {
-      "entity": "South Sudan",
-      "group": "Africa",
-      "period": "2021",
-      "value": 2362759,
-      "iso": "SSD"
     },
     {
       "entity": "Slovak Republic",
@@ -5236,25 +5250,18 @@
       "iso": "ZWE"
     },
     {
-      "entity": "British Virgin Islands",
-      "group": "Americas",
-      "period": "2021",
-      "value": 20,
-      "iso": "VGB"
-    },
-    {
-      "entity": "Curaçao",
-      "group": "Americas",
-      "period": "2021",
-      "value": 35,
-      "iso": "CUW"
-    },
-    {
       "entity": "Afghanistan",
       "group": "Asia",
       "period": "2022",
       "value": 5661717,
       "iso": "AFG"
+    },
+    {
+      "entity": "Anguilla",
+      "group": "Americas",
+      "period": "2022",
+      "value": 5,
+      "iso": "AIA"
     },
     {
       "entity": "Albania",
@@ -5439,6 +5446,13 @@
       "iso": "BGR"
     },
     {
+      "entity": "British Virgin Islands",
+      "group": "Americas",
+      "period": "2022",
+      "value": 20,
+      "iso": "VGB"
+    },
+    {
       "entity": "Belize",
       "group": "Americas",
       "period": "2022",
@@ -5542,6 +5556,13 @@
       "period": "2022",
       "value": 14676,
       "iso": "CUB"
+    },
+    {
+      "entity": "Curaçao",
+      "group": "Americas",
+      "period": "2022",
+      "value": 35,
+      "iso": "CUW"
     },
     {
       "entity": "Cape Verde",
@@ -5682,6 +5703,13 @@
       "period": "2022",
       "value": 14949,
       "iso": "GHA"
+    },
+    {
+      "entity": "Guadeloupe",
+      "group": "Americas",
+      "period": "2022",
+      "value": 17,
+      "iso": "GLP"
     },
     {
       "entity": "Guinea-Bissau",
@@ -6027,6 +6055,13 @@
       "iso": "MWI"
     },
     {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2022",
+      "value": 612,
+      "iso": "MNE"
+    },
+    {
       "entity": "Mongolia",
       "group": "Asia",
       "period": "2022",
@@ -6046,13 +6081,6 @@
       "period": "2022",
       "value": 109,
       "iso": "MOZ"
-    },
-    {
-      "entity": "Montenegro",
-      "group": "Europe",
-      "period": "2022",
-      "value": 612,
-      "iso": "MNE"
     },
     {
       "entity": "Mauritius",
@@ -6258,13 +6286,6 @@
       "iso": "SAU"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2022",
-      "value": 30677,
-      "iso": "SRB"
-    },
-    {
       "entity": "Senegal",
       "group": "Africa",
       "period": "2022",
@@ -6314,11 +6335,25 @@
       "iso": "ESP"
     },
     {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2022",
+      "value": 30677,
+      "iso": "SRB"
+    },
+    {
       "entity": "Vietnam",
       "group": "Asia",
       "period": "2022",
       "value": 17507,
       "iso": "VNM"
+    },
+    {
+      "entity": "South Sudan",
+      "group": "Africa",
+      "period": "2022",
+      "value": 2295082,
+      "iso": "SSD"
     },
     {
       "entity": "St. Kitts and Nevis",
@@ -6347,13 +6382,6 @@
       "period": "2022",
       "value": 35,
       "iso": "SUR"
-    },
-    {
-      "entity": "South Sudan",
-      "group": "Africa",
-      "period": "2022",
-      "value": 2295082,
-      "iso": "SSD"
     },
     {
       "entity": "Slovak Republic",
@@ -6571,34 +6599,6 @@
       "period": "2022",
       "value": 7017,
       "iso": "ZWE"
-    },
-    {
-      "entity": "Anguilla",
-      "group": "Americas",
-      "period": "2022",
-      "value": 5,
-      "iso": "AIA"
-    },
-    {
-      "entity": "British Virgin Islands",
-      "group": "Americas",
-      "period": "2022",
-      "value": 20,
-      "iso": "VGB"
-    },
-    {
-      "entity": "Guadeloupe",
-      "group": "Americas",
-      "period": "2022",
-      "value": 17,
-      "iso": "GLP"
-    },
-    {
-      "entity": "Curaçao",
-      "group": "Americas",
-      "period": "2022",
-      "value": 35,
-      "iso": "CUW"
     },
     {
       "entity": "Afghanistan",
@@ -6888,6 +6888,13 @@
       "iso": "CUB"
     },
     {
+      "entity": "Curaçao",
+      "group": "Americas",
+      "period": "2023",
+      "value": 8,
+      "iso": "CUW"
+    },
+    {
       "entity": "Cape Verde",
       "group": "Africa",
       "period": "2023",
@@ -7033,6 +7040,13 @@
       "period": "2023",
       "value": 13870,
       "iso": "GHA"
+    },
+    {
+      "entity": "Guadeloupe",
+      "group": "Americas",
+      "period": "2023",
+      "value": 17,
+      "iso": "GLP"
     },
     {
       "entity": "Guinea-Bissau",
@@ -7364,6 +7378,13 @@
       "iso": "MWI"
     },
     {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2023",
+      "value": 631,
+      "iso": "MNE"
+    },
+    {
       "entity": "Mongolia",
       "group": "Asia",
       "period": "2023",
@@ -7383,13 +7404,6 @@
       "period": "2023",
       "value": 117,
       "iso": "MOZ"
-    },
-    {
-      "entity": "Montenegro",
-      "group": "Europe",
-      "period": "2023",
-      "value": 631,
-      "iso": "MNE"
     },
     {
       "entity": "Mauritius",
@@ -7595,13 +7609,6 @@
       "iso": "SAU"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2023",
-      "value": 29807,
-      "iso": "SRB"
-    },
-    {
       "entity": "Senegal",
       "group": "Africa",
       "period": "2023",
@@ -7651,11 +7658,25 @@
       "iso": "ESP"
     },
     {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2023",
+      "value": 29807,
+      "iso": "SRB"
+    },
+    {
       "entity": "Vietnam",
       "group": "Asia",
       "period": "2023",
       "value": 18339,
       "iso": "VNM"
+    },
+    {
+      "entity": "South Sudan",
+      "group": "Africa",
+      "period": "2023",
+      "value": 2292482,
+      "iso": "SSD"
     },
     {
       "entity": "St. Kitts and Nevis",
@@ -7684,13 +7705,6 @@
       "period": "2023",
       "value": 42,
       "iso": "SUR"
-    },
-    {
-      "entity": "South Sudan",
-      "group": "Africa",
-      "period": "2023",
-      "value": 2292482,
-      "iso": "SSD"
     },
     {
       "entity": "Slovak Republic",
@@ -7894,20 +7908,6 @@
       "period": "2023",
       "value": 7460,
       "iso": "ZWE"
-    },
-    {
-      "entity": "Guadeloupe",
-      "group": "Americas",
-      "period": "2023",
-      "value": 17,
-      "iso": "GLP"
-    },
-    {
-      "entity": "Curaçao",
-      "group": "Americas",
-      "period": "2023",
-      "value": 8,
-      "iso": "CUW"
     },
     {
       "entity": "Afghanistan",
@@ -8204,6 +8204,13 @@
       "iso": "CUB"
     },
     {
+      "entity": "Curaçao",
+      "group": "Americas",
+      "period": "2024",
+      "value": 8,
+      "iso": "CUW"
+    },
+    {
       "entity": "Cape Verde",
       "group": "Africa",
       "period": "2024",
@@ -8363,6 +8370,13 @@
       "period": "2024",
       "value": 15078,
       "iso": "GHA"
+    },
+    {
+      "entity": "Guadeloupe",
+      "group": "Americas",
+      "period": "2024",
+      "value": 17,
+      "iso": "GLP"
     },
     {
       "entity": "Guinea-Bissau",
@@ -8708,6 +8722,13 @@
       "iso": "MWI"
     },
     {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2024",
+      "value": 763,
+      "iso": "MNE"
+    },
+    {
       "entity": "Mongolia",
       "group": "Asia",
       "period": "2024",
@@ -8734,13 +8755,6 @@
       "period": "2024",
       "value": 10,
       "iso": "MLT"
-    },
-    {
-      "entity": "Montenegro",
-      "group": "Europe",
-      "period": "2024",
-      "value": 763,
-      "iso": "MNE"
     },
     {
       "entity": "Mauritius",
@@ -8939,13 +8953,6 @@
       "iso": "SAU"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2024",
-      "value": 31438,
-      "iso": "SRB"
-    },
-    {
       "entity": "Senegal",
       "group": "Africa",
       "period": "2024",
@@ -8995,11 +9002,25 @@
       "iso": "ESP"
     },
     {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2024",
+      "value": 31438,
+      "iso": "SRB"
+    },
+    {
       "entity": "Vietnam",
       "group": "Asia",
       "period": "2024",
       "value": 19961,
       "iso": "VNM"
+    },
+    {
+      "entity": "South Sudan",
+      "group": "Africa",
+      "period": "2024",
+      "value": 2290622,
+      "iso": "SSD"
     },
     {
       "entity": "St. Kitts and Nevis",
@@ -9028,13 +9049,6 @@
       "period": "2024",
       "value": 50,
       "iso": "SUR"
-    },
-    {
-      "entity": "South Sudan",
-      "group": "Africa",
-      "period": "2024",
-      "value": 2290622,
-      "iso": "SSD"
     },
     {
       "entity": "Slovak Republic",
@@ -9252,20 +9266,6 @@
       "period": "2024",
       "value": 8002,
       "iso": "ZWE"
-    },
-    {
-      "entity": "Guadeloupe",
-      "group": "Americas",
-      "period": "2024",
-      "value": 17,
-      "iso": "GLP"
-    },
-    {
-      "entity": "Curaçao",
-      "group": "Americas",
-      "period": "2024",
-      "value": 8,
-      "iso": "CUW"
     },
     {
       "entity": "Afghanistan",
@@ -9569,6 +9569,13 @@
       "iso": "CUB"
     },
     {
+      "entity": "Curaçao",
+      "group": "Americas",
+      "period": "2025",
+      "value": 8,
+      "iso": "CUW"
+    },
+    {
       "entity": "Cape Verde",
       "group": "Africa",
       "period": "2025",
@@ -9728,6 +9735,13 @@
       "period": "2025",
       "value": 16030,
       "iso": "GHA"
+    },
+    {
+      "entity": "Guadeloupe",
+      "group": "Americas",
+      "period": "2025",
+      "value": 17,
+      "iso": "GLP"
     },
     {
       "entity": "Guinea-Bissau",
@@ -10073,6 +10087,13 @@
       "iso": "MWI"
     },
     {
+      "entity": "Montenegro",
+      "group": "Europe",
+      "period": "2025",
+      "value": 696,
+      "iso": "MNE"
+    },
+    {
       "entity": "Mongolia",
       "group": "Asia",
       "period": "2025",
@@ -10099,13 +10120,6 @@
       "period": "2025",
       "value": 11,
       "iso": "MLT"
-    },
-    {
-      "entity": "Montenegro",
-      "group": "Europe",
-      "period": "2025",
-      "value": 696,
-      "iso": "MNE"
     },
     {
       "entity": "Mauritius",
@@ -10304,13 +10318,6 @@
       "iso": "SAU"
     },
     {
-      "entity": "Serbia",
-      "group": "Europe",
-      "period": "2025",
-      "value": 29665,
-      "iso": "SRB"
-    },
-    {
       "entity": "Senegal",
       "group": "Africa",
       "period": "2025",
@@ -10360,11 +10367,25 @@
       "iso": "ESP"
     },
     {
+      "entity": "Serbia",
+      "group": "Europe",
+      "period": "2025",
+      "value": 29665,
+      "iso": "SRB"
+    },
+    {
       "entity": "Vietnam",
       "group": "Asia",
       "period": "2025",
       "value": 20636,
       "iso": "VNM"
+    },
+    {
+      "entity": "South Sudan",
+      "group": "Africa",
+      "period": "2025",
+      "value": 2386499,
+      "iso": "SSD"
     },
     {
       "entity": "St. Kitts and Nevis",
@@ -10393,13 +10414,6 @@
       "period": "2025",
       "value": 56,
       "iso": "SUR"
-    },
-    {
-      "entity": "South Sudan",
-      "group": "Africa",
-      "period": "2025",
-      "value": 2386499,
-      "iso": "SSD"
     },
     {
       "entity": "Slovak Republic",
@@ -10617,20 +10631,6 @@
       "period": "2025",
       "value": 6632,
       "iso": "ZWE"
-    },
-    {
-      "entity": "Guadeloupe",
-      "group": "Americas",
-      "period": "2025",
-      "value": 17,
-      "iso": "GLP"
-    },
-    {
-      "entity": "Curaçao",
-      "group": "Americas",
-      "period": "2025",
-      "value": 8,
-      "iso": "CUW"
     }
   ]
 }
