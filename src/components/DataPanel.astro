@@ -113,7 +113,12 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
   const el = (id) => document.getElementById(id);
   const selI = el('sel-indicator'), selP = el('sel-period'), selQ = el('sel-query');
   const TOP_N = 7;
-  const state = { slug: cfg.pinnedSlug || cfg.defaultSlug || cfg.datasets[0]?.slug, period: null, view: cfg.defaultView || 'bar', query: '', pinned: new Set(), showAll: false, sortDir: 'desc' };
+  // "My countries" — a saved set that persists across datasets and sessions,
+  // so the same countries stay pinned everywhere the panel is used.
+  const MYKEY = 'bd-my-countries';
+  const loadMy = () => { try { return new Set(JSON.parse(localStorage.getItem(MYKEY) || '[]')); } catch (e) { return new Set(); } };
+  const saveMy = () => { try { localStorage.setItem(MYKEY, JSON.stringify([...state.pinned])); } catch (e) { /* private mode */ } };
+  const state = { slug: cfg.pinnedSlug || cfg.defaultSlug || cfg.datasets[0]?.slug, period: null, view: cfg.defaultView || 'bar', query: '', pinned: loadMy(), showAll: false, sortDir: 'desc' };
   const cache = new Map();
   const meta = () => cfg.datasets.find((d) => d.slug === state.slug);
 
@@ -139,7 +144,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
       selI.appendChild(g);
     }
     selI.value = state.slug;
-    selI.addEventListener('change', () => { state.slug = selI.value; state.pinned.clear(); state.showAll = false; fillPeriods(); render(); });
+    selI.addEventListener('change', () => { state.slug = selI.value; state.showAll = false; fillPeriods(); render(); });
   }
 
   let initialPeriod = params.get('p');
@@ -197,8 +202,9 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
       [...rows].sort((a, b) => a.entity.localeCompare(b.entity))
         .filter((r) => !shown.has(r.entity) && !state.pinned.has(r.entity))
         .map((r) => `<option value="${r.entity}">${r.entity}</option>`).join('');
-    el('pinned-chips').innerHTML = [...state.pinned].map((n) =>
-      `<span class="chip">${n}<button data-rm="${n}" aria-label="remove">×</button></span>`).join('');
+    el('pinned-chips').innerHTML = (state.pinned.size ? '<span class="chips-lbl">★ My countries:</span>' : '') +
+      [...state.pinned].map((n) =>
+        `<span class="chip">${n}<button data-rm="${n}" aria-label="remove">×</button></span>`).join('');
     el('sort-dir').textContent = state.sortDir === 'asc' ? 'Lowest first' : 'Highest first';
     el('show-all').textContent = state.showAll ? 'Show top 7' : `Show all ${rows.length}`;
     el('bar-controls').style.display = state.query ? 'none' : 'flex';
@@ -357,8 +363,8 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
 
   selP.addEventListener('change', () => { state.period = selP.value; render(); });
   selQ.addEventListener('input', () => { state.query = selQ.value.trim(); render(); });
-  el('add-country').addEventListener('change', (e) => { if (e.target.value) { state.pinned.add(e.target.value); render(); } });
-  el('pinned-chips').addEventListener('click', (e) => { const n = e.target.getAttribute('data-rm'); if (n) { state.pinned.delete(n); render(); } });
+  el('add-country').addEventListener('change', (e) => { if (e.target.value) { state.pinned.add(e.target.value); saveMy(); render(); } });
+  el('pinned-chips').addEventListener('click', (e) => { const n = e.target.getAttribute('data-rm'); if (n) { state.pinned.delete(n); saveMy(); render(); } });
   el('show-all').addEventListener('click', () => { state.showAll = !state.showAll; render(); });
   el('sort-dir').addEventListener('click', () => { state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc'; render(); });
   el('view-toggle').addEventListener('click', (e) => {
