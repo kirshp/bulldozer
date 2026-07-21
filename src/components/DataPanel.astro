@@ -14,7 +14,12 @@ const worldTopo = JSON.parse(readFileSync(requireHere.resolve('world-atlas/count
 const worldFc: any = feature(worldTopo, (worldTopo as any).objects.countries);
 const bubbleProj = geoNaturalEarth1().fitSize([960, 480], worldFc);
 // Faint world silhouette drawn behind the bubbles so it reads as a map.
-const bubbleBasemap = geoPath(bubbleProj)(worldFc) ?? '';
+// Per-country silhouettes (one <path> each, tagged with ISO3) so a country
+// can be highlighted when its bubble is hovered.
+const _bubblePath = geoPath(bubbleProj);
+const bubbleCountries = worldFc.features
+  .map((f: any) => ({ iso: (isoNumeric as any)[String(Number(f.id))], d: _bubblePath(f) }))
+  .filter((c: any) => c.iso && c.d);
 const centroids: Record<string, [number, number]> = {};
 for (const f of worldFc.features) {
   const a3 = (isoNumeric as any)[String(Number(f.id))];
@@ -84,7 +89,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
   <div id="view-map" class="view" hidden><WorldMap /></div>
   <div id="view-bubbles" class="view" hidden>
     <svg id="bubble-target" viewBox="0 0 960 520" role="img" aria-label="Bubble map: circle area = indicator value" preserveAspectRatio="xMidYMid meet">
-      <g transform="translate(0,20)"><path class="bubble-basemap" d={bubbleBasemap} /></g>
+      <g transform="translate(0,20)">{bubbleCountries.map((c) => (<path class="bubble-basemap" data-iso={c.iso} d={c.d} />))}</g>
       <g id="bubble-nodes"></g>
     </svg>
     <div id="bubble-tip" hidden></div>
@@ -255,6 +260,9 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
   function renderBubbles(rows) {
     const m = meta(); const unit = m.unit.includes('%') ? '%' : '';
     const data = rows.map((r, i) => ({ ...r, rank: i + 1 })).filter((r) => r.iso && CENT[r.iso]).slice(0, 60);
+    // reset any lingering hover highlight from a previous indicator/period
+    el('bubble-nodes').classList.remove('focus');
+    el('view-bubbles').querySelectorAll('.bubble-basemap.hl').forEach((p) => p.classList.remove('hl'));
     if (!data.length) { el('bubble-nodes').innerHTML = ''; el('bubble-legend').innerHTML = '<span class="legend-label">No countries with map positions for this indicator.</span>'; return; }
     const signed = data.some((r) => r.value < 0);
     const maxV = Math.max(...data.map((r) => Math.abs(r.value))) || 1;
@@ -298,7 +306,23 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
   {
     const btgt = el('bubble-target'), btip = el('bubble-tip'), bwrap = el('view-bubbles');
     let pinned = false;
+    let hlPath = null;
+    const clearFocus = () => {
+      if (hlPath) { hlPath.classList.remove('hl'); hlPath = null; }
+      const nodes = el('bubble-nodes'); nodes.classList.remove('focus');
+      nodes.querySelectorAll('g[data-e]').forEach((x) => { x.classList.remove('hot'); x.style.opacity = ''; });
+    };
+    const focusOn = (g) => {
+      const nodes = el('bubble-nodes');
+      // dim the others directly (SVG <g> opacity via the CSS cascade is flaky)
+      nodes.querySelectorAll('g[data-e]').forEach((x) => { x.style.opacity = x === g ? '1' : '0.28'; x.classList.toggle('hot', x === g); });
+      nodes.classList.add('focus');
+      if (hlPath) hlPath.classList.remove('hl');
+      const p = btgt.querySelector('.bubble-basemap[data-iso="' + g.dataset.iso + '"]');
+      if (p) { p.classList.add('hl'); hlPath = p; } else hlPath = null;
+    };
     const show = (g, ev) => {
+      focusOn(g);
       const d = g.dataset;
       btip.innerHTML = `<b>${flag(d.iso)}${d.e}</b>` +
         `<div class="tr"><span>${btgt.dataset.lbl || 'Value'}</span><b>${d.v}</b></div>` +
@@ -314,12 +338,12 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
     btgt.addEventListener('mousemove', (e) => {
       if (pinned) return;
       const g = e.target.closest('g[data-e]');
-      if (g) show(g, e); else btip.hidden = true;
+      if (g) show(g, e); else { btip.hidden = true; clearFocus(); }
     });
-    btgt.addEventListener('mouseleave', () => { if (!pinned) btip.hidden = true; });
+    btgt.addEventListener('mouseleave', () => { if (!pinned) { btip.hidden = true; clearFocus(); } });
     btgt.addEventListener('click', (e) => {
       const g = e.target.closest('g[data-e]');
-      if (g) { pinned = true; show(g, e); } else { pinned = false; btip.hidden = true; }
+      if (g) { pinned = true; show(g, e); } else { pinned = false; btip.hidden = true; clearFocus(); }
     });
   }
 
