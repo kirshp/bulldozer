@@ -219,7 +219,10 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
           <a href="mailto:azenha.agent@gmail.com">Contact</a> ·
           Public, parsed data only · sources cited per dataset
         </span>
-        <span class="map-note">Map boundaries are from the Natural Earth dataset and do not imply any endorsement or judgment on the legal status of any territory.</span>
+        <span class="map-note">
+          <a href="https://www.naturalearthdata.com/about/" target="_blank" rel="noopener" aria-label="Natural Earth"><img class="ne-logo" src={`${base}/natural-earth-logo.png`} alt="Natural Earth" width="405" height="85" /></a>
+          Map boundaries are from the <a href="https://www.naturalearthdata.com/about/" target="_blank" rel="noopener">Natural Earth</a> public-domain map dataset and do not imply any endorsement or judgment on the legal status of any territory.
+        </span>
       </div>
     </footer>
   </body>
