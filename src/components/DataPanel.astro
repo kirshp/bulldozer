@@ -5,7 +5,7 @@ import isoAlpha2 from '@data/iso-alpha2.json';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { feature } from 'topojson-client';
-import { geoNaturalEarth1, geoCentroid } from 'd3-geo';
+import { geoNaturalEarth1, geoCentroid, geoPath } from 'd3-geo';
 
 // Projected country centroids for the Bubbles view — same projection and
 // frame as WorldMap, so bubbles start from each country's map position.
@@ -13,6 +13,8 @@ const requireHere = createRequire(import.meta.url);
 const worldTopo = JSON.parse(readFileSync(requireHere.resolve('world-atlas/countries-110m.json'), 'utf8'));
 const worldFc: any = feature(worldTopo, (worldTopo as any).objects.countries);
 const bubbleProj = geoNaturalEarth1().fitSize([960, 480], worldFc);
+// Faint world silhouette drawn behind the bubbles so it reads as a map.
+const bubbleBasemap = geoPath(bubbleProj)(worldFc) ?? '';
 const centroids: Record<string, [number, number]> = {};
 for (const f of worldFc.features) {
   const a3 = (isoNumeric as any)[String(Number(f.id))];
@@ -81,7 +83,10 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
   <div id="view-table" class="view" hidden><table class="data" id="table-target"></table></div>
   <div id="view-map" class="view" hidden><WorldMap /></div>
   <div id="view-bubbles" class="view" hidden>
-    <svg id="bubble-target" viewBox="0 0 960 520" role="img" aria-label="Bubble map: circle area = indicator value" preserveAspectRatio="xMidYMid meet"></svg>
+    <svg id="bubble-target" viewBox="0 0 960 520" role="img" aria-label="Bubble map: circle area = indicator value" preserveAspectRatio="xMidYMid meet">
+      <g transform="translate(0,20)"><path class="bubble-basemap" d={bubbleBasemap} /></g>
+      <g id="bubble-nodes"></g>
+    </svg>
     <div id="bubble-tip" hidden></div>
     <div class="map-legend" id="bubble-legend"></div>
   </div>
@@ -250,7 +255,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
   function renderBubbles(rows) {
     const m = meta(); const unit = m.unit.includes('%') ? '%' : '';
     const data = rows.map((r, i) => ({ ...r, rank: i + 1 })).filter((r) => r.iso && CENT[r.iso]).slice(0, 60);
-    if (!data.length) { el('bubble-target').innerHTML = ''; el('bubble-legend').innerHTML = '<span class="legend-label">No countries with map positions for this indicator.</span>'; return; }
+    if (!data.length) { el('bubble-nodes').innerHTML = ''; el('bubble-legend').innerHTML = '<span class="legend-label">No countries with map positions for this indicator.</span>'; return; }
     const signed = data.some((r) => r.value < 0);
     const maxV = Math.max(...data.map((r) => Math.abs(r.value))) || 1;
     const W = 960, H = 520, MAXR = 54, MINR = 4;
@@ -271,7 +276,7 @@ const config = { base, pinnedSlug: pinnedSlug ?? null, defaultSlug, defaultView,
     const absSorted = data.map((r) => Math.abs(r.value)).sort((x, y) => x - y);
     const rankT = (v) => absSorted.length > 1 ? absSorted.indexOf(Math.abs(v)) / (absSorted.length - 1) : 1;
     el('bubble-target').dataset.lbl = m.valueLabel;
-    el('bubble-target').innerHTML = nodes.map((n) => {
+    el('bubble-nodes').innerHTML = nodes.map((n) => {
       const t = signed ? Math.abs(n.value) / maxV : 0.15 + 0.85 * rankT(n.value);
       const col = signed ? (n.value < 0 ? mix(GREY, RED, Math.abs(n.value) / maxV) : mix(GREY, GREEN, n.value / maxV)) : mix(DARK, AMBER, t);
       const dark = !signed && t > 0.55;
