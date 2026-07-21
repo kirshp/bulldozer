@@ -13,7 +13,7 @@ import { parseCsvObjects } from './lib/csv.mjs';
 import { gapminderRows, REGION_4, writeDataset, round } from './lib/datasets.mjs';
 
 const GAP = join(homedir(), 'Library', 'Mobile Documents', 'com~apple~CloudDocs', 'BK', 'Opros', 'Inter_survey', 'Gapminder', 'ddf--entities--geo--country.csv');
-const ALPHA2 = join(homedir(), 'Projects', 'bulldozer', 'src', 'data', 'iso-alpha2.json');
+const ALPHA2 = new URL('../src/data/iso-alpha2.json', import.meta.url).pathname;
 const PARSED = new Date().toISOString().slice(0, 10);
 const WB = { source: 'World Bank Open Data', license: 'CC BY 4.0', url: 'https://data.worldbank.org/' };
 
@@ -63,8 +63,44 @@ async function emit(slug, code, meta, ctx, maxYear) {
   await writeDataset('macro', slug, { ...meta, parsedAt: PARSED }, data);
 }
 
+/** Share of world market capitalisation, per year — computed from the
+ *  absolute US$ series (CM.MKT.LCAP.CD) against the WLD aggregate, so each
+ *  year's shares are honest within that year. Country names fall back to the
+ *  already-parsed datasets when the Gapminder geo file isn't around. */
+async function emitMarketCapShare(ctx) {
+  const res = await fetch('https://api.worldbank.org/v2/country/all/indicator/CM.MKT.LCAP.CD?format=json&per_page=20000&date=2013:2024');
+  const j = await res.json();
+  if (!Array.isArray(j) || !j[1]) { console.warn('– wb-market-cap-share: empty; skipped.'); return; }
+  if (!ctx.geo.size) {
+    for (const f of ['wb-market-cap', 'imf-gdp-usd']) {
+      try {
+        const ds = JSON.parse(await readFile(new URL(`../src/data/macro/${f}.json`, import.meta.url), 'utf8'));
+        for (const o of ds.data) if (o.iso && !ctx.geo.has(o.iso)) ctx.geo.set(o.iso, { name: o.entity, region: o.group });
+      } catch {}
+    }
+  }
+  const world = new Map(); // year -> world total, US$
+  const rows = [];
+  for (const r of j[1]) {
+    if (r.value == null) continue;
+    const iso = (r.countryiso3code || '').toUpperCase();
+    const year = Number(r.date);
+    if (iso === 'WLD') { world.set(year, r.value); continue; }
+    if (ctx.real.has(iso)) rows.push({ iso, year, cap: r.value });
+  }
+  const data = rows.filter((r) => world.get(r.year)).map((r) => {
+    const info = ctx.geo.get(r.iso);
+    return { entity: info?.name || r.iso, group: info?.region || 'Other', period: String(r.year), value: round((r.cap / world.get(r.year)) * 100, 3), iso: r.iso };
+  });
+  await writeDataset('macro', 'wb-market-cap-share', {
+    title: 'Share of World Market Cap', valueLabel: 'Share of world listed-company market cap', unit: '% of world', changeMode: 'pp', topic: 'economy',
+    summary: 'Country’s listed-company market capitalisation as a share of the world total, in current US$ — who owns how much of the world’s stock market. Computed from World Bank CM.MKT.LCAP.CD against the world aggregate, per year.', ...WB, parsedAt: PARSED,
+  }, data);
+}
+
 async function main() {
   const ctx = await geoAndCountries();
+  if (process.argv.includes('--only=market-cap-share')) { await emitMarketCapShare(ctx); return; }
   // Nominal exchange rate — local currency per US$ (period average).
   await emit('wb-exchange-rate', 'PA.NUS.FCRF', {
     title: 'Exchange Rate (per US$)', valueLabel: 'Local currency units per US$ (period average)', unit: 'LCU per US$', changeMode: 'pct', topic: 'economy',
@@ -113,6 +149,7 @@ async function main() {
     title: 'Listed Companies', valueLabel: 'Domestic companies listed on the stock exchange', unit: 'count', changeMode: 'pct', topic: 'economy',
     summary: 'Number of domestic companies listed on the country’s stock exchange(s) at year end. World Bank.', ...WB,
   }, ctx);
+  await emitMarketCapShare(ctx);
   console.log('✓ World Bank: datasets written');
 }
 main();

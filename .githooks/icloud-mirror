@@ -1,0 +1,15 @@
+#!/bin/sh
+# Mirror the working tree into the iCloud project folder (macOS only).
+# Runs from the post-commit / post-merge hooks, so the iCloud copy always
+# matches the last commit. The snapshot carries no .git, node_modules or
+# dist — plain sources only — so iCloud never syncs repository internals.
+# Enable once per clone with: git config core.hooksPath .githooks
+[ "$(uname)" = "Darwin" ] || exit 0
+SRC="$(git rev-parse --show-toplevel)"
+BASE="$HOME/Library/Mobile Documents/com~apple~CloudDocs/!Shpara.com"
+DEST="$BASE/!BullDozer"
+[ -d "$BASE" ] || exit 0
+case "$SRC" in "$BASE"*) exit 0 ;; esac  # already working inside iCloud — nothing to mirror
+mkdir -p "$DEST"
+rsync -a --delete --exclude .git --exclude node_modules --exclude dist "$SRC/" "$DEST/" \
+  && echo "iCloud copy updated → $DEST"

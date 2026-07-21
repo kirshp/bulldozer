@@ -9,8 +9,15 @@
  */
 import globeData from '@data/globe-indicators.json';
 import isoNumeric from '@data/iso-numeric.json';
+import countryMeta from '@data/country-meta.json';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const scored = Object.values(globeData.countries as Record<string, any>).filter((c: any) => c.score != null).length;
+// Trimmed capital lookup for the globe: iso3 → [name, lon, lat]. Drops the
+// coat-of-arms URLs so we ship only what the label layer needs.
+const capitals: Record<string, [string, number, number]> = {};
+for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
+  if (m && m.capital && m.lon != null && m.lat != null) capitals[iso] = [m.capital, m.lon, m.lat];
+}
 ---
 <div class="globe-x">
   <div id="gx-metrics" class="fchips" role="tablist" aria-label="Colour the globe by"></div>
@@ -30,6 +37,7 @@ const scored = Object.values(globeData.countries as Record<string, any>).filter(
 
 <script type="application/json" id="gx-data" set:html={JSON.stringify(globeData)}></script>
 <script type="application/json" id="gx-isonum" set:html={JSON.stringify(isoNumeric)}></script>
+<script type="application/json" id="gx-capitals" set:html={JSON.stringify(capitals)}></script>
 <script is:inline src={`${base}/vendor/d3-array.min.js`}></script>
 <script is:inline src={`${base}/vendor/d3-geo.min.js`}></script>
 <script is:inline src={`${base}/vendor/topojson-client.min.js`}></script>
@@ -38,13 +46,14 @@ const scored = Object.values(globeData.countries as Record<string, any>).filter(
   const base = document.currentScript.dataset.base;
   const DATA = JSON.parse(document.getElementById('gx-data').textContent);
   const ISO_NUM = JSON.parse(document.getElementById('gx-isonum').textContent);
+  const CAP = JSON.parse(document.getElementById('gx-capitals').textContent);
   const META = DATA.meta, C = DATA.countries;
   let topo;
   try { topo = await (await fetch(base + '/data/world-110m.json')).json(); }
   catch (e) { document.querySelector('.globe-x').style.display = 'none'; return; }
 
   const world = topojson.feature(topo, topo.objects.countries).features;
-  for (const f of world) { f.iso = ISO_NUM[String(Number(f.id))] || null; f.c = d3.geoCentroid(f); }
+  for (const f of world) { f.iso = ISO_NUM[String(Number(f.id))] || null; f.c = d3.geoCentroid(f); f.area = d3.geoArea(f); }
   const byIso = new Map(world.filter((f) => f.iso).map((f) => [f.iso, f]));
 
   const SHORT = { 'Taiwan Province of China': 'Taiwan', 'Russian Federation': 'Russia', 'Slovak Republic': 'Slovakia',
@@ -154,28 +163,61 @@ const scored = Object.values(globeData.countries as Record<string, any>).filter(
     ctx.beginPath(); path({ type: 'Sphere' });
     ctx.strokeStyle = TH.rim; ctx.lineWidth = 1.2; ctx.stroke();
 
+    // ---- label layer: prominent country names + their capitals ----
     chipRects = [];
     const center = [-rot[0], -rot[1]];
-    const chips = topCountries(12).map((r) => r.iso);
-    if (selected && !chips.includes(selected)) chips.push(selected);
-    ctx.font = '700 11px ui-monospace, SFMono-Regular, Menlo, monospace';
-    for (const iso of chips) {
-      const f = byIso.get(iso); if (!f) continue;
-      if (d3.geoDistance(f.c, center) > 1.45) continue;
+    const placed = [];  // shared collision boxes {cx,cy,w,h} across names + capitals
+    const fits = (cx, cy, w, h) => !placed.some((r) => Math.abs(cx - r.cx) < (w + r.w) / 2 + 3 && Math.abs(cy - r.cy) < (h + r.h) / 2 + 3);
+
+    // pick the labelled countries: the largest ones on the near side, plus the selection
+    const facing = world
+      .filter((f) => f.iso && C[f.iso] && d3.geoDistance(f.c, center) < 1.28)
+      .sort((a, b) => b.area - a.area)
+      .slice(0, 16);
+    if (selected && byIso.has(selected) && !facing.some((f) => f.iso === selected)) facing.push(byIso.get(selected));
+
+    // country-name pills — priority in the collision layer
+    ctx.font = '700 11.5px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    ctx.textBaseline = 'middle';
+    for (const f of facing) {
+      const iso = f.iso;
       const [x, y] = projection(f.c);
-      const a2 = (C[iso] && C[iso].a2) || iso.slice(0, 2);
-      const w = a2.length * 8 + 16, h = 21, sel = iso === selected;
+      const name = (C[iso] && C[iso].n) || f.properties.name;
+      const sel = iso === selected;
+      const w = ctx.measureText(name).width + 18, h = 21;
+      if (!fits(x, y, w, h)) continue;
+      placed.push({ cx: x, cy: y, w, h });
       const col = tierColor(pctOf(iso, metric));
-      if (chipRects.some((r2) => Math.abs(x - (r2.x + r2.w / 2)) < (w + r2.w) / 2 + 4 && Math.abs(y - (r2.y + r2.h / 2)) < h + 4)) continue;
       ctx.beginPath(); ctx.roundRect(x - w / 2, y - h / 2, w, h, 10);
       ctx.fillStyle = sel ? col : TH.chipBg;
       ctx.shadowColor = 'rgba(0,0,0,0.3)'; ctx.shadowBlur = 6; ctx.shadowOffsetY = 2;
       ctx.fill(); ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
       ctx.strokeStyle = sel ? col : hexA(col, 0.85); ctx.lineWidth = 1.4; ctx.stroke();
       ctx.fillStyle = sel ? '#fff' : TH.chipText;
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(a2, x, y + 0.5);
+      ctx.textAlign = 'center';
+      ctx.fillText(name, x, y + 0.5);
       chipRects.push({ x: x - w / 2, y: y - h / 2, w, h, iso });
+    }
+
+    // capitals — a gold dot on the near side, with a name where it fits
+    ctx.font = '600 10px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    for (const f of facing) {
+      const cap = CAP[f.iso]; if (!cap) continue;
+      const cll = [cap[1], cap[2]];
+      if (d3.geoDistance(cll, center) > 1.45) continue;
+      const [cx, cy] = projection(cll);
+      ctx.beginPath(); ctx.arc(cx, cy, 3.1, 0, 7);
+      ctx.fillStyle = '#ffb100'; ctx.fill();
+      ctx.lineWidth = 1.3; ctx.strokeStyle = 'rgba(35,22,0,0.85)'; ctx.stroke();
+      const label = cap[0];
+      const lw = ctx.measureText(label).width, lh = 13;
+      const lx = cx + 8 + lw / 2, ly = cy;
+      if (!fits(lx, ly, lw + 4, lh)) continue;
+      placed.push({ cx: lx, cy: ly, w: lw + 4, h: lh });
+      ctx.textAlign = 'left';
+      ctx.lineJoin = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = TH.chipBg;
+      ctx.strokeText(label, cx + 8, cy);
+      ctx.fillStyle = TH.chipText; ctx.fillText(label, cx + 8, cy);
     }
   }
 
