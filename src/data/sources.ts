@@ -50,6 +50,12 @@ export const sources: Source[] = [
     description: 'Annual assessment of political rights and civil liberties in 195 countries and 15 territories, aggregated to a 0–100 freedom score.' },
   { name: 'RSF — World Press Freedom Index', url: 'https://rsf.org/en/index', status: 'live', category: 'Governance & democracy', match: 'RSF World Press Freedom',
     description: 'Reporters Without Borders’ ranking of media freedom in 180 countries across political, economic, legal, social and safety contexts.' },
+  { name: 'Fraser — Economic Freedom of the World', url: 'https://www.fraserinstitute.org/economic-freedom', status: 'live', category: 'Governance & democracy', match: 'Fraser Institute',
+    description: 'Fraser Institute index of economic freedom — size of government, property rights, sound money, free trade and regulation, 0–10. Via the QoG standard dataset.' },
+  { name: 'EPI — Environmental Performance Index', url: 'https://epi.yale.edu/', status: 'live', category: 'Risk & resilience', match: 'Environmental Performance Index',
+    description: 'Yale’s 0–100 ranking of national environmental health and ecosystem vitality across ~180 countries. Via the QoG standard dataset.' },
+  { name: 'Global Peace Index (IEP)', url: 'https://www.visionofhumanity.org/', status: 'live', category: 'Risk & resilience', match: 'Institute for Economics',
+    description: 'Institute for Economics & Peace ranking of peacefulness across safety, ongoing conflict and militarisation (lower = more peaceful). Via the QoG standard dataset.' },
 
   // ── Wellbeing & values ─────────────────────────────────────────────
   { name: 'World Happiness Report', url: 'https://worldhappiness.report/', status: 'live', category: 'Wellbeing & values', match: 'World Happiness Report', dash: 'whr',
