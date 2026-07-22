@@ -10,14 +10,21 @@ import { datasets } from '@data/datasets';
 export const GET: APIRoute = () => {
   const catalog = datasets
     .filter((d) => !d.slug.startsWith('rlms-'))
-    .map((d) => ({
-      slug: d.slug,
-      title: d.title,
-      unit: d.unit ?? '',
-      kind: d.kind,
-      topic: d.topic,
-      source: d.source ?? '',
-    }));
+    .map((d) => {
+      // latest data year, so the app can show "data as of YYYY"
+      let latest = '';
+      for (const o of d.data ?? []) if (o.period > latest) latest = o.period;
+      return {
+        slug: d.slug,
+        title: d.title,
+        unit: d.unit ?? '',
+        kind: d.kind,
+        topic: d.topic,
+        source: d.source ?? '',
+        parsedAt: d.parsedAt ?? '', // when we last refreshed it (freshness)
+        latest, // latest period present in the data
+      };
+    });
   return new Response(JSON.stringify(catalog), {
     headers: { 'Content-Type': 'application/json' },
   });

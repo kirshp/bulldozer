@@ -20,12 +20,24 @@ const nav = [
   { id: 'surveys', label: 'Polls', href: `${base}/surveys` },
   { id: 'geo', label: 'Geo', href: `${base}/geo` },
 ];
+// The burger is a *complete* menu — mirrors every section (so it works as the
+// only nav on mobile) plus tools, the app link and the theme toggle.
 const burger = [
+  { id: 'news', label: '📰 New', href: `${base}/` },
+  { id: 'explore', label: '🔎 Top', href: `${base}/explore` },
+  { id: 'macro', label: '📈 Macro', href: `${base}/macro` },
+  { id: 'markets', label: '💼 Biz', href: `${base}/markets` },
+  { id: 'surveys', label: '🗳️ Polls', href: `${base}/surveys` },
+  { id: 'geo', label: '🌍 Geo', href: `${base}/geo` },
+  { id: 'edu', label: '🎓 Edu', href: `${base}/edu` },
+  { sep: true },
   { id: 'quiz', label: '🎲 Country quiz', href: `${base}/quiz` },
   { id: 'glossary', label: '📖 Glossary', href: `${base}/glossary` },
   { id: 'about', label: 'ℹ️ About', href: `${base}/about` },
   { id: 'github', label: '🐙 GitHub', href: 'https://github.com/kirshp/bulldozer' },
   { id: 'contact', label: '✉️ Contact', href: 'mailto:azenha.agent@gmail.com' },
+  { sep: true },
+  { id: 'app', label: '📱 Get the app', href: `${base}/downloads/bulldozer-stats.apk`, download: true },
 ];
 const fullTitle = title ? `${title} · BullDozer` : 'BullDozer — Marketing Analytics & Research';
 const desc = description ?? 'Bulldoze the noise. Mine the signal. 136 public, parsed datasets — surveys, IMF & World Bank macro, markets and people. Every number sourced.';
@@ -106,12 +118,14 @@ const ogImage = `https://shpara.com${base}${ogPath ?? '/og.png'}`;
           <div class="burger-wrap">
             <button type="button" class="hdr-icon" id="hdr-burger" aria-label="More sections" aria-expanded="false" aria-controls="burger-menu">☰</button>
             <nav class="burger-menu" id="burger-menu" hidden>
-              <!-- mobile-only: header icons don't fit next to the tabs -->
+              {burger.map((n) => (
+                n.sep
+                  ? <div class="bm-sep" role="separator"></div>
+                  : <a href={n.href} class={`bm-${n.id} ${active === n.id ? 'active' : ''}`} {...(n.download ? { download: true } : {})}>{n.label}</a>
+              ))}
+              <div class="bm-sep" role="separator"></div>
               <button type="button" class="bm-tool" id="bm-search">🔍 Search</button>
               <button type="button" class="bm-tool" id="bm-theme">☀️ Light theme</button>
-              {burger.map((n) => (
-                <a href={n.href} class={`bm-${n.id} ${active === n.id ? 'active' : ''}`}>{n.label}</a>
-              ))}
             </nav>
           </div>
         </div>
