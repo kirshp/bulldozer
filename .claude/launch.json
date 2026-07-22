@@ -1,11 +1,6 @@
 {
   "version": "0.0.1",
   "configurations": [
-    {
-      "name": "bulldozer",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 4321
-    }
+    { "name": "bd-preview", "runtimeExecutable": "npm", "runtimeArgs": ["run", "preview", "--", "--port", "4333"], "port": 4333 }
   ]
 }

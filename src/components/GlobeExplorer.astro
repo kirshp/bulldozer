@@ -20,7 +20,11 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
 }
 ---
 <div class="globe-x">
-  <div id="gx-metrics" class="fchips" role="tablist" aria-label="Colour the globe by"></div>
+  <div id="gx-views" class="gx-views" role="tablist" aria-label="Map style">
+    <button type="button" class="gx-vbtn active" data-v="globe" role="tab" aria-selected="true">🌐 Globe</button>
+    <button type="button" class="gx-vbtn" data-v="flat" role="tab" aria-selected="false">🗺️ Flat map</button>
+  </div>
+  <div id="gx-metrics" class="fchips" role="tablist" aria-label="Colour the map by"></div>
   <div class="gx-grid">
     <div class="gx-stage">
       <canvas id="gx-globe" aria-label="Interactive globe: drag to rotate, click a country for details"></canvas>
@@ -111,9 +115,12 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
   }
   window.addEventListener('resize', resize);
 
-  const projection = d3.geoOrthographic().clipAngle(90);
-  const path = d3.geoPath(projection, ctx);
-  let rot = [58, -14], zoom = 1, dirty = true;
+  const projGlobe = d3.geoOrthographic().clipAngle(90);
+  const projFlat = d3.geoNaturalEarth1();
+  let view = 'globe';
+  let projection = projGlobe;
+  let path = d3.geoPath(projection, ctx);
+  let rot = [58, -14], zoom = 1, pan = [0, 0], dirty = true;
   let metric = 'score', selected = null, chipRects = [];
   let vel = [0, 0], dragging = false, lastPtr = null, movedDist = 0, lastInteract = performance.now();
   let tween = null, patterns = {};
@@ -135,15 +142,30 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
 
   function render() {
     const R = size / 2;
-    projection.translate([R, R]).scale((R - 14) * zoom);
+    if (view === 'globe') {
+      projection = projGlobe;
+      projection.translate([R, R]).scale((R - 14) * zoom).rotate([rot[0], rot[1]]);
+    } else {
+      projection = projFlat;
+      projection.fitExtent([[6, 6], [size - 6, size - 6]], { type: 'Sphere' });
+      projection.scale(projection.scale() * zoom);
+      const t = projection.translate();
+      projection.translate([t[0] + pan[0], t[1] + pan[1]]);
+    }
+    path = d3.geoPath(projection, ctx);
     ctx.clearRect(0, 0, size, size);
-    let g = ctx.createRadialGradient(R, R, (R - 14) * zoom * 0.92, R, R, (R - 14) * zoom * 1.13);
-    g.addColorStop(0, TH.halo); g.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, size, size);
-    ctx.beginPath(); path({ type: 'Sphere' });
-    g = ctx.createRadialGradient(R - R * 0.35, R - R * 0.42, R * 0.1, R, R, (R - 14) * zoom * 1.02);
-    g.addColorStop(0, TH.sphere[0]); g.addColorStop(0.55, TH.sphere[1]); g.addColorStop(1, TH.sphere[2]);
-    ctx.fillStyle = g; ctx.fill();
+    if (view === 'globe') {
+      let g = ctx.createRadialGradient(R, R, (R - 14) * zoom * 0.92, R, R, (R - 14) * zoom * 1.13);
+      g.addColorStop(0, TH.halo); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, size, size);
+      ctx.beginPath(); path({ type: 'Sphere' });
+      g = ctx.createRadialGradient(R - R * 0.35, R - R * 0.42, R * 0.1, R, R, (R - 14) * zoom * 1.02);
+      g.addColorStop(0, TH.sphere[0]); g.addColorStop(0.55, TH.sphere[1]); g.addColorStop(1, TH.sphere[2]);
+      ctx.fillStyle = g; ctx.fill();
+    } else {
+      ctx.beginPath(); path({ type: 'Sphere' });
+      ctx.fillStyle = TH.sphere[1]; ctx.fill();
+    }
     for (const f of world) {
       const p = f.iso ? pctOf(f.iso, metric) : null;
       const col = tierColor(p);
@@ -171,9 +193,9 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
 
     // pick the labelled countries: the largest ones on the near side, plus the selection
     const facing = world
-      .filter((f) => f.iso && C[f.iso] && d3.geoDistance(f.c, center) < 1.28)
+      .filter((f) => f.iso && C[f.iso] && (view !== 'globe' || d3.geoDistance(f.c, center) < 1.28))
       .sort((a, b) => b.area - a.area)
-      .slice(0, 16);
+      .slice(0, view === 'globe' ? 16 : 22);
     if (selected && byIso.has(selected) && !facing.some((f) => f.iso === selected)) facing.push(byIso.get(selected));
 
     // country-name pills — priority in the collision layer
@@ -204,7 +226,7 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
     for (const f of facing) {
       const cap = CAP[f.iso]; if (!cap) continue;
       const cll = [cap[1], cap[2]];
-      if (d3.geoDistance(cll, center) > 1.45) continue;
+      if (view === 'globe' && d3.geoDistance(cll, center) > 1.45) continue;
       const [cx, cy] = projection(cll);
       ctx.beginPath(); ctx.arc(cx, cy, 3.1, 0, 7);
       ctx.fillStyle = '#ffb100'; ctx.fill();
@@ -230,8 +252,12 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
     if (!dragging) return;
     const dx = e.clientX - lastPtr[0], dy = e.clientY - lastPtr[1];
     lastPtr = [e.clientX, e.clientY]; movedDist += Math.abs(dx) + Math.abs(dy);
-    rot[0] += dx * sens(); rot[1] = Math.max(-78, Math.min(78, rot[1] - dy * sens()));
-    vel = [dx * sens(), dy * sens()];
+    if (view === 'globe') {
+      rot[0] += dx * sens(); rot[1] = Math.max(-78, Math.min(78, rot[1] - dy * sens()));
+      vel = [dx * sens(), dy * sens()];
+    } else {
+      pan[0] += dx; pan[1] += dy;
+    }
     lastInteract = performance.now(); dirty = true;
   });
   canvas.addEventListener('pointerup', (e) => {
@@ -250,7 +276,7 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
     for (const c of chipRects) if (x >= c.x && x <= c.x + c.w && y >= c.y && y <= c.y + c.h) return select(c.iso);
     const ll = projection.invert([x, y]);
     if (!ll || isNaN(ll[0])) return;
-    if (d3.geoDistance(ll, [-rot[0], -rot[1]]) > Math.PI / 2) return;
+    if (view === 'globe' && d3.geoDistance(ll, [-rot[0], -rot[1]]) > Math.PI / 2) return;
     for (const f of world) if (d3.geoContains(f, ll)) return select(f.iso);
     select(null);
   }
@@ -301,7 +327,15 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
 
   document.getElementById('gx-zin').addEventListener('click', () => { zoom = Math.min(2.4, zoom * 1.25); dirty = true; lastInteract = performance.now(); });
   document.getElementById('gx-zout').addEventListener('click', () => { zoom = Math.max(0.7, zoom / 1.25); dirty = true; lastInteract = performance.now(); });
-  document.getElementById('gx-zreset').addEventListener('click', () => { zoom = 1; rot = [58, -14]; select(null); lastInteract = performance.now(); });
+  document.getElementById('gx-zreset').addEventListener('click', () => { zoom = 1; rot = [58, -14]; pan = [0, 0]; select(null); lastInteract = performance.now(); dirty = true; });
+
+  const viewsEl = document.getElementById('gx-views');
+  viewsEl.addEventListener('click', (e) => {
+    const b = e.target.closest('.gx-vbtn'); if (!b || b.dataset.v === view) return;
+    view = b.dataset.v;
+    [...viewsEl.children].forEach((c) => { const on = c === b; c.classList.toggle('active', on); c.setAttribute('aria-selected', on); });
+    zoom = 1; pan = [0, 0]; vel = [0, 0]; lastInteract = performance.now(); dirty = true;
+  });
 
   document.getElementById('gx-legend').innerHTML =
     [['Thriving', PAL[0]], ['Solid', PAL[1]], ['Mixed', PAL[2]], ['Strained', PAL[3]], ['Critical', PAL[4]]]
@@ -311,13 +345,13 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function frame() {
     if (tween) tween();
-    if (!dragging && (Math.abs(vel[0]) > 0.02 || Math.abs(vel[1]) > 0.02)) {
+    if (view === 'globe' && !dragging && (Math.abs(vel[0]) > 0.02 || Math.abs(vel[1]) > 0.02)) {
       rot[0] += vel[0]; rot[1] = Math.max(-78, Math.min(78, rot[1] - vel[1]));
       vel = [vel[0] * 0.94, vel[1] * 0.94];
       dirty = true;
     }
-    if (!reduceMotion && !dragging && !tween && performance.now() - lastInteract > 4000) { rot[0] += 0.04; dirty = true; }
-    if (dirty) { projection.rotate([rot[0], rot[1]]); render(); dirty = false; }
+    if (view === 'globe' && !reduceMotion && !dragging && !tween && performance.now() - lastInteract > 4000) { rot[0] += 0.04; dirty = true; }
+    if (dirty) { render(); dirty = false; }
     requestAnimationFrame(frame);
   }
   resize(); renderPanel(); frame();
@@ -327,6 +361,12 @@ for (const [iso, m] of Object.entries(countryMeta as Record<string, any>)) {
 
 <style>
   .globe-x { margin: 10px 0 26px; }
+  .globe-x .gx-views { display: inline-flex; gap: 2px; padding: 3px; margin-bottom: 12px;
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 999px; }
+  .globe-x .gx-vbtn { border: 0; background: transparent; color: var(--text-dim);
+    font: 600 13px var(--font); padding: 6px 16px; border-radius: 999px; cursor: pointer; transition: background .15s, color .15s; }
+  .globe-x .gx-vbtn:hover { color: var(--text); }
+  .globe-x .gx-vbtn.active { background: var(--accent); color: #1a1300; }
   .globe-x .fchips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
   .gx-grid { display: grid; grid-template-columns: minmax(300px, 620px) minmax(280px, 1fr); gap: 22px; align-items: start; }
   .gx-stage { position: relative; display: flex; justify-content: center; }
