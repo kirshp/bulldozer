@@ -90,6 +90,7 @@ async function main() {
     OPTIONAL { ?c wdt:P452 ?industry . ?industry rdfs:label ?industryLabel FILTER(lang(?industryLabel)='en') }
     OPTIONAL { ?c schema:description ?desc FILTER(lang(?desc)='en') }
     OPTIONAL { ?c p:P2139 ?rst . ?rst ps:P2139 ?rev . ?rst psv:P2139 ?rvn . ?rvn wikibase:quantityUnit wd:Q4917 . OPTIONAL { ?rst pq:P585 ?revt } }
+    OPTIONAL { ?c p:P2226 ?cst . ?cst ps:P2226 ?mcap . ?cst psv:P2226 ?mcn . ?mcn wikibase:quantityUnit wd:Q4917 . OPTIONAL { ?cst pq:P585 ?mcapt } }
   }`;
   const wd = await fetch('https://query.wikidata.org/sparql?format=json&query=' + encodeURIComponent(q), { headers: { ...UA, Accept: 'application/sparql-results+json' } });
   const meta = {};
@@ -104,6 +105,10 @@ async function main() {
       const t = b.revt ? b.revt.value : '0';
       if (!m.revAt || t > m.revAt) { m.revAt = t; m.revBn = Math.round(Number(b.rev.value) / 1e9); }
     }
+    if (b.mcap) {
+      const t = b.mcapt ? b.mcapt.value : '0';
+      if (!m.capAt || t > m.capAt) { m.capAt = t; m.capWdBn = Math.round(Number(b.mcap.value) / 1e9); }
+    }
   } else { console.warn('  Wikidata enrich failed', wd.status); }
 
   const out = rows.map((r) => {
@@ -113,7 +118,12 @@ async function main() {
     const wdRevYear = m.revAt ? Number(m.revAt.slice(0, 4)) : null;
     const revenueBn = r.revenueBn != null ? r.revenueBn : (m.revBn ?? null);
     const revYear = r.revenueBn != null ? REV_YEAR : (r.revenueBn == null && m.revBn != null ? wdRevYear : null);
-    return { name: r.name, capBn: r.capBn, capYear: r.capBn ? CAP_YEAR : null, revenueBn, profitBn: r.profitBn, employees: r.employees, revYear, industry: m.industry || null, iso: m.iso || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
+    // Cap: authoritative fresh table value first; Wikidata P2226 (latest USD) widens
+    // coverage to the non-tech giants (Walmart, Aramco, Exxon…) absent from the table.
+    const wdCapYear = m.capAt ? Number(m.capAt.slice(0, 4)) : null;
+    const capBn = r.capBn != null ? r.capBn : (m.capWdBn ?? null);
+    const capYear = r.capBn != null ? CAP_YEAR : (r.capBn == null && m.capWdBn != null ? wdCapYear : null);
+    return { name: r.name, capBn, capYear, revenueBn, profitBn: r.profitBn, employees: r.employees, revYear, industry: m.industry || null, iso: m.iso || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
   });
   // Most valuable first: market-cap leaders, then by revenue.
   out.sort((a, b) => (b.capBn || 0) - (a.capBn || 0) || (b.revenueBn || 0) - (a.revenueBn || 0));
