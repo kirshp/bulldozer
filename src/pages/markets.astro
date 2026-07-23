@@ -88,6 +88,7 @@ const RANKINGS = [
           <button type="button" data-m="profitBn">Profit</button>
           <button type="button" data-m="employees">Employees</button>
         </span>
+        <label class="co-all" id="co-all-wrap"><input type="checkbox" id="co-all-cb"> <span id="co-all-txt">Show all</span></label>
       </div>
 
       <div class="co-slope" id="co-slope">
@@ -295,21 +296,23 @@ const RANKINGS = [
       const mk = (t, a, txt) => { const e = document.createElementNS(NSU, t); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; };
       const ord = (n) => { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 
-      // top 10 by market cap, among companies that have both a cap and a revenue
-      const S = data.filter((c) => c.capBn != null && c.revenueBn != null)
-        .sort((a, b) => b.capBn - a.capBn).slice(0, 10)
+      // every company that has both a cap and a revenue, biggest cap first
+      const POOL = data.filter((c) => c.capBn != null && c.revenueBn != null)
+        .sort((a, b) => b.capBn - a.capBn)
         .map((c) => ({ name: c.name, cap: c.capBn, rev: c.revenueBn, capYear: c.capYear, revYear: c.revYear, flag: c.flag, logo: c.logo }));
-      const N = S.length;
-      const VBW = 920, VBH = 440, topPad = 12, xL = 8, xR = 912, ctrl = 460;
-      const rowH = N > 1 ? (VBH - 2 * topPad - 14) / (N - 1) : 0;
-      const yOf = (i) => topPad + i * rowH + 7;
-      const maxVal = Math.max(...S.map((c) => Math.max(c.cap, c.rev)));
-      const wOf = (v) => 2.5 + 21 * Math.sqrt(v / maxVal);
+      const VBW = 920, topPad = 12, xL = 8, xR = 912, ctrl = 460, rowH = 40;
       const metricLabel = (k) => (k === 'cap' ? 'market cap' : 'revenue');
       const headerLabel = (k) => (k === 'cap' ? 'Rank by market cap' : 'Rank by revenue');
-      let sort = 'cap', hov = null;
+      let sort = 'cap', hov = null, showAll = false;
 
       function slopeRender() {
+        const S = showAll ? POOL : POOL.slice(0, 10);
+        const N = S.length;
+        const VBH = topPad * 2 + 14 + (N - 1) * rowH;
+        const yOf = (i) => topPad + i * rowH + 7;
+        const maxVal = Math.max(...S.map((c) => Math.max(c.cap, c.rev)));
+        const wOf = (v) => 2.5 + 21 * Math.sqrt(v / maxVal);
+        svg.setAttribute('viewBox', `0 0 ${VBW} ${VBH}`);
         const leftKey = sort === 'cap' ? 'cap' : 'rev';
         const rightKey = sort === 'cap' ? 'rev' : 'cap';
         const byLeft = [...S].sort((a, b) => b[leftKey] - a[leftKey]);
@@ -389,12 +392,17 @@ const RANKINGS = [
       sortT.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setSort(b.dataset.s); });
       hlEl.addEventListener('click', () => setSort(hlEl.dataset.metric));
       hrEl.addEventListener('click', () => setSort(hrEl.dataset.metric));
+      const allWrap = document.getElementById('co-all-wrap');
+      const allCb = document.getElementById('co-all-cb');
+      document.getElementById('co-all-txt').textContent = `Show all ${POOL.length}`;
+      allCb.addEventListener('change', () => { showAll = allCb.checked; hov = null; slopeRender(); });
       viewT.addEventListener('click', (e) => {
         const b = e.target.closest('button'); if (!b) return;
         Array.prototype.forEach.call(viewT.children, (x) => x.classList.toggle('active', x === b));
         const slope = b.dataset.v === 'slope';
         slopeBox.style.display = slope ? '' : 'none';
         sortT.style.display = slope ? '' : 'none';
+        allWrap.style.display = slope ? '' : 'none';
         metricT.style.display = slope ? 'none' : '';
         sub.style.display = slope ? 'none' : '';
         bars.style.display = slope ? 'none' : '';

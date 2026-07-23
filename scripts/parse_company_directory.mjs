@@ -132,11 +132,26 @@ async function main() {
   const CURATED = {
     'TSMC': { revenueBn: 90, revYear: 2024 },
     'Saudi Aramco': { capBn: 1600, capYear: CAP_YEAR },
+    'Broadcom': { revenueBn: 64, revYear: 2025 },   // FY2025 $63.9B (was a stale FY2023 figure)
+    // SpaceX IPO'd 12 Jun 2026 (Nasdaq: SPCX) — largest IPO ever, ~$1.77T at listing;
+    // FY2025 revenue ~$18.7B. Too new for the Wikipedia tables, so added in full.
+    'SpaceX': { capBn: 1770, capYear: CAP_YEAR, revenueBn: 19, revYear: 2025, iso: 'USA',
+      industry: 'aerospace', desc: 'American spacecraft manufacturer and launch provider (Nasdaq: SPCX)',
+      logo: 'https://commons.wikimedia.org/wiki/Special:FilePath/SpaceX-Logo.svg',
+      wiki: 'https://en.wikipedia.org/wiki/SpaceX' },
   };
   for (const o of out) {
     const cu = CURATED[o.name]; if (!cu) continue;
-    if (o.revenueBn == null && cu.revenueBn != null) { o.revenueBn = cu.revenueBn; o.revYear = cu.revYear; }
-    if (o.capBn == null && cu.capBn != null) { o.capBn = cu.capBn; o.capYear = cu.capYear; }
+    // curated values are hand-verified and take precedence over the scraped ones
+    if (cu.revenueBn != null) { o.revenueBn = cu.revenueBn; o.revYear = cu.revYear ?? o.revYear; }
+    if (cu.capBn != null) { o.capBn = cu.capBn; o.capYear = cu.capYear ?? o.capYear; }
+  }
+  // add curated companies that aren't in the Wikipedia lists at all (e.g. just-IPO'd)
+  for (const [name, cu] of Object.entries(CURATED)) {
+    if (out.some((o) => o.name === name) || cu.capBn == null) continue;
+    out.push({ name, capBn: cu.capBn, capYear: cu.capYear ?? CAP_YEAR, revenueBn: cu.revenueBn ?? null,
+      profitBn: null, employees: null, revYear: cu.revYear ?? null, industry: cu.industry ?? null,
+      iso: cu.iso ?? null, logo: cu.logo ?? null, desc: cu.desc ?? null, wiki: cu.wiki ?? null });
   }
   out.sort((a, b) => (b.capBn || 0) - (a.capBn || 0) || (b.revenueBn || 0) - (a.revenueBn || 0));
   // Most valuable first: market-cap leaders, then by revenue.
