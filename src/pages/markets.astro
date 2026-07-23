@@ -73,7 +73,11 @@ const RANKINGS = [
   <section class="section" style="padding-top:0" id="companies">
     <div class="container">
       <h2>Largest companies</h2>
-      <div class="ci-controls" style="margin-bottom:6px">
+      <div class="ci-controls" style="margin-bottom:6px; display:flex; gap:10px 14px; flex-wrap:wrap; align-items:center">
+        <span class="view-toggle" id="co-view">
+          <button type="button" data-v="bars" class="active">Bars</button>
+          <button type="button" data-v="slope">Cap × revenue</button>
+        </span>
         <span class="view-toggle" id="co-metric">
           <button type="button" data-m="capBn" class="active">Market cap</button>
           <button type="button" data-m="revenueBn">Revenue</button>
@@ -83,6 +87,17 @@ const RANKINGS = [
       </div>
       <p class="sub" id="co-bar-sub"></p>
       <div class="bars" id="co-bars"></div>
+      <div class="co-slope" id="co-slope" hidden>
+        <p class="sub" id="co-slope-read"></p>
+        <div class="co-slope-plot">
+          <svg id="co-slope-svg" viewBox="0 0 800 660" role="img" aria-label="Slope chart: market-cap rank versus revenue rank"></svg>
+          <div class="tip" id="co-slope-tip"></div>
+        </div>
+        <p class="co-slope-key">
+          <span class="k"><i class="prem"></i> Valued above its sales (falls right)</span>
+          <span class="k"><i class="cheap"></i> Sells above its value (rises right)</span>
+        </p>
+      </div>
       <script type="application/json" id="co-data" set:html={JSON.stringify(coData)}></script>
 
       <h3 style="margin-top:26px">Company directory</h3>
@@ -260,6 +275,81 @@ const RANKINGS = [
         render(b.dataset.m);
       });
       render('capBn');
+
+      // ---- second view: cap-vs-revenue rank slope (WSJ-style) ----
+      const viewT = document.getElementById('co-view');
+      const metricT = document.getElementById('co-metric');
+      const slopeBox = document.getElementById('co-slope');
+      const svg = document.getElementById('co-slope-svg');
+      const tip = document.getElementById('co-slope-tip');
+      const read = document.getElementById('co-slope-read');
+      const NSU = 'http://www.w3.org/2000/svg';
+      const mk = (t, a) => { const e = document.createElementNS(NSU, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+
+      // companies with both a cap and a revenue, top 15 by cap
+      const S = data.filter((c) => c.capBn != null && c.revenueBn != null)
+        .sort((a, b) => b.capBn - a.capBn).slice(0, 15).map((c) => ({ ...c }));
+      const byCap = [...S].sort((a, b) => b.capBn - a.capBn);
+      const byRev = [...S].sort((a, b) => b.revenueBn - a.revenueBn);
+      S.forEach((c) => { c.cr = byCap.indexOf(byCap.find((x) => x.name === c.name)) + 1; c.rr = byRev.indexOf(byRev.find((x) => x.name === c.name)) + 1; c.delta = c.rr - c.cr; });
+      const N = S.length;
+      const LX = 210, RX = 590, TOP = 40, BOT = 620;
+      const yr = (r) => TOP + (r - 1) / (N - 1) * (BOT - TOP);
+      const dcls = (c) => (c.delta > 0 ? 'prem' : (c.delta < 0 ? 'cheap' : 'prem'));
+      let sel = byCap[0] ? byCap[0].name : null;
+
+      function slopeBuild() {
+        svg.innerHTML = '';
+        const hL = mk('text', { x: LX, y: 20, 'text-anchor': 'end', class: 'sl-ax' }); hL.textContent = 'Market cap ▸'; svg.appendChild(hL);
+        const hR = mk('text', { x: RX, y: 20, 'text-anchor': 'start', class: 'sl-ax' }); hR.textContent = '◂ Revenue'; svg.appendChild(hR);
+        S.forEach((c) => {
+          const y1 = yr(c.cr), y2 = yr(c.rr), mx = (LX + RX) / 2;
+          svg.appendChild(mk('path', { d: `M ${LX} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${RX} ${y2}`, class: 'sl-strand', 'data-n': c.name }));
+        });
+        S.forEach((c) => {
+          const y1 = yr(c.cr), y2 = yr(c.rr);
+          svg.appendChild(mk('rect', { x: LX - 3, y: y1 - 6, width: 6, height: 12, rx: 2, class: 'sl-tick', 'data-n': c.name }));
+          svg.appendChild(mk('rect', { x: RX - 3, y: y2 - 6, width: 6, height: 12, rx: 2, class: 'sl-tick', 'data-n': c.name }));
+          const rl = mk('text', { x: LX - 12, y: y1 + 4, 'text-anchor': 'end', class: 'sl-rk' }); rl.textContent = c.cr; svg.appendChild(rl);
+          const rr = mk('text', { x: RX + 12, y: y2 + 4, 'text-anchor': 'start', class: 'sl-rk' }); rr.textContent = c.rr; svg.appendChild(rr);
+          const ll = mk('text', { x: LX - 24, y: y1 + 4, 'text-anchor': 'end', class: 'sl-lab', 'data-n': c.name }); ll.textContent = c.name; svg.appendChild(ll);
+          const lr = mk('text', { x: RX + 24, y: y2 + 4, 'text-anchor': 'start', class: 'sl-lab', 'data-n': c.name }); lr.textContent = c.name; svg.appendChild(lr);
+        });
+        svg.querySelectorAll('[data-n]').forEach((node) => {
+          const nm = node.getAttribute('data-n'); const c = S.find((x) => x.name === nm);
+          node.addEventListener('click', () => { sel = nm; slopePaint(); });
+          node.addEventListener('mousemove', (e) => { hov = nm; slopePaint(); slopeTip(c, e); });
+          node.addEventListener('mouseleave', () => { hov = null; slopePaint(); tip.style.opacity = 0; });
+        });
+        slopePaint();
+      }
+      let hov = null;
+      function slopeTip(c, e) {
+        const box = svg.parentElement.getBoundingClientRect();
+        tip.innerHTML = `<b>${c.name}</b><br>Cap ${usd(c.capBn)} · <b>#${c.cr}</b> &nbsp;|&nbsp; Rev ${usd(c.revenueBn)} · <b>#${c.rr}</b>`;
+        tip.style.left = (e.clientX - box.left) + 'px'; tip.style.top = (e.clientY - box.top) + 'px'; tip.style.opacity = 1;
+      }
+      function slopePaint() {
+        const active = hov || sel;
+        S.forEach((c) => {
+          const on = c.name === active;
+          const st = svg.querySelector(`path[data-n="${CSS.escape(c.name)}"]`);
+          if (st) { st.setAttribute('class', 'sl-strand ' + (on ? 'sel ' + dcls(c) : 'dim')); if (on) st.parentNode.appendChild(st); }
+          svg.querySelectorAll(`.sl-tick[data-n="${CSS.escape(c.name)}"]`).forEach((t) => t.setAttribute('class', 'sl-tick ' + (on ? 'sel ' + dcls(c) : '')));
+          svg.querySelectorAll(`.sl-lab[data-n="${CSS.escape(c.name)}"]`).forEach((t) => t.setAttribute('class', 'sl-lab ' + (on ? 'sel' : '')));
+        });
+        const c = S.find((x) => x.name === sel); if (!c) return;
+        const verdict = c.delta > 0 ? `valued ${c.delta} rank${c.delta > 1 ? 's' : ''} above its sales`
+          : (c.delta < 0 ? `sells ${-c.delta} rank${-c.delta > 1 ? 's' : ''} above its value` : 'cap and revenue rank alike');
+        read.innerHTML = `<b>${c.name}</b> — market cap ${usd(c.capBn)} (rank #${c.cr}), revenue ${usd(c.revenueBn)} (rank #${c.rr}): <span class="sl-verdict ${dcls(c)}">${verdict}</span>. Click any company to trace it.`;
+      }
+      viewT.addEventListener('click', (e) => {
+        const b = e.target.closest('button'); if (!b) return;
+        Array.prototype.forEach.call(viewT.children, (x) => x.classList.toggle('active', x === b));
+        const slope = b.dataset.v === 'slope';
+        slopeBox.hidden = !slope; bars.hidden = slope; sub.hidden = slope; metricT.style.display = slope ? 'none' : '';
+        if (slope && !svg.childNodes.length) slopeBuild();
+      });
     })();
   </script>
 </BaseLayout>

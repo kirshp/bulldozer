@@ -83,12 +83,13 @@ async function main() {
 
   // Wikidata: logo (P154), country ISO3 (P17→P298), industry (P452), description
   const qids = [...new Set(Object.values(titleToQid).filter(Boolean))];
-  const q = `SELECT ?c ?logo ?iso ?industryLabel ?desc WHERE {
+  const q = `SELECT ?c ?logo ?iso ?industryLabel ?desc ?rev ?revt WHERE {
     VALUES ?c { ${qids.map((q) => 'wd:' + q).join(' ')} }
     OPTIONAL { ?c wdt:P154 ?logo }
     OPTIONAL { ?c wdt:P17 ?country . ?country wdt:P298 ?iso }
     OPTIONAL { ?c wdt:P452 ?industry . ?industry rdfs:label ?industryLabel FILTER(lang(?industryLabel)='en') }
     OPTIONAL { ?c schema:description ?desc FILTER(lang(?desc)='en') }
+    OPTIONAL { ?c p:P2139 ?rst . ?rst ps:P2139 ?rev . ?rst psv:P2139 ?rvn . ?rvn wikibase:quantityUnit wd:Q4917 . OPTIONAL { ?rst pq:P585 ?revt } }
   }`;
   const wd = await fetch('https://query.wikidata.org/sparql?format=json&query=' + encodeURIComponent(q), { headers: { ...UA, Accept: 'application/sparql-results+json' } });
   const meta = {};
@@ -98,11 +99,21 @@ async function main() {
     if (b.iso && !m.iso) m.iso = b.iso.value.toUpperCase();
     if (b.industryLabel && !m.industry) m.industry = b.industryLabel.value;
     if (b.desc && !m.desc) m.desc = b.desc.value;
+    // latest USD revenue (P2139) — fallback for cap leaders missing from the revenue table
+    if (b.rev) {
+      const t = b.revt ? b.revt.value : '0';
+      if (!m.revAt || t > m.revAt) { m.revAt = t; m.revBn = Math.round(Number(b.rev.value) / 1e9); }
+    }
   } else { console.warn('  Wikidata enrich failed', wd.status); }
 
   const out = rows.map((r) => {
     const m = meta[titleToQid[r.title]] || {};
-    return { name: r.name, capBn: r.capBn, capYear: r.capBn ? CAP_YEAR : null, revenueBn: r.revenueBn, profitBn: r.profitBn, employees: r.employees, revYear: r.revenueBn ? REV_YEAR : null, industry: m.industry || null, iso: m.iso || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
+    // Prefer the FY2024 revenue-table value; fall back to latest Wikidata USD revenue
+    // (fills the cap leaders — Nvidia, Apple, Meta, Tesla — absent from the revenue table).
+    const wdRevYear = m.revAt ? Number(m.revAt.slice(0, 4)) : null;
+    const revenueBn = r.revenueBn != null ? r.revenueBn : (m.revBn ?? null);
+    const revYear = r.revenueBn != null ? REV_YEAR : (r.revenueBn == null && m.revBn != null ? wdRevYear : null);
+    return { name: r.name, capBn: r.capBn, capYear: r.capBn ? CAP_YEAR : null, revenueBn, profitBn: r.profitBn, employees: r.employees, revYear, industry: m.industry || null, iso: m.iso || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
   });
   // Most valuable first: market-cap leaders, then by revenue.
   out.sort((a, b) => (b.capBn || 0) - (a.capBn || 0) || (b.revenueBn || 0) - (a.revenueBn || 0));
