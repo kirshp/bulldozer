@@ -11,12 +11,12 @@ const age = rlms.byAge;
 const ageMax = Math.max(...age.map((a) => a.pct));
 const youngOld = age.length ? `${age[0].group} ${age[0].pct}% vs 65+ ${age[age.length - 1].pct}%` : '';
 ---
-<BaseLayout title="Russia Online" active="news"
+<BaseLayout title="Internet Use in Russia 2012–2024: The Generation Gap" active="news"
   description="Internet adoption in Russia from RLMS-HSE microdata: the rise since 2012 and the generation gap.">
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: "Russia Online",
+    headline: "Internet Use in Russia 2012–2024: The Generation Gap",
     description: 'Internet use in Russia since 2012 and the generation gap, from RLMS-HSE microdata.',
     url: 'https://shpara.com/bulldozer/stories/russia-online',
     image: 'https://shpara.com/bulldozer/og.png',
