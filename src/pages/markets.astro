@@ -298,7 +298,7 @@ const RANKINGS = [
       // top 10 by market cap, among companies that have both a cap and a revenue
       const S = data.filter((c) => c.capBn != null && c.revenueBn != null)
         .sort((a, b) => b.capBn - a.capBn).slice(0, 10)
-        .map((c) => ({ name: c.name, cap: c.capBn, rev: c.revenueBn, flag: c.flag, logo: c.logo }));
+        .map((c) => ({ name: c.name, cap: c.capBn, rev: c.revenueBn, capYear: c.capYear, revYear: c.revYear, flag: c.flag, logo: c.logo }));
       const N = S.length;
       const VBW = 920, VBH = 440, topPad = 12, xL = 8, xR = 912, ctrl = 460;
       const rowH = N > 1 ? (VBH - 2 * topPad - 14) / (N - 1) : 0;
@@ -346,13 +346,17 @@ const RANKINGS = [
         rows.forEach((r) => {
           const on = r.c.name === hero || r.c.name === hov;
           const mkLab = (rank, y, key, side) => {
-            if (!(rank < 3 || on)) return;
             const name = r.c.name, val = usd(r.c[key]);
+            const yr = key === 'cap' ? r.c.capYear : r.c.revYear;
             const anchor = side === 'L' ? 'start' : 'end';
             const x = side === 'L' ? xL + 16 : xR - 10;
             const g = mk('text', { x, y: y + 4, 'text-anchor': anchor, 'data-n': name, class: 'rib-lab' + (on ? ' on' : '') + (r.c.name === hero ? ' hero' : '') });
-            g.appendChild(mk('tspan', { class: 'rib-nm' }, name));
-            g.appendChild(mk('tspan', { class: 'rib-val', dx: 6 }, val));
+            const nm = mk('tspan', { class: 'rib-nm' }, name);
+            const vl = mk('tspan', { class: 'rib-val', dx: 6 }, val);
+            const yrSpan = yr ? mk('tspan', { class: 'rib-yr', dx: 4 }, "’" + String(yr).slice(2)) : null;
+            // order the tspans so name is always closest to the tick
+            if (side === 'L') { g.append(nm, vl); if (yrSpan) g.append(yrSpan); }
+            else { if (yrSpan) g.append(yrSpan); g.append(vl, nm); }
             svg.appendChild(g);
           };
           mkLab(r.li, r.yl, leftKey, 'L');

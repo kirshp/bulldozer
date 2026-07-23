@@ -612,6 +612,7 @@ html[data-theme='light'] #co-slope { --rib: #c3ccd2; --tickc: #9aa4ad; }
 #co-slope .rib-lab.on .rib-nm { font-weight: 700; fill: var(--text); }
 #co-slope .rib-lab.on.hero .rib-nm { fill: var(--accent); }
 #co-slope .rib-lab .rib-val { font-size: 12px; fill: var(--text-dim); font-variant-numeric: tabular-nums; }
+#co-slope .rib-lab .rib-yr { font-size: 10.5px; fill: var(--text-dim); opacity: 0.6; font-variant-numeric: tabular-nums; }
 #co-slope .co-slope-foot { font-size: 12px; color: var(--text-dim); margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--border); }
 #co-slope .tip { position: absolute; pointer-events: none; opacity: 0; transform: translate(-50%, -116%);
   background: var(--text); color: var(--bg); padding: 8px 11px; border-radius: 9px; font-size: 12px;
