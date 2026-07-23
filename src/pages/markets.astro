@@ -295,14 +295,16 @@ const RANKINGS = [
       const mk = (t, a, txt) => { const e = document.createElementNS(NSU, t); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; };
       const ord = (n) => { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 
-      // every company with both a market cap and a revenue
-      const S = data.filter((c) => c.capBn != null && c.revenueBn != null).map((c) => ({ name: c.name, cap: c.capBn, rev: c.revenueBn, flag: c.flag, logo: c.logo }));
+      // top 10 by market cap, among companies that have both a cap and a revenue
+      const S = data.filter((c) => c.capBn != null && c.revenueBn != null)
+        .sort((a, b) => b.capBn - a.capBn).slice(0, 10)
+        .map((c) => ({ name: c.name, cap: c.capBn, rev: c.revenueBn, flag: c.flag, logo: c.logo }));
       const N = S.length;
-      const VBW = 920, VBH = 520, topPad = 14, xL = 8, xR = 912, ctrl = 460;
-      const rowH = N > 1 ? (VBH - 2 * topPad - 16) / (N - 1) : 0;
-      const yOf = (i) => topPad + i * rowH + 8;
+      const VBW = 920, VBH = 440, topPad = 12, xL = 8, xR = 912, ctrl = 460;
+      const rowH = N > 1 ? (VBH - 2 * topPad - 14) / (N - 1) : 0;
+      const yOf = (i) => topPad + i * rowH + 7;
       const maxVal = Math.max(...S.map((c) => Math.max(c.cap, c.rev)));
-      const wOf = (v) => 2.5 + 26 * Math.sqrt(v / maxVal);
+      const wOf = (v) => 2.5 + 21 * Math.sqrt(v / maxVal);
       const metricLabel = (k) => (k === 'cap' ? 'market cap' : 'revenue');
       const headerLabel = (k) => (k === 'cap' ? 'Rank by market cap' : 'Rank by revenue');
       let sort = 'cap', hov = null;

@@ -125,6 +125,20 @@ async function main() {
     const capYear = r.capBn != null ? CAP_YEAR : (r.capBn == null && m.capWdBn != null ? wdCapYear : null);
     return { name: r.name, capBn, capYear, revenueBn, profitBn: r.profitBn, employees: r.employees, revYear, industry: m.industry || null, iso: m.iso || null, logo: m.logo || null, desc: m.desc || null, wiki: `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title)}` };
   });
+
+  // Curated 2026 snapshot filling two gaps the open sources structurally miss:
+  // TSMC reports revenue in TWD (filtered out of the USD-only Wikidata pull) and
+  // Saudi Aramco's market cap isn't in the Wikipedia cap table. Public figures.
+  const CURATED = {
+    'TSMC': { revenueBn: 90, revYear: 2024 },
+    'Saudi Aramco': { capBn: 1600, capYear: CAP_YEAR },
+  };
+  for (const o of out) {
+    const cu = CURATED[o.name]; if (!cu) continue;
+    if (o.revenueBn == null && cu.revenueBn != null) { o.revenueBn = cu.revenueBn; o.revYear = cu.revYear; }
+    if (o.capBn == null && cu.capBn != null) { o.capBn = cu.capBn; o.capYear = cu.capYear; }
+  }
+  out.sort((a, b) => (b.capBn || 0) - (a.capBn || 0) || (b.revenueBn || 0) - (a.revenueBn || 0));
   // Most valuable first: market-cap leaders, then by revenue.
   out.sort((a, b) => (b.capBn || 0) - (a.capBn || 0) || (b.revenueBn || 0) - (a.revenueBn || 0));
   await writeFile(OUT, JSON.stringify(out));

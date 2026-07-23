@@ -601,7 +601,8 @@ html[data-theme='light'] #co-slope { --rib: #c3ccd2; --tickc: #9aa4ad; }
 #co-slope .co-slope-hero strong { color: var(--text); font-weight: 700; }
 #co-slope .co-slope-heads { display: flex; justify-content: space-between; font-family: var(--mono);
   font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
-#co-slope .co-slope-plot { position: relative; width: 100%; }
+#co-slope .co-slope-plot { position: relative; width: 100%; max-width: 840px; }
+#co-slope .co-slope-heads { max-width: 840px; }
 #co-slope svg { width: 100%; height: auto; display: block; overflow: visible; }
 #co-slope .rib-lab { paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; cursor: pointer; }
 #co-slope .rib-lab .rib-nm { font-size: 14px; font-weight: 500; fill: var(--text-dim); }
