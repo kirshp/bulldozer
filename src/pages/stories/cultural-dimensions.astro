@@ -22,6 +22,17 @@ const mostCollectivist = top((p) => -p.y);
 ---
 <BaseLayout title="The Shape of National Culture" active="news"
   description="Hofstede's cultural dimensions: how countries differ on power distance and individualism.">
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: "The Shape of National Culture",
+    description: 'Hofstede\'s power distance vs individualism — the cultural fault lines between societies, visualised.',
+    url: 'https://shpara.com/bulldozer/stories/cultural-dimensions',
+    image: 'https://shpara.com/bulldozer/og.png',
+    datePublished: '2026-06-28',
+    author: { '@type': 'Person', name: 'Kirill Shpara', url: 'https://shpara.com/' },
+    publisher: { '@type': 'Organization', name: 'BullDozer', url: 'https://shpara.com/bulldozer/' },
+  })} />
   <section class="story-hero">
     <div class="container">
       <a class="back-link" href={`${base}/`}>← News</a>

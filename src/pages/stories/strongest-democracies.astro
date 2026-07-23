@@ -16,6 +16,17 @@ const medal = (i: number) => ['#FFD24A', '#C7CDD4', '#E08A4B'][i] || 'var(--acce
 ---
 <BaseLayout title="The World's Strongest Democracies" active="news"
   description={`${top.entity} leads the V-Dem Liberal Democracy Index (${period}). A visual story.`}>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: "The World's Strongest Democracies",
+    description: 'The liberal-democracy leaders and the countries at the bottom of the scale — a visual story from V-Dem data.',
+    url: 'https://shpara.com/bulldozer/stories/strongest-democracies',
+    image: 'https://shpara.com/bulldozer/og.png',
+    datePublished: '2026-06-28',
+    author: { '@type': 'Person', name: 'Kirill Shpara', url: 'https://shpara.com/' },
+    publisher: { '@type': 'Organization', name: 'BullDozer', url: 'https://shpara.com/bulldozer/' },
+  })} />
   <section class="story-hero">
     <div class="container">
       <a class="back-link" href={`${base}/`}>← News</a>

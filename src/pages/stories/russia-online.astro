@@ -13,6 +13,17 @@ const youngOld = age.length ? `${age[0].group} ${age[0].pct}% vs 65+ ${age[age.l
 ---
 <BaseLayout title="Russia Online" active="news"
   description="Internet adoption in Russia from RLMS-HSE microdata: the rise since 2012 and the generation gap.">
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: "Russia Online",
+    description: 'Internet use in Russia since 2012 and the generation gap, from RLMS-HSE microdata.',
+    url: 'https://shpara.com/bulldozer/stories/russia-online',
+    image: 'https://shpara.com/bulldozer/og.png',
+    datePublished: '2026-06-28',
+    author: { '@type': 'Person', name: 'Kirill Shpara', url: 'https://shpara.com/' },
+    publisher: { '@type': 'Organization', name: 'BullDozer', url: 'https://shpara.com/bulldozer/' },
+  })} />
   <section class="story-hero">
     <div class="container">
       <a class="back-link" href={`${base}/`}>← News</a>
