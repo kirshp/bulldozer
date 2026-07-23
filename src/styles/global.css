@@ -601,6 +601,9 @@ html[data-theme='light'] #co-slope { --rib: #c3ccd2; --tickc: #9aa4ad; }
 #co-slope .co-slope-hero strong { color: var(--text); font-weight: 700; }
 #co-slope .co-slope-heads { display: flex; justify-content: space-between; font-family: var(--mono);
   font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+#co-slope .co-slope-heads .hd-click { cursor: pointer; padding-bottom: 2px; border-bottom: 1.5px solid transparent; transition: color .12s, border-color .12s; }
+#co-slope .co-slope-heads .hd-click:hover { color: var(--text); }
+#co-slope .co-slope-heads .hd-click.first { color: var(--accent); border-bottom-color: var(--accent); }
 #co-slope .co-slope-plot { position: relative; width: 100%; max-width: 840px; }
 #co-slope .co-slope-heads { max-width: 840px; }
 #co-slope svg { width: 100%; height: auto; display: block; overflow: visible; }

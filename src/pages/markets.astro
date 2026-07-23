@@ -364,9 +364,10 @@ const RANKINGS = [
           node.addEventListener('mousemove', (e) => { if (hov !== nm) { hov = nm; slopeRender(); } slopeTip(c, e); });
           node.addEventListener('mouseleave', () => { hov = null; slopeRender(); tip.style.opacity = 0; });
         });
-        // headers + hero sentence + footnote
-        hlEl.textContent = headerLabel(leftKey);
-        hrEl.textContent = headerLabel(rightKey);
+        // headers double as the sort control (click a column to put it first)
+        hlEl.textContent = headerLabel(leftKey); hlEl.dataset.metric = leftKey;
+        hrEl.textContent = headerLabel(rightKey); hrEl.dataset.metric = rightKey;
+        hlEl.classList.add('hd-click', 'first'); hrEl.classList.add('hd-click'); hrEl.classList.remove('first');
         const heroRow = rows.find((r) => r.c.name === hero);
         heroEl.innerHTML = `<span class="hero-co">${hero}</span> ranks <strong>1st</strong> in ${metricLabel(leftKey)}… and <strong>${ord(heroRow.ri + 1)}</strong> in ${metricLabel(rightKey)} among the world’s giants.`;
         footEl.textContent = `${N} of the world’s largest public companies, ranked among themselves. Ribbon width = size. Hover a line for detail. Market cap 2026 · revenue latest FY/TTM.`;
@@ -376,11 +377,14 @@ const RANKINGS = [
         tip.innerHTML = `<b>${c.flag || ''} ${c.name}</b><br>Cap ${usd(c.cap)} &nbsp;|&nbsp; Revenue ${usd(c.rev)}`;
         tip.style.left = (e.clientX - box.left) + 'px'; tip.style.top = (e.clientY - box.top) + 'px'; tip.style.opacity = 1;
       }
-      sortT.addEventListener('click', (e) => {
-        const b = e.target.closest('button'); if (!b) return;
-        Array.prototype.forEach.call(sortT.children, (x) => x.classList.toggle('active', x === b));
-        sort = b.dataset.s; hov = null; slopeRender();
-      });
+      function setSort(m) {
+        sort = m; hov = null;
+        Array.prototype.forEach.call(sortT.children, (x) => x.classList.toggle('active', x.dataset.s === m));
+        slopeRender();
+      }
+      sortT.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setSort(b.dataset.s); });
+      hlEl.addEventListener('click', () => setSort(hlEl.dataset.metric));
+      hrEl.addEventListener('click', () => setSort(hrEl.dataset.metric));
       viewT.addEventListener('click', (e) => {
         const b = e.target.closest('button'); if (!b) return;
         Array.prototype.forEach.call(viewT.children, (x) => x.classList.toggle('active', x === b));
